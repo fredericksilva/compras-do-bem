@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
-  // Place JavaScript code here...
+  // Alert box close
+  $(document).on('click', '#alert-close', function() {
+    $('#alert').fadeOut('slow', function() {
+
+    })
+  })
 
 });

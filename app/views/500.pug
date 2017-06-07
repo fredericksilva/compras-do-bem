@@ -1,0 +1,7 @@
+extends layouts/default
+
+block content
+    h2 500 - Opa! Erro no servidor
+
+    - if (env == 'development')
+      pre= error

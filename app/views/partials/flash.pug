@@ -1,0 +1,18 @@
+if messages.errors
+  #alert.card-panel.red.darken-1.white-text(style='position: relative;')
+    button#alert-close.close2.btn-flat.transparent(type='button')
+      i.material-icons close
+    for error in messages.errors
+      div= error.msg
+if messages.info
+  #alert.card-panel.teal.darken-1.white-text(style='position: relative;')
+    button#alert-close.close2.btn-flat.transparent(type='button')
+      i.material-icons close
+    for info in messages.info
+      div= info.msg
+if messages.success
+  #alert.card-panel.green.darken-1.white-text(style='position: relative;')
+    button#alert-close.close2.btn-flat.transparent(type='button')
+      i.material-icons close
+    for success in messages.success
+      div= success.msg

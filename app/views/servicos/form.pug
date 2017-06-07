@@ -1,0 +1,66 @@
+extends ../layouts/default
+
+block styles
+  
+
+block content
+  - var action = '/servico'
+  - action += servico.isNew? '' : '/' + servico
+  - if (errors)
+    p= errors
+  h3 Servicos
+  .row
+    form.col.s12(method="POST", action=action)
+      input(type='hidden', name='_csrf', value=_csrf)
+
+      - if (!servico.isNew)
+        input(type="hidden", name="_method", value="PUT")
+
+      .row
+        .input-field.col.s12
+          input.validate(type='text', value=servico.title, name='title', id='title', autofocus, required)
+          label(for='title') Título
+      .row
+        .input-field.col.s12
+          textarea.validate.materialize-textarea(name='body', id='body', required)
+          label(for='body') Texto...
+      .row
+        input(type='hidden', value='', name='tags', id='tags')
+        p.caption Tags
+        .input-field.col.s12.chips
+      .row
+        .input-field.col.s12
+          button.btn.waves-effect.waves-light(type='submit')
+            | Criar
+            i.material-icons.right send
+
+block scripts
+  script(type='text/javascript').
+    $(document).ready(function() {
+      $('.chips').material_chip();
+
+      $('.chips').on('chip.add', function(e, chip) {
+        let current = $('#tags').val()
+        if(current === '') {
+          current = chip.tag
+        } else {
+          current = current + ',' + chip.tag
+        }
+        $('#tags').val(current)
+      })
+
+      $('.chips').on('chip.delete', function(e, chip) {
+        let current = $('#tags').val()
+        current = current.split(','+chip.tag)
+        if (current.length === 1) {
+          current = current.join('')
+          current = current.split(chip.tag)
+        }
+        current = current.join('')
+        if(current.charAt(0) === ',') {
+          current = current.slice(1)
+        }
+        $('#tags').val(current)
+      })
+
+    })

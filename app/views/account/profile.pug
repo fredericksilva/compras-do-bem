@@ -1,0 +1,97 @@
+extends ../layouts/default
+
+block content
+  .section
+    h3 Informação de Perfil
+
+    .row
+      form.col.s12(action='/account/profile', method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .row
+          .input-field.col.s12
+            input.validate(type='email', name='email', id='email', value=user.email)
+            label(for='email') Email
+        .row
+          .input-field.col.s12
+            input.validate(type='text', name='name', id='name', value=user.profile.name)
+            label(for='name') Nome
+        .row
+          .input-field.col.s12
+            p Gênero
+            p(style='float: left; margin-right: 20px;')
+              input.with-gap(type='radio', checked=user.profile.gender=='male', name='gender', value='male', data-toggle='radio', id='male')
+              label(for='male') Masculino
+            p(style='float: left; margin-right: 20px;')
+              input.with-gap(type='radio', checked=user.profile.gender=='female', name='gender', value='female', data-toggle='radio', id='female')
+              label(for='female') Feminino
+            p(style='float: left; margin-right: 20px;')
+              input.with-gap(type='radio', checked=user.profile.gender=='other', name='gender', value='other', data-toggle='radio', id='other')
+              label(for='other') Outro
+        .row
+          .input-field.col.s12
+            input.validate(type='text', name='location', id='location', value=user.profile.location)
+            label(for='location') Localização
+        .row
+          .input-field.col.s12
+            input.validate(type='text', name='website', id='website', value=user.profile.website)
+            label(for='website') Site
+        .row
+          .input-field.col.s12
+            p Gravatar
+            img(src=user.gravatar(), class='profile', width='100', height='100')
+        .row
+          .input-field.col.s12
+            button.btn.waves-effect.waves-light(type='submit')
+              | Atualizar Perfil
+              i.material-icons.right mode_edit
+    .divider
+    .section.row
+      h3 Mudar Senha
+
+      form.col.s12(action='/account/password', method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .row
+          .input-field.col.s12
+            input.validate(type='password', name='password', id='password')
+            label(for='password') Nova Senha
+        .row
+          .input-field.col.s12
+            input.validate(type='password', name='confirmPassword', id='confirmPassword')
+            label(for='confirmPassword') Confirmar Senha
+        .row
+          .input-field.col.s12
+            button.btn.waves-effect.waves-light(type='submit')
+              | Mudar Senha
+              i.material-icons.right vpn_key
+    .divider
+    .section.row
+      h3 Apagar Conta
+
+      form.col.s12(action='/account/delete', method='POST')
+        .input-field.col.s12
+          p Você pode apagar sua conta, mas tenha em mente que essa ação é irreversivel.
+          input(type='hidden', name='_csrf', value=_csrf)
+          button.btn.waves-effect.waves-light.red(type='submit')
+            | Apague Minha Conta
+            i.material-icons.right remove_circle
+
+    .divider
+    .section.row
+      h3 Associar Outras Contas
+      .form-horizontal
+        .row
+          .col.s12
+            if user.google
+              p: a.red-text.text-darken-4(href='/account/unlink/google') Desassociar sua conta Google
+            else
+              p: a(href='/auth/google') Associar com sua conta Google
+          .col.s12
+            if user.facebook
+              p: a.red-text.text-darken-4(href='/account/unlink/facebook') Desassociar seu perfil de Facebook
+            else
+              p: a(href='/auth/facebook') Associar com seu perfil de Facebook
+          .col.s12
+            if user.twitter
+              p: a.red-text.text-darken-4(href='/account/unlink/twitter') Desassociar sua conta de Twitter
+            else
+              p: a(href='/auth/twitter') Associar sua conta de Twitter

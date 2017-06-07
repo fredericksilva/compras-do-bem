@@ -1,0 +1,23 @@
+extends ../layouts/default
+
+block content
+  h3 Sign up
+  .row
+    form.col.s12(id='signup-form', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .row
+        .input-field.col.s12
+          input.validate(type='email', name='email', id='email', autofocus, required)
+          label(for='email') Email
+      .row
+        .input-field.col.s12.m6
+          input.validate(type='password', name='password', id='password', required)
+          label(for='password') Password
+        .input-field.col.s12.m6
+          input.form-control(type='password', name='confirmPassword', id='confirmPassword', required)
+          label.col-sm-3.control-label(for='confirmPassword') Confirm Password
+      .row
+        .input-field.col.s12
+          button.btn.waves-effect.waves-light(type='submit')
+            | Signup
+            i.material-icons.right send

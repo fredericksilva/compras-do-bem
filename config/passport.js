@@ -1,10 +1,11 @@
 const passport = require('passport');
+const mongoose = require('mongoose');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-const User = require('../models/User');
+const User = mongoose.model('User');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -23,14 +24,15 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
     if (err) { return done(err); }
     if (!user) {
-      return done(null, false, { msg: `Email ${email} not found.` });
+      return done(null, false, { msg: `O email ${email} não foi achado.` });
     }
     user.comparePassword(password, (err, isMatch) => {
+      console.log('err: ', err);
       if (err) { return done(err); }
       if (isMatch) {
         return done(null, user);
       }
-      return done(null, false, { msg: 'Invalid email or password.' });
+      return done(null, false, { msg: 'Email e/ou senha inválidos.' });
     });
   });
 }));
@@ -64,7 +66,7 @@ passport.use(new FacebookStrategy({
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Já existe uma conta de Facebook que pertence a você. Logue-se com essa conta ou desassocie-a e associe com sua conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -75,7 +77,7 @@ passport.use(new FacebookStrategy({
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
           user.save((err) => {
-            req.flash('info', { msg: 'Facebook account has been linked.' });
+            req.flash('info', { msg: 'Conta de Facebook associada.' });
             done(err, user);
           });
         });
@@ -90,7 +92,7 @@ passport.use(new FacebookStrategy({
       User.findOne({ email: profile._json.email }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
+          req.flash('errors', { msg: 'Já existe uma conta usando esse email. Logue-se nessa conta e associe-a ao seu perfil de Facebook manualmente em Configurações de Conta.' });
           done(err);
         } else {
           const user = new User();
@@ -122,7 +124,7 @@ passport.use(new TwitterStrategy({
     User.findOne({ twitter: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Já existe uma conta de Twitter associada com seu perfil. Logue-se com essa conta ou desassocie-a e então associe sua conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -134,7 +136,7 @@ passport.use(new TwitterStrategy({
           user.profile.picture = user.profile.picture || profile._json.profile_image_url_https;
           user.save((err) => {
             if (err) { return done(err); }
-            req.flash('info', { msg: 'Twitter account has been linked.' });
+            req.flash('info', { msg: 'Sua conta de Twitter foi associada.' });
             done(err, user);
           });
         });
@@ -176,7 +178,7 @@ passport.use(new GoogleStrategy({
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'Já existe uma conta Google associada. Logue-se nessa conta ou desassocie-a e então associe sua conta atual.' });
         done(err);
       } else {
         User.findById(req.user.id, (err, user) => {
@@ -187,7 +189,7 @@ passport.use(new GoogleStrategy({
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || profile._json.image.url;
           user.save((err) => {
-            req.flash('info', { msg: 'Google account has been linked.' });
+            req.flash('info', { msg: 'Conta Google associada.' });
             done(err, user);
           });
         });
@@ -202,7 +204,7 @@ passport.use(new GoogleStrategy({
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
+          req.flash('errors', { msg: 'Já existe uma conta utilizando esse endereço de email. Logue-se nessa conta depois associe-a manualmente a sua conta Google em Configurações de Conta.' });
           done(err);
         } else {
           const user = new User();
@@ -241,5 +243,16 @@ exports.isAuthorized = (req, res, next) => {
     next();
   } else {
     res.redirect(`/auth/${provider}`);
+  }
+};
+
+/**
+ * Admin Authorization middleware.
+ */
+exports.isAdmin = (req, res, next) => {
+  if (req.user.admin) {
+    next();
+  } else {
+    req.flash('errors', { msg: 'Você não tem permissão para realizar essa operação.' });
   }
 };

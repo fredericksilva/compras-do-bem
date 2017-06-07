@@ -1,0 +1,16 @@
+extends ../layouts/default
+
+block content
+  h3 Forgot Password
+  .row
+    form.col.s12(method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .row
+        p Enter your email address below and we will send you password reset instructions.
+        .input-field.col.s12
+          input.validate(type='email', name='email', id='email', autofocus, required)
+          label(for='email') Email
+        .input-field.col.s12
+          button.btn.waves-effect.waves-light(type='submit')
+            | Reset Password
+            i.material-icons.right vpn_key

@@ -1,0 +1,35 @@
+extends ../layouts/default
+
+block content
+  .row
+    h3 Sign in
+    form.col.s12(method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .row
+        .input-field.col.s12
+          input.validate(type='email', name='email', id='email', autofocus, required)
+          label(for='email') Email
+      .row
+        .input-field.col.s12
+          input.validate(type='password', name='password', id='password', required)
+          label(for='password') Password
+      .row
+        .col.s12
+          button.btn.waves-effect.waves-light(type='submit')
+            i.fa.fa-user.left
+            | Login
+          a.btn-flat(href='/forgot') Esqueceu a senha?
+    .row
+      .col.s12
+        .divider
+    .row
+      .col.s12
+        a.btn.waves-effect.waves-light(href='/auth/facebook', style='background: #3b5998;')
+          i.fa.fa-facebook.left
+          | Logue-se com Facebook
+        a.btn.waves-effect.waves-light(href='/auth/twitter', style='background: #55acee;')
+          i.fa.fa-twitter.left
+          | Logue-se com Twitter
+        a.btn.waves-effect.waves-light(href='/auth/google', style='background: #dd4b39;')
+          i.fa.fa-google-plus.left
+          | Logue-se com Google

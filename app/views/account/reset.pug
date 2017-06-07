@@ -1,0 +1,18 @@
+extends ../layouts/default
+
+block content
+  .row
+    form.col.s12(method='POST')
+      h3 Mudar Senha
+      input(type='hidden', name='_csrf', value=_csrf)
+      .row
+        .input-field.col.s12
+          input.validate(type='password', name='password', id='password', autofocus, required)
+          label(for='password') Nova Senha
+        .input-field.col.s12
+          input.validate(type='password', name='confirm', id='confirm', required)
+          label(for='confirm') Confirmar Senha
+        .col.s12
+          button.btn(type='submit')
+            i.fa.fa-keyboard-o.left
+            | Mudar Senha
