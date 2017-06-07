@@ -39,8 +39,8 @@ Estamos usando uma marcação chamada [PUG](https://pugjs.org/api/getting-starte
 
 O pug cria a hierarquisação das tags html por identação. No caso de nosso projeto estamos usando o padrão de 2 espaços. Veja abaixo
 
-*jade*
-``` jade
+*pug*
+``` pug
 ul
   li teste
   li teste 2
@@ -55,8 +55,8 @@ ul
 
 **Classes e Ids**
 
-*jade*
-``` jade
+*pug*
+``` pug
 #id
   p.classe Paragraf com classe
 #id2.classe
@@ -71,8 +71,8 @@ ul
 
 **Identação de Conteudo in Div**
 
-*jade*
-``` jade
+*pug*
+``` pug
 div
   | Texto in Div
   span Algum Span
@@ -87,8 +87,8 @@ div
 
 **Repetição de conteúdo (Loops)**
 
-*jade*
-``` jade
+*pug*
+``` pug
 each val in [1, 2, 3]
   //- Catrão Default
   .card
@@ -133,7 +133,7 @@ A extrutura básica se encontra em **layouts/default.pug**. Todas as outras pág
 
 Abaixo o padrão de cada página.
 
-``` jade
+``` pug
 extends ../layouts/default
 
 block styles
