@@ -1,0 +1,68 @@
+header
+  .container
+    section.navegacao
+      .row
+        .col.abreMenu.s1.m1.l1.white-text
+          i.material-icons menu
+        .col.s9.m9.l9.menuLinks.hide-on-small-only
+          ul
+            // <li><a href="#" title="Página inicial">Home</a></li>
+            li
+              a(href='/servico', title='Serviço') Serviço
+            li
+              a(href='/account', title='Perfil Usuário') Perfil Usuário
+        .col.s2.m2.l1.menuLinks.hide-on-small-only
+          if !user
+            a.btn.botaoLogar.transparent(href='/signup', title='Cadastro/Login') Cadastro/Login
+          else
+            a.dropdown-button(href='#', data-toggle='dropdown', data-activates='user-menu', data-beloworigin='true', style='height: 64px;')
+              if user.profile.picture
+                img.responsive-img.circle(src=user.profile.picture, style='width: 45px; margin: 10px 10px 0 0; float: left;')
+              else
+                img.responsive-img.circle(src=user.gravatar(60), style='width: 45px; margin: 10px 10px 0 0; float: left;')
+              span(style='float: left;')= user.profile.name || user.email || user.id
+              i.material-icons.right arrow_drop_down
+            ul#user-menu.dropdown-content
+              li
+                a(href='/account') My Account
+              li.divider
+              li
+                a(href='/logout') Logout
+    section.busca
+      .row
+        .caixaBusca.col.s12
+          form(method='get', action='')
+            .col.l5.m12.s12.buscador
+              input(placeholder='Pesquisar ...', type='text')
+            .col.m5.l3.s5.b_cidade.dropdown-button(data-activates='cidade')
+              i.material-icons keyboard_arrow_down
+              span.cid Rio de Janeiro - RJ 
+            .col.m5.l3.s5.b_categoria.dropdown-button(data-activates='categoria')
+              i.material-icons room
+              span.cat Todas as categorias 
+            .col.m2.l1.s2.b_botao
+              i.material-icons.btnBuscar.pink-text.text-lighten-3 search
+            input.cid_Enviar(type='hidden', value='', name='categoria')
+            input.cat_Enviar(type='hidden', value='', name='cidade')
+      ul#cidade.dropForm.dropdown-content
+        li
+        li(data-destino='cid', data-valor='Rio de Janeiro', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a Rio de Janeiro (Capital)
+        li(data-destino='cid', data-valor='Campos', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a Campos
+        li(data-destino='cid', data-valor='São Paulo', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a São Paulo
+      ul#categoria.dropForm.dropdown-content
+        li
+        li(data-destino='cat', data-valor='Restaurantes', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a Restaurantes
+        li(data-destino='cat', data-valor='Compras', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a Compras
+        li(data-destino='cat', data-valor='Vida Noturna', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a Vida Noturna
+        li(data-destino='cat', data-valor='Vida ativa', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a Vida ativa
+    section.logo
+      .container
+        .row
+          img.col.l6.offset-l3.s12(src='img/logo.png')

@@ -1,10 +1,446 @@
-extends ../layouts/default
+extends ../layouts/home
 
 block styles
   
 
 block content
-  h1 Compras do Bem | Home
-  .divider
+  section.categorias
+    .container
+      h1 Rio de Janeiro - RJ
+      .row
+        .exibe
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | RESTAURANTES
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | COMPRAS
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | VIDA NORTUNA
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | VIDA ATIVA
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | BELEZA E SPAS
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 directions_car
+            | VEÍCULOS
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 build
+            | SERVIÇOS RESIDENCIAIS
+          .s12.m3.l3.col.boxCategoria.center-align.vermais(data-destino='nExibe')
+            i.material-icons.pink-text.text-lighten-2 more_horiz
+            | MAIS CATEGORIAS
+        .nExibe
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | RESTAURANTES
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | COMPRAS
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | VIDA NORTUNA
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | VIDA ATIVA
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 restaurant_menu
+            | BELEZA E SPAS
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 directions_car
+            | VEÍCULOS
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 build
+            | SERVIÇOS RESIDENCIAIS
+          .s12.m3.l3.col.boxCategoria.center-align
+            i.material-icons.pink-text.text-lighten-2 more_horiz
+            | MAIS CATEGORIAS
+  section.empresas
+    .container
+      h1 Ativdades Recentes
+      .row
+        .exibir
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+        .nexibir
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title.grey-text.text-darken-4
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title.grey-text.text-darken-4
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.grey-text.text-darken-4.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+          // inicio cards
+          .s12.m4.l4.col.cards
+            .card
+              .card-image.waves-effect.waves-block.waves-light
+                img.activator(src='img/thumbs.jpg')
+              .card-content
+                span.card-title.activator.cardNome
+                  | João da Silva
+                  i.material-icons.right more_vert
+                span.cardAcao  Adicionou uma foto
+                p.cardCidade.pink-text.text-lighten-2 Parque Laje
+              .card-action
+                .row
+                  .col.s12.m5.l5
+                    i.material-icons.gostei thumb_up
+                    |  2 curtidas
+                  .col.s12.m7.l7
+                    .votacao
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons.yellow-text.text-darken-1 star_rate
+                      i.material-icons star_rate
+                    .cardVotacao  (12)
+              .card-reveal
+                span.card-title
+                  | Card Title
+                  i.material-icons.right close
+                p
+                  | Here is some more information about this product that is only revealed once clicked on.
+          // fim cards
+        .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
+          span.palavraUsada
+            i.material-icons keyboard_arrow_down
+            |   Mostrar
+          |  atividades: Rio de Janeiro
+
 
 block scripts

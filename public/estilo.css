@@ -1,0 +1,96 @@
+@charset "utf-8";
+html, body{ height: 100%; color: #949897}
+header{ background: url(img/fundo.jpg) center no-repeat; background-size: cover; position: relative; padding-top: 15px; overflow: hidden }
+.fundoNegro{ display: none; background-color:#333; opacity: 0.90; height: 100%; width: 100%; position: fixed; z-index: 900}
+.abreMenu{ padding: 0 !important; }
+.b_cidade .material-icons, .b_categoria .material-icons {display: block;
+	float: left;
+	margin-top: 7px;
+
+	overflow: hidden;}
+.abreMenu i{ font-size: 3em; cursor:pointer;}
+	.menuLinks li { float: left; margin: 0 1em}
+.menuLinks li a{ color:#fff; font-size: 1em; text-transform: uppercase;  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;}
+.botaoLogar{-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border:1px solid #fff; font-size: 0.8em}
+.botaoLogar:hover{ background-color: #fc0 !important; transition: 0.5s; -webkit-transition:0.5s}
+.caixaBusca{ padding: 5px;  background: #fff; margin-top:30px; margin-bottom: 30px;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; min-height: 50px; }
+.caixaBusca .row{ margin-bottom: 0;}
+.buscador input{ border: none !important; height: 40px !important; margin: 1px !important}
+.buscador input:hover{ border: 0 !important}
+.buscador input:hover{ border: 0 !important}
+.buscador i{ line-height: 38px; display: inline-block}
+.buscador{ font-size:0.5rem !important}
+.logo img{ margin-top:40px; margin-bottom: 40px}
+.b_cidade,.b_categoria{line-height:40px; height: 40px; margin-top: 5px; font-size: 0.8rem; border-left: 1px solid #b3b2b2; cursor:pointer; text-align: left }
+.b_categoria{border-right: 1px solid #b3b2b2;}
+.btnBuscar{ font-size: 2.2em !important; line-height: 50px; }
+.b_botao{text-align: center; cursor: pointer }
+.categorias h1,.empresas h1{ font-size: 1.5em; text-align: center; color: #757575}
+.categorias{ background-color: #e0e9e6; padding-top: 5px; padding-bottom: 5px;cursor:pointer}
+.boxCategoria{ background: #fff; border: 1px solid #e0e9e6;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; height: 126px; text-align: center }
+.boxCategoria i{ font-size: 3em; display: block; margin-top: 30px; margin-bottom: 10px}
+.card-action i,.nVotacao{ float: left; width: 20px; display: block}
+.cardVotacao{ display: block; float: left}
+.votacao i{ font-size: 1.3em}
+.votacao{  float: left; margin-right: 10px; width: 100px}
+.gostei{ font-size: 1.2em}
+.cardNome{ font-weight: bold !important; text-transform: uppercase; font-size: 1.0rem !important; display: inline !important}
+.cardAcao{   font-size: 0.8em!important}
+.vejaMais{ text-align:center; line-height: 25px}
+.vejaMais i{  font-size: 0.9em; font-weight: bold !important}
+.footerSuperior{ overflow: hidden; padding: 30px 0}
+.footerSuperior h1{ font-size:1.3em; text-transform: uppercase;padding: 0; margin:30px 0 0 0}
+.footerSuperior h2{ font-size:0.7em; padding: 0; margin: 5px 0 10px 0}
+.servicos{ font-size: 0.7em;text-transform: uppercase; margin-top:  25px }
+.servicos a{color: #f06292 }
+.links{font-size: 0.7em;margin-top:  25px}
+.links li,.servicos li{ margin-bottom: 6px}
+.links a{ color:rgba(0,0,0,0.87)}
+.links a:hover{color:#f06292 !important}
+.subfooter{padding:10px 0; font-size: 0.9em; height: 109px}
+	.subfooter span{ display: block; margin-top: 70px;};
+.nExibe,.nexibir{ display: none !important;}
+.nexibir{ display: none }
+.vermais,.vermais2{cursor: pointer}
+.menuSupenso{ text-align: right; left: -500px; width: 500px; position: fixed; top:0;  height: 100%; z-index: 1000; background: #c83579}
+.conteudoMenu{ text-align: right; padding: 30px;float: right; width: 250px;}
+.fechar{ font-size: 1.2em;
+	cursor: pointer; margin-bottom: 15px;}
+.fechar i{font-size: 1.1em; text-align: right}
+.localizacao{text-align: left; line-height: 34px; margin-top: 20px; width: 214px; background-color: #fff; float: right; clear: both;-webkit-border-radius: 10px; height: 34px; -moz-border-radius: 10px;border-radius: 10px;}
+.localizacao i{text-align: left; line-height: 34px;}
+.buscaMenu{ text-align: left; line-height: 34px; margin-top: 20px; width: 214px; background-color: #fff; float: right; clear: both;-webkit-border-radius: 10px; height: 34px; -moz-border-radius: 10px;border-radius: 10px;}
+.buscaMenu i{text-align: left; line-height: 34px;}
+.btn{margin-left: -15px !important;}
+.conteudoMenu a{ color:#fff; text-transform: uppercase;}
+.conteudoMenu li{ margin: 8px 0; font-size: 0.9em;}
+.linkMenu{  margin-top: 20px !important; display: block; clear: both }
+.dropdown-content a{ font-size: 0.8em !important; color:#949897 !important; font-weight: normal !important;}
+.boxCategoria a,.boxCategoria{ color:#949897 !important;}
+/*medias querys*/
+@media only screen and (max-width: 600px) {
+	.menuSupenso{ text-align: right; left: -500px; width: 95%; position: fixed; top:0;  height: 100%; z-index: 1000; background: #c83579}
+
+	.b_cidade i,.b_categoria i{ display:	block}
+	.b_cidade,.b_categoria{text-align: center;    line-height: 3.6em;}
+	.b_botao{border-left: none;}
+	.b_cidade{ border: none !important;}
+	.buscador input{border-bottom: 1px solid #333 !important}
+	.categorias h1,.empresas h1{ font-size: 1.5em; text-align: center; color: #757575}
+.categorias{ background-color: #e0e9e6;  padding-bottom: 5px;cursor:pointer}
+
+.boxCategoria{ line-height: 40px; background: #fff; border: 1px solid #e0e9e6;-webkit-border-radius: 10px; height: 40px; -moz-border-radius: 10px;border-radius: 10px;  text-align: left !important }
+	.boxCategoria i{ font-size:1.3em; margin: 0 25px 0 0; float: left; line-height: 40px; }
+
+	
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 480px) {
+
+}
+
+@media only screen and (max-width: 1024px) {
+
+}
