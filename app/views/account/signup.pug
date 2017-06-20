@@ -1,23 +1,129 @@
 extends ../layouts/default
 
 block content
-  h3 Sign up
-  .row
-    form.col.s12(id='signup-form', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
+  section.cadastro
+    .container
       .row
-        .input-field.col.s12
-          input.validate(type='email', name='email', id='email', autofocus, required)
-          label(for='email') Email
-      .row
-        .input-field.col.s12.m6
-          input.validate(type='password', name='password', id='password', required)
-          label(for='password') Password
-        .input-field.col.s12.m6
-          input.form-control(type='password', name='confirmPassword', id='confirmPassword', required)
-          label.col-sm-3.control-label(for='confirmPassword') Confirm Password
-      .row
-        .input-field.col.s12
-          button.btn.waves-effect.waves-light(type='submit')
-            | Signup
-            i.material-icons.right send
+        .col.s12.breadcrumb
+          a(href='#!')
+            i.pink-text.material-icons home
+          i.material-icons navigate_next
+          a(href='#!') Cadastro
+        .col.s12.m6.l6
+          img(src='img/facebotao.jpg')
+          small Não se preocupe, nunca publicamos sem a sua permissão.
+          form(id='signup-form', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            label(for='first_name') Primeiro Nome
+            input#first_name.validate(placeholder='Primeiro Nome', type='text')
+            label(for='email', data-error='wrong', data-success='right') Email
+            input#email.validate(placeholder='E-mail', type='email')
+            label(for='password') Senha
+            input#confirm_password.validate(placeholder='Senha', type='password')
+            label(for='confirm_password') Confirmar Senha
+            input#password.validate(placeholder='Confirmar Senha', type='password')
+            label(for='secound_name') Segundo nome
+            input#secound_name.validate(placeholder='Segundo Nome', type='text')
+            label ANIVERSÁRIO
+            .row
+              .input-field.col.s4
+                select
+                  option(value='', disabled='', selected='') DIA
+                  option(value='1') 1
+                  option(value='2') 2
+                  option(value='3') 3
+                  option(value='4') 4
+                  option(value='5') 5
+                  option(value='6') 6
+                  option(value='7') 7
+                  option(value='8') 8
+                  option(value='9') 9
+                  option(value='10') 10
+                  option(value='11') 11
+                  option(value='12') 12
+                  option(value='13') 13
+                  option(value='14') 14
+                  option(value='15') 15
+                  option(value='16') 1
+                  option(value='17') 2
+                  option(value='18') 3
+                  option(value='19') 4
+                  option(value='20') 5
+                  option(value='21') 6
+                  option(value='22') 7
+                  option(value='23') 8
+                  option(value='24') 9
+                  option(value='1') 10
+                  option(value='2') 11
+                  option(value='3') 12
+                  option(value='1') 13
+                  option(value='2') 14
+                  option(value='3') 15
+              .input-field.col.s4
+                select
+                  option(value='', disabled='', selected='') MÊS
+                  option(value='1') 1
+                  option(value='2') 2
+                  option(value='3') 3
+                  option(value='4') 4
+                  option(value='5') 5
+                  option(value='6') 6
+                  option(value='7') 7
+                  option(value='8') 8
+                  option(value='9') 9
+                  option(value='10') 10
+                  option(value='11') 11
+                  option(value='12') 12
+              .input-field.col.s4
+                select
+                  option(value='', disabled='', selected='') ANO
+                  option(value='1') 1978
+                  option(value='2') 2
+                  option(value='3') 3
+                  option(value='4') 4
+                  option(value='5') 5
+                  option(value='6') 6
+                  option(value='7') 7
+                  option(value='8') 8
+                  option(value='9') 9
+                  option(value='10') 10
+                  option(value='11') 11
+                  option(value='12') 12
+                  option(value='13') 13
+                  option(value='14') 14
+                  option(value='15') 15
+                  option(value='16') 1
+                  option(value='17') 2
+                  option(value='18') 3
+                  option(value='19') 4
+                  option(value='20') 5
+                  option(value='21') 6
+                  option(value='22') 7
+                  option(value='23') 8
+                  option(value='24') 9
+                  option(value='1') 10
+                  option(value='2') 11
+                  option(value='3') 12
+                  option(value='1') 13
+                  option(value='2') 2009
+                  option(value='3') 2010
+            button.pink.lighten-2.waves-effect.waves-light.btn-large INSCREVA-SE
+        .col.s3.hide-on-small-only
+        .col.s12.m3.l3
+          .logo_lateral
+            img(src='img/logointerno.png')
+            br(clear='all')
+            strong SÃO PAULO
+            p
+              | Rua Baluarte, 123
+              br
+              |                     Vila Olímpia – São Paulo
+              br
+              |                     (11) 0000-0000
+            strong RIO DE JANEIRO
+            p
+              | Av. Rainha Elizabeth, 321
+              br
+              |                     Ipanema – Rio de Janeiro
+              br
+              |                     (21) 1111-1111

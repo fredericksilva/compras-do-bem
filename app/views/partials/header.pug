@@ -1,44 +1,20 @@
-header.navbar-fixed
-  nav
-    .nav-wrapper
-      a.brand-logo(href='/')
-        i.fa.fa-cube
-        | Nome do Projeto
-      ul.right.hide-on-med-and-down
-        li
-          a.dropdown-button(href='#', data-toggle='dropdown', data-activates='pages-menu', data-beloworigin='true') 
-            | Páginas
-            i.material-icons.right arrow_drop_down
-          ul#pages-menu.dropdown-content
+header.interno
+  .container
+    section.navegacao
+      .row
+        .col.s1.m1.l1.white-text
+          a(href='.')
+            img(src='img/logo_fundo_branco.png')
+        .col.abreMenu.s1.m1.l1.white-text
+          i.material-icons menu
+        .col.s9.m9.l9.menuLinks.hide-on-small-only
+          ul
             li
-              a(href='/') Home
+              a(href='#', title='Página inicial') Home
             li
-              a(href='/servico') Servicos Resultado de Busca
+              a(href='#', title='Página inicial') Cadastro
             li
-              a(href='/servico/novo') Novo Servico
-            li
-              a(href='/servico/servico') Perfil de Servico
-            li
-              a(href='/user/eu') Perfil de Usuário
-            li
-              a(href='/dashboard') Dashboard
-        if !user
-          li(class=(title == 'Login') ? 'active' : undefined)
-            a(href='/login') Login
-          li(class=(title == 'Create Account') ? 'active' : undefined)
-            a(href='/signup') Create Account
-        else
-          li(class=(title == 'Account Management') ? 'active' : undefined)
-            a.dropdown-button(href='#', data-toggle='dropdown', data-activates='user-menu', data-beloworigin='true', style='height: 64px;')
-              if user.profile.picture
-                img.responsive-img.circle(src=user.profile.picture, style='width: 45px; margin: 10px 10px 0 0; float: left;')
-              else
-                img.responsive-img.circle(src=user.gravatar(60), style='width: 45px; margin: 10px 10px 0 0; float: left;')
-              span(style='float: left;')= user.profile.name || user.email || user.id
-              i.material-icons.right arrow_drop_down
-            ul#user-menu.dropdown-content
-              li
-                a(href='/account') My Account
-              li.divider
-              li
-                a(href='/logout') Logout
+              a(href='#', title='Página inicial') Perfil Usuário
+        .col.s2.m2.l1.menuLinks.hide-on-small-only
+          a.btn.botaoLogar.transparent Cadastro/Login
+          

@@ -8,6 +8,65 @@ block content
   - action += servico.isNew? '' : '/' + servico
   - if (errors)
     p= errors
+  section.reinvindicacao
+    .container
+      .row
+        .col.s12.breadcrumb
+          a(href='#!')
+            i.pink-text.material-icons home
+          a(href='#!') Serviços
+          i.material-icons navigate_next
+          a(href='#!') Criar serviço
+        .col.s12.m12.l12.bordaInferior
+          h2.subtitles Publicar Negócio
+        form(method="POST", action=action)
+          input(type='hidden', name='_csrf', value=_csrf)
+
+          - if (!servico.isNew)
+            input(type="hidden", name="_method", value="PUT")
+            
+          .col.s12.m7.l7
+            select
+              option(value='', disabled='', selected='') País
+              option(value='1') Brasil 
+              option(value='2') USA
+              option(value='3') Argentina
+            br
+            label(for='nome_negocio') NOME DO NEGÓCIO
+            input#nome_negocio.validate(placeholder='NOME DO NEGÓCIO', type='text')
+            label(for='nome_negocio') ENDEREÇO
+            input#endereco.validate(placeholder='ENDEREÇO', type='text')
+            label(for='endereco') CEP
+            input#cep.validate(placeholder='CEP', type='text')
+            label(for='cep') ENDEREÇO DO SITE
+            input#end_site.validate(placeholder='ENDEREÇO DO SITE', type='text')
+            select(multiple='')
+              option.corinput(value='', disabled='') CATEGORIAS (Selecione 3 categorias. Quanto mais específico, melhor)
+              option(value='1') Option 1
+              option(value='2') Option 2
+              option(value='3') Option 3
+            input#abertoBreve(type='checkbox')
+            label(for='abertoBreve') ESTE NEGÓCIO ABRIU RECENTEMENTE OU ABRIRÁ EM BREVE
+            input#escreverComentario(type='checkbox')
+            label(for='escreverComentario') ESCREVA UM COMENTÁRIO PARA ESTE NEGÓCIO
+          .col.s12.m5.l5
+            iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
+          br(clear='all')
+          .col.s12.m12.l12
+            .exibirComentario
+              .ratting
+                .row
+                  .col.s2.m2.l2
+                    i.material-icons.white-text.estrela star_rate
+                    i.material-icons.white-text.estrela star_rate
+                    i.material-icons.white-text.estrela star_rate
+                    i.material-icons.white-text.estrela star_rate
+                    i.material-icons.white-text.estrela star_rate
+                  .col.s10.m10.l10.grey-text.text-accent-1
+                    | Faça sua avaliação
+              .escreverComentario
+                textarea#textarea1.materialize-textarea(placeholder='Escrever comentário')
+
   h3 Servicos
   .row
     form.col.s12(method="POST", action=action)

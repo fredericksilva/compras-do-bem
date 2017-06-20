@@ -68,6 +68,29 @@ header{ background: url(img/fundo.jpg) center no-repeat; background-size: cover;
 .linkMenu{  margin-top: 20px !important; display: block; clear: both }
 .dropdown-content a{ font-size: 0.8em !important; color:#949897 !important; font-weight: normal !important;}
 .boxCategoria a,.boxCategoria{ color:#949897 !important;}
+/*paginas internas*/
+ .interno{ background: #c83579}
+small{ display: block; margin-bottom: 20px; color:#111; font-weight: 500;}
+label,input{ text-transform: uppercase}
+.breadcrumb {color: #949897 !important; font-size: 0.9em !important; margin:30px 0}
+.breadcrumb i{font-size: 12px !important; margin-right: 5px; float: none !important; }
+.breadcrumb a{color: #949897}
+.ends img{  clear: both; display: block; }
+.reinvindicacao h2 { margin: 25px 0; font-size: 1.5em }
+.reinvindicacao strong{color: #f06292;}
+.reinvindicacao span{ display: block; margin: 25px 0; }
+.reinvindicacao i{ font-size: 0.8em; margin-right: 5px ; display: inline-block;color: #f06292;   }
+.reinvindicar{color: #f06292; font-weight: bold;}
+.bordaInferior{ border-bottom: 1px dotted #898f8c; margin-bottom: 20px }
+.corinput{color: #949897 !important;}
+label, input {
+	text-transform: capitalize !important;
+	color:#949897 !important;
+}
+.exibirComentario{ margin-top: 20px; display: none; border:1px solid #e0e9e5; width: 100%}
+.escreverComentario{ margin: 20px;}
+.ratting{ background: #e0e9e5; color: #eee;}
+.estrela{ height: 20px; width: 10px !important; padding: 4px; font-size: 1.2em !important;}
 /*medias querys*/
 @media only screen and (max-width: 600px) {
 	.menuSupenso{ text-align: right; left: -500px; width: 95%; position: fixed; top:0;  height: 100%; z-index: 1000; background: #c83579}

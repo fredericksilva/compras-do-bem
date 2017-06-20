@@ -38,7 +38,11 @@ $(document).ready(function() {
 
 
     });
+//abrir comentario
+    $("#escreverComentario").click(function(){
+        $(".exibirComentario").fadeToggle(500);
 
+    });
     //fechar menu
     $(".fechar").click(function(){
 
@@ -54,4 +58,7 @@ $(document).ready(function() {
             left: "0",
         }, 500 );
     });
+});
+$(document).ready(function() {
+    $('select').material_select();
 });
