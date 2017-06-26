@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
   admin: { type: Boolean, default: false },
 
   profile: {
-    name: String,
+    first_name: String,
+    second_name: String,
     gender: String,
     location: String,
     website: String,

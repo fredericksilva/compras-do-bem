@@ -1,33 +1,39 @@
-header
+header.pai
   .container
     section.navegacao
       .row
         .col.abreMenu.s1.m1.l1.white-text
           i.material-icons menu
-        .col.s9.m9.l9.menuLinks.hide-on-small-only
+        .col.s8.m9.l9.menuLinks.hide-on-small-only
           ul
-            // <li><a href="#" title="Página inicial">Home</a></li>
             li
-              a(href='/servico', title='Serviço') Serviço
+              a(href='/', title='Home') Home
+            li
+              a(href='/servico/novo', title='Serviço') Serviço
             li
               a(href='/account', title='Perfil Usuário') Perfil Usuário
-        .col.s2.m2.l1.menuLinks.hide-on-small-only
-          if !user
-            a.btn.botaoLogar.transparent(href='/signup', title='Cadastro/Login') Cadastro/Login
-          else
-            a.dropdown-button(href='#', data-toggle='dropdown', data-activates='user-menu', data-beloworigin='true', style='height: 64px;')
+        if !user
+          .col.s4.m2.l2.menuLinks.hide-on-small-only
+            a.btn.botaoLogar.transparent(href='/login', title='Cadastro/Login') Cadastro/Login
+        else
+          .menuLinks.logado.white-text.col.offset-s7.s4.m2.l2
+            .icones_profile_foto
               if user.profile.picture
-                img.responsive-img.circle(src=user.profile.picture, style='width: 45px; margin: 10px 10px 0 0; float: left;')
+                img(src=user.profile.picture)
               else
-                img.responsive-img.circle(src=user.gravatar(60), style='width: 45px; margin: 10px 10px 0 0; float: left;')
-              span(style='float: left;')= user.profile.name || user.email || user.id
-              i.material-icons.right arrow_drop_down
-            ul#user-menu.dropdown-content
-              li
-                a(href='/account') My Account
-              li.divider
-              li
-                a(href='/logout') Logout
+                img(src=user.gravatar(60))
+              .abreprofile.dropdown-button(data-activates='dropdown1')
+                i.material-icons keyboard_arrow_down
+              ul#dropdown1.dropdown-content
+                li(style='margin: 0;')
+                  a(href='/account') Minha Conta
+                li.divider(style='margin: 0;')
+                li(style='margin: 0;')
+                  a(href='/logout') Logout
+            .icones_profile_aviso
+              i.material-icons notifications
+            .icones_profile_mensagem
+              i.material-icons mode_comment
     section.busca
       .row
         .caixaBusca.col.s12

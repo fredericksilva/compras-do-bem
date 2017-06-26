@@ -2,19 +2,39 @@ header.interno
   .container
     section.navegacao
       .row
-        .col.s1.m1.l1.white-text
-          a(href='.')
-            img(src='img/logo_fundo_branco.png')
+        .white-text.hide-on-small-only
+          a.logobranco(href='.')
+            img(src='/img/logo_fundo_branco.png')
         .col.abreMenu.s1.m1.l1.white-text
           i.material-icons menu
-        .col.s9.m9.l9.menuLinks.hide-on-small-only
+        .col.s8.m9.l9.menuLinks.hide-on-small-only
           ul
             li
-              a(href='#', title='Página inicial') Home
+              a(href='/', title='Home') Home
             li
-              a(href='#', title='Página inicial') Cadastro
+              a(href='/servico/novo', title='Serviço') Serviço
             li
-              a(href='#', title='Página inicial') Perfil Usuário
-        .col.s2.m2.l1.menuLinks.hide-on-small-only
-          a.btn.botaoLogar.transparent Cadastro/Login
+              a(href='/account', title='Perfil Usuário') Perfil Usuário
+        if !user
+          .col.s2.m2.l2.menuLinks.hide-on-small-only
+            a.btn.botaoLogar.transparent(href='/login', title='Cadastro/Login') Cadastro/Login
+        else
+          .menuLinks.logado.white-text.col.offset-s7.s2.m2.l2
+            .icones_profile_foto
+              if user.profile.picture
+                img(src=user.profile.picture)
+              else
+                img(src=user.gravatar(60))
+              .abreprofile.dropdown-button(data-activates='dropdown1')
+                i.material-icons keyboard_arrow_down
+              ul#dropdown1.dropdown-content
+                li(style='margin: 0;')
+                  a(href='/account') Minha Conta
+                li.divider(style='margin: 0;')
+                li(style='margin: 0;')
+                  a(href='/logout') Logout
+            .icones_profile_aviso
+              i.material-icons notifications
+            .icones_profile_mensagem
+              i.material-icons mode_comment
           

@@ -3,7 +3,7 @@ section.menuSupenso
     .fechar.white-text
       | FECHAR 
       i.material-icons clear
-    a.btn.botaoLogar.transparent Cadastro/Login
+    a.btn.botaoLogar.transparent(href='/login', title='Login') Cadastro/Login
     .localizacao
       i.material-icons room
     .buscaMenu
@@ -11,16 +11,9 @@ section.menuSupenso
     .linkMenu
       br(clear='all')
       ul
-        // <li><a href="#" title="Página inicial">Home</a></li>
         li
-          a(href='#', title='Página inicial') Serviço
+          a(href='/', title='Home') Home
         li
-          a(href='#', title='Página inicial') Perfil Usuário
+          a(href='/servico/novo', title='Página inicial') Novo Serviço
         li
-          a(href='#', title='Página inicial') criar serviço
-        li
-          a(href='#', title='Página inicial') serviços por categoria
-        li
-          a(href='#', title='Página inicial') avaliações por categoria
-        li
-          a(href='#', title='Página inicial') perfil usuário
+          a(href='/account', title='Página inicial') Perfil Usuário

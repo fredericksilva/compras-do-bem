@@ -1,8 +1,9 @@
 @charset "utf-8";
 html, body{ height: 100%; color: #949897}
-header{ background: url(img/fundo.jpg) center no-repeat; background-size: cover; position: relative; padding-top: 15px; overflow: hidden }
+header{ background: url(img/fundo.jpg) center no-repeat; background-size: cover; position: relative; padding-top: 15px; }
 .fundoNegro{ display: none; background-color:#333; opacity: 0.90; height: 100%; width: 100%; position: fixed; z-index: 900}
 .abreMenu{ padding: 0 !important; }
+.pai{ overflow: hidden}
 .b_cidade .material-icons, .b_categoria .material-icons {display: block;
 	float: left;
 	margin-top: 7px;
@@ -13,7 +14,7 @@ header{ background: url(img/fundo.jpg) center no-repeat; background-size: cover;
 .menuLinks li a{ color:#fff; font-size: 1em; text-transform: uppercase;  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;}
 .botaoLogar{-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border:1px solid #fff; font-size: 0.8em}
-.botaoLogar:hover{ background-color: #fc0 !important; transition: 0.5s; -webkit-transition:0.5s}
+.botaoLogar:hover{ background-color: #c51f79 !important; transition: 0.5s; -webkit-transition:0.5s}
 .caixaBusca{ padding: 5px;  background: #fff; margin-top:30px; margin-bottom: 30px;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; min-height: 50px; }
 .caixaBusca .row{ margin-bottom: 0;}
 .buscador input{ border: none !important; height: 40px !important; margin: 1px !important}
@@ -62,7 +63,7 @@ header{ background: url(img/fundo.jpg) center no-repeat; background-size: cover;
 .localizacao i{text-align: left; line-height: 34px;}
 .buscaMenu{ text-align: left; line-height: 34px; margin-top: 20px; width: 214px; background-color: #fff; float: right; clear: both;-webkit-border-radius: 10px; height: 34px; -moz-border-radius: 10px;border-radius: 10px;}
 .buscaMenu i{text-align: left; line-height: 34px;}
-.btn{margin-left: -15px !important;}
+.btn{margin-left: -15px !important; margin-top: 5px;}
 .conteudoMenu a{ color:#fff; text-transform: uppercase;}
 .conteudoMenu li{ margin: 8px 0; font-size: 0.9em;}
 .linkMenu{  margin-top: 20px !important; display: block; clear: both }
@@ -83,16 +84,32 @@ label,input{ text-transform: uppercase}
 .reinvindicar{color: #f06292; font-weight: bold;}
 .bordaInferior{ border-bottom: 1px dotted #898f8c; margin-bottom: 20px }
 .corinput{color: #949897 !important;}
+.logobranco {	margin-left: -65px;	float: left;	margin-top: -4px;}
+.abreprofile{ height:41px; float: left;}
+.logado{ margin-top: 10px;}
+.logado i{ font-size: 1.3em; margin: 10px 5px}
+.logado img{ width: 30px; height: 30px; float: left }
+.abreprofile{ float: left; background-color: #9b347b; height: 30px; padding: 0 1px; cursor: pointer }
+.abreprofile i{ font-size: 0.7em; margin: 0 1px !important; line-height: 30px; color: #e0e9e6}
+.icones_profile_mensagem,.icones_profile_aviso,.icones_profile_foto{
+	float: right;
+}
 label, input {
 	text-transform: capitalize !important;
 	color:#949897 !important;
 }
+.logo_lateral img{ width: 100%}
+
 .exibirComentario{ margin-top: 20px; display: none; border:1px solid #e0e9e5; width: 100%}
 .escreverComentario{ margin: 20px;}
 .ratting{ background: #e0e9e5; color: #eee;}
 .estrela{ height: 20px; width: 10px !important; padding: 4px; font-size: 1.2em !important;}
+
+
+
 /*medias querys*/
 @media only screen and (max-width: 600px) {
+	.logobranco { position: absolute; left: 50%;	margin-top: -4px; margin-left: -23px}
 	.menuSupenso{ text-align: right; left: -500px; width: 95%; position: fixed; top:0;  height: 100%; z-index: 1000; background: #c83579}
 
 	.b_cidade i,.b_categoria i{ display:	block}
