@@ -17,8 +17,8 @@ block content
           br
           form(id='signup-form', method='POST')
             input(type='hidden', name='_csrf', value=_csrf)
-            label(for='email', data-error='wrong', data-success='right', name='email', required) Email
-            input#email.validate(placeholder='E-mail', type='email')
+            label(for='email', data-error='wrong', data-success='right') Email
+            input#email.validate(placeholder='E-mail', type='email', name='email', required)
             label(for='password') Senha
             input#confirm_password.validate(placeholder='Senha', type='password', name='password', required)
             .row

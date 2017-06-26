@@ -72,7 +72,7 @@ header{ background: url(img/fundo.jpg) center no-repeat; background-size: cover;
 /*paginas internas*/
  .interno{ background: #c83579}
 small{ display: block; margin-bottom: 20px; color:#111; font-weight: 500;}
-label,input{ text-transform: uppercase}
+label{ text-transform: uppercase}
 .breadcrumb {color: #949897 !important; font-size: 0.9em !important; margin:30px 0}
 .breadcrumb i{font-size: 12px !important; margin-right: 5px; float: none !important; }
 .breadcrumb a{color: #949897}
@@ -95,7 +95,6 @@ label,input{ text-transform: uppercase}
 	float: right;
 }
 label, input {
-	text-transform: capitalize !important;
 	color:#949897 !important;
 }
 .logo_lateral img{ width: 100%}
