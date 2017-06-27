@@ -1,16 +1,39 @@
 extends ../layouts/default
 
 block content
-  h3 Forgot Password
-  .row
-    form.col.s12(method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
+  section.cadastro
+    .container
       .row
-        p Enter your email address below and we will send you password reset instructions.
-        .input-field.col.s12
-          input.validate(type='email', name='email', id='email', autofocus, required)
-          label(for='email') Email
-        .input-field.col.s12
-          button.btn.waves-effect.waves-light(type='submit')
-            | Reset Password
-            i.material-icons.right vpn_key
+        .col.s12.breadcrumb
+          a(href='/')
+            i.pink-text.material-icons home
+          i.material-icons navigate_next
+          a(href='#!') Esqueceu senha
+        .col.s12.m6.l6
+          h5 Preencha o email para o qual deseja resetar a senha.
+          br
+          br
+          form(id='signup-form', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            label(for='email', data-error='wrong', data-success='right') Email
+            input#email.validate(placeholder='E-mail', type='email', name='email', required)
+            button.pink.lighten-2.waves-effect.waves-light.btn-large(type='submit') Login
+        .col.s3.hide-on-small-only
+        .col.s12.m3.l3
+          .logo_lateral
+            img(src='img/logointerno.png')
+            br(clear='all')
+            strong SÃO PAULO
+            p
+              | Rua Baluarte, 123
+              br
+              |                     Vila Olímpia – São Paulo
+              br
+              |                     (11) 0000-0000
+            strong RIO DE JANEIRO
+            p
+              | Av. Rainha Elizabeth, 321
+              br
+              |                     Ipanema – Rio de Janeiro
+              br
+              |                     (21) 1111-1111

@@ -1,17 +1,8 @@
-body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-main {
+.cadastro {
   flex: 1 0 auto;
   margin-bottom: 50px !important;
 }
 
-.btn {
-  margin: 10px;
-}
 .close2 {
   position: absolute;
   right: 15px;

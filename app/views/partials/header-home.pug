@@ -18,11 +18,11 @@ header.pai
         else
           .menuLinks.logado.white-text.col.offset-s7.s4.m2.l2
             .icones_profile_foto
-              if user.profile.picture
-                img(src=user.profile.picture)
-              else
               .abreprofile.dropdown-button(data-activates='dropdown1', data-beloworigin='true', style='padding: 0;')
-                img(src=user.gravatar(60))
+                if user.profile.picture
+                  img(src=user.profile.picture)
+                else
+                  img(src=user.gravatar(60))
                 i.material-icons keyboard_arrow_down
               ul#dropdown1.dropdown-content
                 li(style='margin: 0;')

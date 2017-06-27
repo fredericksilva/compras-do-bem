@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt-nodejs');
-const crypto = require('crypto');
 const mongoose = require('mongoose');
 const slug = require('../../public/js/lib/makeslug');
 
@@ -10,9 +8,59 @@ const servicoSchema = new mongoose.Schema({
   title: { type: String, default: '', trim: true },
   body: { type: String, default: '', trim: true },
   urlized: { type: String, default: '', trim: true },
-  user: { type: mongoose.Schema.ObjectId, ref: 'User' },
+  telefone: { type: String, default: '', trim: true },
+  email: { type: String, default: '', trim: true },
+  site: { type: String, default: '', trim: true },
+  fotos: [String],
+  proprietario: { type: mongoose.Schema.ObjectId, ref: 'User' },
+  proAuth: { type: Boolean, default: false },
   tags: { type: [], get: getTags, set: setTags },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  horarios: {
+    seg: {
+      aberto: { type: Boolean, default: true },
+      hora: { type: Number, min: 0, max: 23 },
+      min: { type: Number, min: 0, max: 59 }
+    },
+    ter: {
+      aberto: { type: Boolean, default: true },
+      hora: { type: Number, min: 0, max: 23 },
+      min: { type: Number, min: 0, max: 59 }
+    },
+    qua: {
+      aberto: { type: Boolean, default: true },
+      hora: { type: Number, min: 0, max: 23 },
+      min: { type: Number, min: 0, max: 59 }
+    },
+    qui: {
+      aberto: { type: Boolean, default: true },
+      hora: { type: Number, min: 0, max: 23 },
+      min: { type: Number, min: 0, max: 59 }
+    },
+    sex: {
+      aberto: { type: Boolean, default: true },
+      hora: { type: Number, min: 0, max: 23 },
+      min: { type: Number, min: 0, max: 59 }
+    },
+    sab: {
+      aberto: { type: Boolean, default: false },
+      hora: { type: Number, min: 0, max: 23 },
+      min: { type: Number, min: 0, max: 59 }
+    },
+    dom: {
+      aberto: { type: Boolean, default: false },
+      hora: { type: Number, min: 0, max: 23 },
+      min: { type: Number, min: 0, max: 59 }
+    }
+  },
+  endereco: {
+    estado: { type: String, default: '', trim: true },
+    cidade: { type: String, default: '', trim: true },
+    rua: { type: String, default: '', trim: true },
+    numero: { type: String, default: '', trim: true },
+    complemento: { type: String, default: '', trim: true },
+    cep: { type: String, default: '', trim: true }
+  }
 }, { timestamps: true });
 
 /**

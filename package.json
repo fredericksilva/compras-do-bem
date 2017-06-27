@@ -14,6 +14,7 @@
     "postinstall": "npm rebuild node-sass"
   },
   "dependencies": {
+    "aws-sdk": "^2.77.0",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
@@ -41,6 +42,7 @@
     "mongoose": "^4.6.6",
     "morgan": "^1.7.0",
     "multer": "^1.2.0",
+    "multer-s3": "^2.7.0",
     "node-foursquare": "^0.3.0",
     "node-linkedin": "^0.5.4",
     "node-sass-middleware": "^0.11.0",

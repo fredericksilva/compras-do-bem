@@ -74,6 +74,7 @@ passport.use(new FacebookStrategy({
           if (err) { return done(err); }
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
+          user.active = true;
           user.profile.name = user.profile.name || `${profile.name.givenName} ${profile.name.familyName}`;
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
@@ -99,6 +100,7 @@ passport.use(new FacebookStrategy({
           const user = new User();
           user.email = profile._json.email;
           user.facebook = profile.id;
+          user.active = true;
           user.tokens.push({ kind: 'facebook', accessToken });
           user.profile.name = `${profile.name.givenName} ${profile.name.familyName}`;
           user.profile.gender = profile._json.gender;
