@@ -3,6 +3,16 @@ const mongoose = require('mongoose');
 const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
 const passport = require('passport');
+const moment = require('moment');
+const jwt = require('jsonwebtoken');
+
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASSWORD
+  }
+});
 
 const User = mongoose.model('User');
 
@@ -39,7 +49,7 @@ exports.postLogin = (req, res, next) => {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', info);
-      return res.redirect('/login');
+      return res.redirect('/signup');
     }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
@@ -88,10 +98,35 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
+  let aniversario
+  if (req.body.aniv_ano && req.body.aniv_mes && req.body.aniv_dia) {
+    aniversario = moment(`${req.body.aniv_ano}-${req.body.aniv_mes}-${req.body.aniv_dia}`);
+  }
+
   const user = new User({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    profile: {
+      first_name: req.body.first_name,
+      second_name: req.body.second_name,
+      aniversario
+    }
   });
+
+  const sendVerificationEmail = (user, token) => {
+    if (!user) { return; }
+    const verificationOptions = {
+      to: user.email,
+      from: 'contato@jardim.in',
+      subject: 'Verifique seu email',
+      html: `Olá,<br><br>Isso é um email confirmação.<br><br> Para confirmar seu email clique no link: <a href="http://${req.hostname}${process.env.NODE_ENV === 'development' ? ':' + req.app.get('port') : '' }/verificacao/${token}" target="_blank">Link</a>`
+    };
+    return transporter.sendMail(verificationOptions)
+      .then(() => {
+        req.flash('success', { msg: 'Enviamos um email de verificação para seu email.' });
+        res.redirect('/');  
+      });
+  };
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
@@ -101,12 +136,68 @@ exports.postSignup = (req, res, next) => {
     }
     user.save((err) => {
       if (err) { return next(err); }
+      var token = jwt.sign(user, process.env.SESSION_SECRET);
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
         }
-        res.redirect('/');
+        sendVerificationEmail(user, token);
       });
+    });
+  });
+};
+
+/**
+ * GET /verificacao/:verifToken
+ * Verifica email.
+ */
+exports.verifyAccount = (req, res, next) => {
+  const token = req.params.verifToken;
+
+  jwt.verify(token, process.env.SESSION_SECRET, function(err, decoded) {
+    if (decoded === undefined) {
+      req.flash('errors', { msg: 'Erro na autenticação do token.' });
+      return res.redirect('/'); 
+    } else {
+      User.findOne({ email: decoded['$__'].scope.email }, (err, user) => {
+        if (err) { return next(err); }
+        if (!user) {
+          req.flash('errors', { msg: 'Esse usuário não existe.' });
+          return res.redirect('/');
+        } else if (user.active) {
+          req.flash('success', { msg: 'Sua conta já está confirmada.' });
+          res.redirect('/');
+        }
+        user.active = true;
+        user.save((err) => {
+          if (err) { return next(err); }
+          req.flash('success', { msg: 'Sua conta foi confirmada.' });
+          res.redirect('/');
+        });
+      });
+    }
+  });
+};
+
+/**
+ * GET /user/:id/makeadmin
+ * Make user admin.
+ */
+exports.makeAdmin = (req, res, next) => {
+  User.findOne({ _id: req.params.id }, (err, user) => {
+    if (err) { return next(err); }
+    if (!user) {
+      req.flash('errors', { msg: 'Esse usuário não existe.' });
+      return res.redirect('/');
+    } else if (user.admin) {
+      req.flash('success', { msg: 'Esse usuário já é admin.' });
+      return res.redirect('/');
+    }
+    user.admin = true;
+    user.save((err) => {
+      if (err) { return next(err); }
+      req.flash('success', { msg: `O usuário ${user.first_name} ${user.second_name} agora é admin.` });
+      res.redirect('/');
     });
   });
 };
@@ -274,13 +365,6 @@ exports.postReset = (req, res, next) => {
 
   const sendResetPasswordEmail = (user) => {
     if (!user) { return; }
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASSWORD
-      }
-    });
     const mailOptions = {
       to: user.email,
       from: 'contato@jardim.in',

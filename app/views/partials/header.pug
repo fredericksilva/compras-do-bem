@@ -24,12 +24,12 @@ header.interno
               if user.profile.picture
                 img(src=user.profile.picture)
               else
+              .abreprofile.dropdown-button(data-activates='dropdown1', data-beloworigin='true', style='padding: 0;')
                 img(src=user.gravatar(60))
-              .abreprofile.dropdown-button(data-activates='dropdown1')
                 i.material-icons keyboard_arrow_down
               ul#dropdown1.dropdown-content
                 li(style='margin: 0;')
-                  a(href='/account') Minha Conta
+                  a(href='/account') Perfil
                 li.divider(style='margin: 0;')
                 li(style='margin: 0;')
                   a(href='/logout') Logout

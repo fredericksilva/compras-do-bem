@@ -22,12 +22,13 @@ passport.deserializeUser((id, done) => {
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
+    console.log('user: ', user);
     if (err) { return done(err); }
+    console.log(password);
     if (!user) {
-      return done(null, false, { msg: `O email ${email} não foi achado.` });
+      return done(null, false, { msg: `Seu email não foi cadastrado ainda. Cadastre-se e faça parte dessa rede!` });
     }
     user.comparePassword(password, (err, isMatch) => {
-      console.log('err: ', err);
       if (err) { return done(err); }
       if (isMatch) {
         return done(null, user);
@@ -228,6 +229,10 @@ passport.use(new GoogleStrategy({
  */
 exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
+    if (!req.user.active) {
+      req.flash('info', { msg: 'Você ainda não verificou seu email. Procure em sua caixa por um email de confirmação e clique no link.' });
+      res.redirect('/')
+    }
     return next();
   }
   res.redirect('/login');

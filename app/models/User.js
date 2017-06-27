@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   google: String,
   tokens: Array,
   admin: { type: Boolean, default: false },
+  active: { type: Boolean, default: false },
 
   profile: {
     first_name: String,
@@ -20,7 +21,8 @@ const userSchema = new mongoose.Schema({
     gender: String,
     location: String,
     website: String,
-    picture: String
+    picture: String,
+    aniversario: Date
   }
 }, { timestamps: true });
 

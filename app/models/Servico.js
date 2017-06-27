@@ -45,29 +45,6 @@ servicoSchema.pre('save', function save(next) {
 });
 
 /**
- * Helper method for validating user's password.
- */
-servicoSchema.methods.comparePassword = function comparePassword(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    cb(err, isMatch);
-  });
-};
-
-/**
- * Helper method for getting user's gravatar.
- */
-servicoSchema.methods.gravatar = function gravatar(size) {
-  if (!size) {
-    size = 200;
-  }
-  if (!this.email) {
-    return `https://gravatar.com/avatar/?s=${size}&d=retro`;
-  }
-  const md5 = crypto.createHash('md5').update(this.email).digest('hex');
-  return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
-};
-
-/**
  * Statics
  */
 
@@ -82,7 +59,6 @@ servicoSchema.statics = {
 
   load(urlized) {
     return this.findOne({ urlized })
-      .populate('user', 'name email username')
       .exec();
   },
 

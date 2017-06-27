@@ -17,19 +17,19 @@ block content
           form(id='signup-form', method='POST')
             input(type='hidden', name='_csrf', value=_csrf)
             label(for='first_name') Primeiro Nome
-            input#first_name.validate(placeholder='Primeiro Nome', type='text')
+            input#first_name.validate(placeholder='Primeiro Nome', type='text', name="first_name")
             label(for='second_name') Segundo nome
-            input#second_name.validate(placeholder='Segundo Nome', type='text')
+            input#second_name.validate(placeholder='Segundo Nome', type='text', name="second_name")
             label(for='email', data-error='wrong', data-success='right') Email
-            input#email.validate(placeholder='E-mail', type='email')
+            input#email.validate(placeholder='E-mail', type='email', name="email")
             label(for='password') Senha
-            input#confirm_password.validate(placeholder='Senha', type='password')
-            label(for='confirm_password') Confirmar Senha
-            input#password.validate(placeholder='Confirmar Senha', type='password')
+            input#password.validate(placeholder='Senha', type='password', name="password")
+            label(for='confirmPassword') Confirmar Senha
+            input#confirmPassword.validate(placeholder='Confirmar Senha', type='password', name="confirmPassword")
             label ANIVERSÁRIO
             .row
               .input-field.col.s4
-                select
+                select(name='aniv_dia')
                   option(value='', disabled='', selected='') DIA
                   option(value='1') 1
                   option(value='2') 2
@@ -63,7 +63,7 @@ block content
                   option(value='30') 30
                   option(value='31') 31
               .input-field.col.s4
-                select
+                select(name='aniv_mes')
                   option(value='', disabled='', selected='') MÊS
                   option(value='1') 1
                   option(value='2') 2
@@ -78,7 +78,7 @@ block content
                   option(value='11') 11
                   option(value='12') 12
               .input-field.col.s4
-                select
+                select(name='aniv_ano')
                   option(value='', disabled='', selected='') ANO
                   option(value='1978') 1978
                   option(value='1979') 1979

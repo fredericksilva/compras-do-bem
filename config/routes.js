@@ -32,7 +32,7 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/servico/servico', servicoController.showStatic);
   app.get('/servico/:urlized', servicoController.show);
   app.get('/servico/:urlized/edit', passportConfig.isAuthenticated, servicoController.edit);
-  app.get('/dashboard', passportConfig.isAuthenticated, pagesController.dashboard);
+  app.get('/dashboard', passportConfig.isAuthenticated, passportConfig.isAdmin, pagesController.dashboard);
 
   /**
    * Servico routes.
@@ -52,6 +52,7 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/reset/:token', userController.postReset);
   app.get('/signup', userController.getSignup);
   app.post('/signup', userController.postSignup);
+  app.get('/verificacao/:verifToken', userController.verifyAccount);
   // app.get('/contact', contactController.getContact);
   app.post('/contact', contactController.postContact);
   app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
@@ -59,6 +60,7 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
   app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
+  app.get('/user/:id/makeadmin', passportConfig.isAuthenticated, userController.makeAdmin)
 
   /**
    * API examples routes.

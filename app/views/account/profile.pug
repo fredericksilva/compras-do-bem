@@ -5,6 +5,9 @@ block content
     h3 Informação de Perfil
 
     .row
+      a(href='/user/' + user._id + '/makeadmin') Tornar Admin
+
+    .row
       form.col.s12(action='/account/profile', method='POST')
         input(type='hidden', name='_csrf', value=_csrf)
         .row
