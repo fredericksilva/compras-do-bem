@@ -20,6 +20,7 @@ const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const fs = require('fs');
 const join = require('path').join;
+const device = require('express-device');
 
 const models = join(__dirname, 'app/models');
 // const multer = require('multer');
@@ -84,6 +85,7 @@ app.use(sass({
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(device.capture());
 app.use(expressValidator());
 app.use(session({
   resave: true,

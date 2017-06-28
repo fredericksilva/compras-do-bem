@@ -19,48 +19,69 @@ const servicoSchema = new mongoose.Schema({
   horarios: {
     seg: {
       aberto: { type: Boolean, default: true },
-      hora: { type: Number, min: 0, max: 23 },
-      min: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
+      min_abre: { type: Number, min: 0, max: 59, default: 0 },
+      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
+      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
     },
     ter: {
       aberto: { type: Boolean, default: true },
-      hora: { type: Number, min: 0, max: 23 },
-      min: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
+      min_abre: { type: Number, min: 0, max: 59, default: 0 },
+      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
+      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
     },
     qua: {
       aberto: { type: Boolean, default: true },
-      hora: { type: Number, min: 0, max: 23 },
-      min: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
+      min_abre: { type: Number, min: 0, max: 59, default: 0 },
+      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
+      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
     },
     qui: {
       aberto: { type: Boolean, default: true },
-      hora: { type: Number, min: 0, max: 23 },
-      min: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
+      min_abre: { type: Number, min: 0, max: 59, default: 0 },
+      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
+      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
     },
     sex: {
       aberto: { type: Boolean, default: true },
-      hora: { type: Number, min: 0, max: 23 },
-      min: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
+      min_abre: { type: Number, min: 0, max: 59, default: 0 },
+      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
+      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
     },
     sab: {
       aberto: { type: Boolean, default: false },
-      hora: { type: Number, min: 0, max: 23 },
-      min: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: Number, min: 0, max: 23 },
+      min_abre: { type: Number, min: 0, max: 59 },
+      hora_fecha: { type: Number, min: 0, max: 23 },
+      min_fecha: { type: Number, min: 0, max: 59 }
     },
     dom: {
       aberto: { type: Boolean, default: false },
-      hora: { type: Number, min: 0, max: 23 },
-      min: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: Number, min: 0, max: 23 },
+      min_abre: { type: Number, min: 0, max: 59 },
+      hora_fecha: { type: Number, min: 0, max: 23 },
+      min_fecha: { type: Number, min: 0, max: 59 }
     }
   },
   endereco: {
+    existe: { type: Boolean, default: false },
     estado: { type: String, default: '', trim: true },
     cidade: { type: String, default: '', trim: true },
     rua: { type: String, default: '', trim: true },
     numero: { type: String, default: '', trim: true },
     complemento: { type: String, default: '', trim: true },
     cep: { type: String, default: '', trim: true }
-  }
+  },
+  clipping: [{
+    title: { type: String },
+    img: { type: String },
+    data: { type: Date },
+    link: { type: String }
+  }]
 }, { timestamps: true });
 
 /**

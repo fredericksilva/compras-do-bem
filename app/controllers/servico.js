@@ -53,7 +53,8 @@ exports.index = async(function* (req, res) {
 exports.new = function (req, res){
   res.render('servicos/new', {
     title: 'New servico',
-    servico: new Servico()
+    servico: new Servico(),
+    device: req.device.type === 'phone' || req.device.type === 'tablet'
   });
 };
 
@@ -62,21 +63,26 @@ exports.new = function (req, res){
  * Upload an image
  */
 exports.create = async(function* (req, res) {
-  const servico = new Servico(only(req.body, 'title body tags'));
-  servico.user = req.user;
-  try {
-    yield servico.save();
-    respondOrRedirect({ req, res }, `/servico/${servico.urlized}`, servico, {
-      type: 'success',
-      text: 'Successfully created servico!'
-    });
-  } catch (err) {
-    respond(res, 'servicos/new', {
-      title: servico.title || 'New servico',
-      errors: [err.toString()],
-      servico
-    }, 422);
-  }
+  console.log(req.body)
+  res.render('servicos/new', {
+    title: 'New servico',
+    servico: new Servico()
+  });
+  // const servico = new Servico(only(req.body, 'title body tags'));
+  // servico.user = req.user;
+  // try {
+  //   yield servico.save();
+  //   respondOrRedirect({ req, res }, `/servico/${servico.urlized}`, servico, {
+  //     type: 'success',
+  //     text: 'Successfully created servico!'
+  //   });
+  // } catch (err) {
+  //   respond(res, 'servicos/new', {
+  //     title: servico.title || 'New servico',
+  //     errors: [err.toString()],
+  //     servico
+  //   }, 422);
+  // }
 });
 
 /**
