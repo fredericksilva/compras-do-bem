@@ -1,10 +1,155 @@
 extends ../layouts/default
 
 block styles
-
+  link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css')
+  link(rel='stylesheet', href='https://cdn.datatables.net/1.10.15/css/dataTables.material.min.css')
+  style(type='text/css').
+    .acao {
+      width: 80px;
+    }
+    .btn-floating.btn-table {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      float: right;
+      margin-right: 5px;
+    }
+    .btn-floating.btn-table i {
+      line-height: 30px;
+      font-size: 1rem;
+    }
 
 block content
-  h1 Dashboard
-  .divider
+  section.cadastro
+    .container
+      .row
+        .col.s12.breadcrumb
+          a(href='/')
+            i.pink-text.material-icons home
+          i.material-icons navigate_next
+          a(href='#!') Dashboard
+        .col.s12.m12.l12
+          h2 Categorias
+            a.btn-floating.btn-small.waves-effect.waves-light.pink#categ_modal-btn(href='#', style='margin-left: 20px;')
+              i.material-icons add
+
+          #categ_modal.modal.modal-fixed-footer
+            form#nova-categ(action='/categoria/nova', method='POST')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .modal-content
+                h4 Nova Categoria
+                br
+                .row
+                  .col.s12.m12.l12
+                    label(for='categ_nome') Nome
+                    input#categ_nome(type='text', name='title')
+                  .col.s12.m12.l12
+                    label(for='categ_desc') Descriçao
+                    textarea#categ_desc.materialize-textarea(type='text', name='body')
+              .modal-footer
+                button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Criar Nova
+
+          #categ_edit.modal.modal-fixed-footer
+            form#edit-categ(action='/categoria/_id', method='POST')
+              input(type="hidden", name="_method", value="PUT")
+              input(type='hidden', name='_csrf', value=_csrf)
+              .modal-content
+                h4#categ_title Categoria: X
+                br
+                .row
+                  .col.s12.m12.l12
+                    label(for='categ_nome_edit') Nome
+                    input#categ_nome_edit(type='text', name='title')
+                  .col.s12.m12.l12
+                    label(for='categ_desc_edit') Descriçao
+                    textarea#categ_desc_edit.materialize-textarea(type='text', name='body')
+              .modal-footer
+                button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Editar Categoria
+
+          #categ_delete.modal.modal-fixed-footer
+              .modal-content
+                form#delete-categ(action='/categoria/_id', method='DELETE')
+                  input(type='hidden', name='_csrf', value=_csrf)
+                  h4#categ_title_del Categoria: X
+                  h6 Tem certeza que deseja deletar a categoria?
+                  .row
+                    .col.s12.m12.l12
+                      button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Categoria
+              .modal-footer
+                button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+        .col.s12.m12.l12
+          table#categ_table.highlight.bordered
+            thead
+              tr
+                th Nome
+                th Descricao
+                th Acao
+            tbody
+        
 
 block scripts
+  script(src='//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js')
+  script(src='https://cdn.datatables.net/1.10.15/js/dataTables.material.min.js')
+  script(type='text/javascript').
+    $(document).ready(function() {
+
+      var table = $('#categ_table').DataTable({
+        ajax: {
+          url: '/categorias',
+          type: 'GET'
+        },
+        columns: [
+          { data: 'title' },
+          { data: 'body' },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a><a class="btn-floating btn-table yellow black-text categ_edit" href="#edit/' + meta.row + '"><i class="material-icons">mode_edit</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: false, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
+      $('.dataTables_length').parent().parent().css('display', 'none');
+
+      $('#categ_modal-btn').on('click', function(e) {
+        e.preventDefault();
+        console.log(e);
+
+        $('#categ_modal').modal('open');
+      });
+
+      $(window).on('hashchange', function() {
+        var hash = location.hash;
+        if (hash !== '') {
+          if (hash.split('edit/').length > 1) {
+            var index = hash.split('edit/')[1]
+            var item = table.data()[index]
+            $('#categ_title').text('Categoria: ' + item.title)
+            $('#categ_nome_edit').val(item.title)
+            $('#categ_desc_edit').val(item.body)
+            $('#edit-categ').attr('action', '/categoria/' + item._id + '/edit', item.body)
+            $('#categ_edit').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete/').length > 1) {
+            var index = hash.split('delete/')[1]
+            var item = table.data()[index]
+            $('#categ_title_del').text('Categoria: ' + item.title)
+            $('#categ_nome_delete').val(item.title)
+            $('#categ_desc_delete').val(item.body)
+            $('#delete-categ').attr('action', '/categoria/' + item._id, item.body)
+            $('#categ_delete').modal('open');
+            location.hash = ''
+          } else {
+            location.hash = ''
+          }
+        } else {
+          console.log('vazio')
+        }
+      })
+    })

@@ -15,26 +15,4 @@ header.interno
               a(href='/servico/novo', title='Serviço') Serviço
             li
               a(href='/account', title='Perfil Usuário') Perfil Usuário
-        if !user
-          .col.s2.m2.l2.menuLinks.hide-on-small-only
-            a.btn.botaoLogar.transparent(href='/login', title='Cadastro/Login') Cadastro/Login
-        else
-          .menuLinks.logado.white-text.col.offset-s7.s2.m2.l2
-            .icones_profile_foto
-              .abreprofile.dropdown-button(data-activates='dropdown1', data-beloworigin='true', style='padding: 0;')
-                if user.profile.picture
-                  img(src=user.profile.picture)
-                else
-                  img(src=user.gravatar(60))
-                i.material-icons keyboard_arrow_down
-              ul#dropdown1.dropdown-content
-                li(style='margin: 0;')
-                  a(href='/account') Perfil
-                li.divider(style='margin: 0;')
-                li(style='margin: 0;')
-                  a(href='/logout') Logout
-            .icones_profile_aviso
-              i.material-icons notifications
-            .icones_profile_mensagem
-              i.material-icons mode_comment
-          
+        include user_menu.pug

@@ -9,6 +9,7 @@
  * Controllers (route handlers).
  */
 const pagesController = require('../app/controllers/pages');
+const categoriaController = require('../app/controllers/categoria');
 const userController = require('../app/controllers/user');
 // const apiController = require('../app/controllers/api');
 const servicoController = require('../app/controllers/servico');
@@ -33,12 +34,20 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/servico/:urlized', servicoController.show);
   app.get('/servico/:urlized/edit', passportConfig.isAuthenticated, servicoController.edit);
   app.get('/dashboard', passportConfig.isAuthenticated, passportConfig.isAdmin, pagesController.dashboard);
+  app.get('/categorias', categoriaController.index);
 
   /**
    * Servico routes.
    */
   app.post('/servico', passportConfig.isAuthenticated, servicoController.create);
   app.put('/servico/:urlized', passportConfig.isAuthenticated, servicoController.update);
+
+    /**
+   * Categoria routes.
+   */
+  app.post('/categoria/nova', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.create);
+  app.post('/categoria/:id/edit', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.update);
+  app.delete('/categoria/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.delete);
 
   /**
    * User routes.

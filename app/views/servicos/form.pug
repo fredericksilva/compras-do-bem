@@ -8,7 +8,7 @@ block content
   - action += servico.isNew? '' : '/' + servico
   - if (errors)
     p= errors
-  section.reinvindicacao
+  section.reinvindicacao.cadastro
     .container
       .row
         .col.s12.breadcrumb
@@ -52,27 +52,44 @@ block content
               label Possui Endereço? 
                 br
                 | Não
-                input(type='checkbox', name='endereco.existe')
+                input#edn_existe(type='checkbox', name='endereco.existe')
                 span.lever
                 | Sim
             br
             #endereco(style='display: none;')
               label(for='rua') RUA
               input#rua.validate(placeholder='RUA', type='text', name='rua')
-              label(for='numero') NÚMERO
-              input#numero.validate(placeholder='NÚMERO', type='text', name='numero')
-              label(for='complemento') COMPLEMENTO
-              input#complemento.validate(placeholder='COMPLEMENTO', type='text', name='complemento')
+              .row
+                .col.s12.m6.l6
+                  label(for='numero') NÚMERO
+                  input#numero.validate(placeholder='NÚMERO', type='text', name='numero')
+                .col.s12.m6.l6
+                  label(for='complemento') COMPLEMENTO
+                  input#complemento.validate(placeholder='COMPLEMENTO', type='text', name='complemento')
             br
           .col.s12.m5.l5
             iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
           br(clear='all')
           .col.s12.m12.l12
-            select(multiple='')
-              option.corinput(value='', disabled='') CATEGORIAS (Selecione 3 categorias. Quanto mais específico, melhor)
-              option(value='1') Option 1
-              option(value='2') Option 2
-              option(value='3') Option 3
+            label CATEGORIAS
+            br
+            br
+            .row
+              .col.s6.m4.l4
+                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
+                label(for='filled-in-box') Categoria 1
+              .col.s6.m4.l4
+                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
+                label(for='filled-in-box') Categoria 2
+              .col.s6.m4.l4
+                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
+                label(for='filled-in-box') Categoria 3
+              .col.s6.m4.l4
+                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
+                label(for='filled-in-box') Categoria 4
+              .col.s6.m4.l4
+                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
+                label(for='filled-in-box') Categoria 5
             br
             label tags
             .row
@@ -106,6 +123,7 @@ block content
 block scripts
   script(type='text/javascript').
     $(document).ready(function() {
+
       $('.chips').material_chip();
 
       $('.chips').on('chip.add', function(e, chip) {
@@ -132,4 +150,11 @@ block scripts
         $('#tags').val(current)
       })
 
+      $('#edn_existe').on('change', function(e) {
+        if (e.currentTarget.checked) {
+          $('#endereco').css('display', 'block')
+        } else {
+          $('#endereco').css('display', 'none')
+        }
+      })
     })
