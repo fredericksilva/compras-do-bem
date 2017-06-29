@@ -11,6 +11,7 @@ const servicoSchema = new mongoose.Schema({
   telefone: { type: String, default: '', trim: true },
   email: { type: String, default: '', trim: true },
   site: { type: String, default: '', trim: true },
+  categorias: [String],
   fotos: [String],
   proprietario: { type: mongoose.Schema.ObjectId, ref: 'User' },
   proAuth: { type: Boolean, default: false },

@@ -51,7 +51,6 @@ block content
 
           #categ_edit.modal.modal-fixed-footer
             form#edit-categ(action='/categoria/_id', method='POST')
-              input(type="hidden", name="_method", value="PUT")
               input(type='hidden', name='_csrf', value=_csrf)
               .modal-content
                 h4#categ_title Categoria: X
@@ -68,7 +67,7 @@ block content
 
           #categ_delete.modal.modal-fixed-footer
               .modal-content
-                form#delete-categ(action='/categoria/_id', method='DELETE')
+                form#delete-categ(action='/categoria/_id', method='GET')
                   input(type='hidden', name='_csrf', value=_csrf)
                   h4#categ_title_del Categoria: X
                   h6 Tem certeza que deseja deletar a categoria?
@@ -142,7 +141,7 @@ block scripts
             $('#categ_title_del').text('Categoria: ' + item.title)
             $('#categ_nome_delete').val(item.title)
             $('#categ_desc_delete').val(item.body)
-            $('#delete-categ').attr('action', '/categoria/' + item._id, item.body)
+            $('#delete-categ').attr('action', '/categoria/' + item._id + '/delete', item.body)
             $('#categ_delete').modal('open');
             location.hash = ''
           } else {

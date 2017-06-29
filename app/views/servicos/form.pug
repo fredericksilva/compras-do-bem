@@ -1,7 +1,16 @@
 extends ../layouts/default
 
 block styles
-  
+  style(type='text/css').
+    #image_place img {
+      width: 100% !important;
+      height: auto;
+    }
+    #carroca img {
+      width: 20% !important;
+      height: auto;
+      margin: 5px;
+    }
 
 block content
   - var action = '/servico'
@@ -19,35 +28,43 @@ block content
           a(href='#!') Criar serviço
         .col.s12.m12.l12.bordaInferior
           h2.subtitles Publicar Negócio
-        form(method="POST", action=action)
-          input(type='hidden', name='_csrf', value=_csrf)
+        form(method="POST", action=action, enctype='multipart/form-data')
+          //- input(type='hidden', name='_csrf', value=_csrf)
 
           - if (!servico.isNew)
             input(type="hidden", name="_method", value="PUT")
             
 
           .col.s12.m7.l7
+            if (device)
+              .row
+                .col.s12.m12.l12#image_place
+                .col.s12.m12.l12
+                  #carroca
+
+              .file-field.input-field
+                .btn(style='width: 100%;')
+                  span(style='font-size: 35px; margin-top: 0px;') 
+                    i.material-icons.white-text(style='font-size: 40px; float: left;') image
+                    | Upload Image
+                  input#image-input(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
+                .file-path-wrapper(style='display: none;')
+                  input.file-pat
             br
             label(for='nome_negocio') NOME DO NEGÓCIO
-            input#nome_negocio.validate(placeholder='NOME DO NEGÓCIO', type='text', name='title', autofocus)
+            input#nome_negocio.validate(placeholder='NOME DO NEGÓCIO', type='text', name='title', autofocus, required)
             label(for='site') SITE
             input#end_site.validate(placeholder='SITE', type='text')
             br
             .row
               .col.s12.m6.l6
                 label(for='estado') ESTADO
-                select#estado(name='estado')
+                select#estados(name='estado', required)
                   option.corinput(value='') SELECIONAR...
-                  option(value='1') Option 1
-                  option(value='2') Option 2
-                  option(value='3') Option 3
               .col.s12.m6.l6
                 label(for='cidade') CIDADE
-                select#cidade(name='cidade')
+                select#cidades(name='cidade', required)
                   option.corinput(value='') SELECIONAR...
-                  option(value='1') Option 1
-                  option(value='2') Option 2
-                  option(value='3') Option 3
             .switch
               label Possui Endereço? 
                 br
@@ -68,28 +85,32 @@ block content
                   input#complemento.validate(placeholder='COMPLEMENTO', type='text', name='complemento')
             br
           .col.s12.m5.l5
-            iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
+            //- iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
+            if (!device)
+              .row
+                .col.s12.m12.l12#image_place
+                .col.s12.m12.l12
+                  #carroca
+
+              .file-field.input-field
+                .btn(style='width: 100%;')
+                  span(style='font-size: 35px; margin-top: 0px;') 
+                    i.material-icons.white-text(style='font-size: 40px; float: left;') image
+                    | Upload Image
+                  input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
+                .file-path-wrapper(style='display: none;')
+                  input.file-path.validate(type='text', placeholder='Upload one or more files')
+
           br(clear='all')
           .col.s12.m12.l12
             label CATEGORIAS
             br
             br
             .row
-              .col.s6.m4.l4
-                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
-                label(for='filled-in-box') Categoria 1
-              .col.s6.m4.l4
-                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
-                label(for='filled-in-box') Categoria 2
-              .col.s6.m4.l4
-                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
-                label(for='filled-in-box') Categoria 3
-              .col.s6.m4.l4
-                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
-                label(for='filled-in-box') Categoria 4
-              .col.s6.m4.l4
-                input(type='checkbox', class='filled-in', id='filled-in-box', checked='checked')
-                label(for='filled-in-box') Categoria 5
+              each cat in categorias
+                .col.s6.m4.l4(class=cat._id)
+                  input(type='checkbox', class='filled-in', id=cat._id, name=cat.title)
+                  label(for=cat._id)= cat.title
             br
             label tags
             .row
@@ -97,9 +118,6 @@ block content
                 input(type='hidden', value='', name='tags', id='tags')
                 //- p.caption Tags
                 .input-field.col.s12.chips
-            br
-            input#abertoBreve(type='checkbox')
-            label(for='abertoBreve') ESTE NEGÓCIO ABRIU RECENTEMENTE OU ABRIRÁ EM BREVE
             br
             input#escreverComentario(type='checkbox')
             label(for='escreverComentario') ESCREVA UM COMENTÁRIO PARA ESTE NEGÓCIO
@@ -121,6 +139,37 @@ block content
             button.pink.lighten-2.waves-effect.waves-light.btn-large INSCREVA-SE
 
 block scripts
+  script(src='/js/lib/load-image.min.js')
+  script(type='text/javascript').
+    var image_place = document.getElementById('image_place');
+    var carrosel = document.getElementById('carroca');
+    document.getElementById('image-input').onchange = function (e) {
+      console.log(e.target.files)
+      image_place.innerHTML = ""
+      carrosel.innerHTML = ""
+      for (var i in e.target.files) {
+        if (i === '0') {
+          loadImage(
+            e.target.files[0],
+            function (img) {
+              image_place.appendChild(img);
+            },
+            {maxWidth: 600} // Options
+          );
+        } else {
+          loadImage(
+            e.target.files[i],
+            function (img) {
+              carrosel.appendChild(img);
+            },
+            {maxWidth: 600} // Options
+          );
+          if (e.target.files.length - 1 === i) {
+            $('.carousel').carousel();
+          }
+        }
+      }
+    };
   script(type='text/javascript').
     $(document).ready(function() {
 
@@ -157,4 +206,39 @@ block scripts
           $('#endereco').css('display', 'none')
         }
       })
+
+      $.getJSON('/estados.json', function (data) {
+        var items = [];
+        var options = '<option value="">escolha um estado</option>';	
+
+        $.each(data, function (key, val) {
+          options += '<option value="' + val.nome + '">' + val.nome + '</option>';
+        });
+        $("#estados").html(options);
+        $('select').material_select();
+				
+        $("#estados").change(function () {				
+				
+          var options_cidades = '';
+          var str = "";					
+					
+          $("#estados option:selected").each(function () {
+            str += $(this).text();
+          });
+					
+          $.each(data, function (key, val) {
+            if(val.nome == str) {							
+              $.each(val.cidades, function (key_city, val_city) {
+                options_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
+              });							
+            }
+          });
+
+          $("#cidades").html(options_cidades);
+          $('select').material_select();
+					
+        }).change();		
+			
+      });
+
     })

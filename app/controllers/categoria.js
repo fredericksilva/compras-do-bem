@@ -80,6 +80,20 @@ exports.edit = function (req, res) {
  * Update categoria
  */
 exports.update = async(function* (req, res) {
+  Categoria.findOne({_id: req.params.id}, function (err, categoria) {
+    if (err) return res.send(err);
+    categoria.title = req.body.title;
+    categoria.body = req.body.body;
+
+    categoria.save(function(err) {
+      if (err) return console.log(err);
+
+      respondOrRedirect({ req, res }, '/dashboard', categoria, {
+        type: 'success',
+        title: 'Categoria atualizada!'
+      });
+    });
+  })
   const categoria = req.categoria;
   assign(categoria, only(req.body, 'title body'));
   try {
@@ -99,7 +113,7 @@ exports.update = async(function* (req, res) {
  */
 exports.delete = function (req, res) {
   Categoria.remove({
-    urlized: req.params.urlized
+    _id: req.params.id
   }, (err) => {
     if (err) {
       console.log(err);

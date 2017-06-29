@@ -17,6 +17,24 @@ const contactController = require('../app/controllers/contact');
 
 // const upload = multer({ dest: path.join(__dirname, '../public/uploads') });
 
+const aws = require('aws-sdk');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const s3 = new aws.S3({ accessKeyId: process.env.AWS_ACCESS_KEY_ID, secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY });
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.BUCKET,
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString() + '_' + file.originalname)
+    }
+  })
+});
+
 /**
  * Expose
  */
@@ -39,7 +57,7 @@ module.exports = (app, passportConfig, passport) => {
   /**
    * Servico routes.
    */
-  app.post('/servico', passportConfig.isAuthenticated, servicoController.create);
+  app.post('/servico', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.create);
   app.put('/servico/:urlized', passportConfig.isAuthenticated, servicoController.update);
 
     /**
@@ -47,7 +65,7 @@ module.exports = (app, passportConfig, passport) => {
    */
   app.post('/categoria/nova', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.create);
   app.post('/categoria/:id/edit', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.update);
-  app.delete('/categoria/:id', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.delete);
+  app.get('/categoria/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.delete);
 
   /**
    * User routes.

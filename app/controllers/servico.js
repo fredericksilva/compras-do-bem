@@ -7,6 +7,7 @@ const only = require('only');
 const { respond, respondOrRedirect } = require('../utils');
 
 const Servico = mongoose.model('Servico');
+const Categoria = mongoose.model('Categoria');
 const assign = Object.assign;
 
 /**
@@ -51,10 +52,16 @@ exports.index = async(function* (req, res) {
  * New servico
  */
 exports.new = function (req, res){
-  res.render('servicos/new', {
-    title: 'New servico',
-    servico: new Servico(),
-    device: req.device.type === 'phone' || req.device.type === 'tablet'
+  console.log('novo servico')
+  Categoria.list().then((categorias) => {
+    res.render('servicos/new', {
+      title: 'New servico',
+      servico: new Servico(),
+      categorias,
+      device: req.device.type === 'phone' || req.device.type === 'tablet'
+    });
+  }).catch((err) => {
+    console.log(err)
   });
 };
 
@@ -62,13 +69,27 @@ exports.new = function (req, res){
  * Create an servico
  * Upload an image
  */
-exports.create = async(function* (req, res) {
-  console.log(req.body)
-  res.render('servicos/new', {
-    title: 'New servico',
-    servico: new Servico()
-  });
-  // const servico = new Servico(only(req.body, 'title body tags'));
+exports.create = async(function* (req, res, next) {
+  // console.log(req.body)
+  // console.log('-----')
+  // console.log(req.files)
+  // const servico = new Servico(only(req.body, 'title tags site'));
+  var categorias = []
+  for (var i in req.body) {
+    if (req.body[i] === 'on') {
+      categorias.push(i)
+    }
+  }
+  servico.categorias = categorias;
+  servico.endereco.estado = estado;
+  servico.endereco.cidade = cidade;
+  if (req.body.rua !== '' && req.body.numero !== '' && req.body.complemento !== '') {
+    servico.endereco.existe = true;
+    servico.endereco.rua = req.body.rua;
+    servico.endereco.numero = req.body.numero;
+    servico.endereco.complemento = req.body.complemento;
+  }
+  res.redirect('/servico/novo');
   // servico.user = req.user;
   // try {
   //   yield servico.save();
