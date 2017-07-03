@@ -26,6 +26,7 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: process.env.BUCKET,
+    acl: 'public-read',
     metadata: function (req, file, cb) {
       cb(null, {fieldName: file.fieldname});
     },
@@ -51,14 +52,17 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/servico/servico', servicoController.showStatic);
   app.get('/servico/:urlized', servicoController.show);
   app.get('/servico/:urlized/edit', passportConfig.isAuthenticated, servicoController.edit);
+  app.get('/servico/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.delete);
   app.get('/dashboard', passportConfig.isAuthenticated, passportConfig.isAdmin, pagesController.dashboard);
   app.get('/categorias', categoriaController.index);
+  app.get('/users', userController.index);
+  app.get('/servicos', servicoController.ajax);
 
   /**
    * Servico routes.
    */
   app.post('/servico', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.create);
-  app.put('/servico/:urlized', passportConfig.isAuthenticated, servicoController.update);
+  app.post('/servico/:urlized', passportConfig.isAuthenticated, servicoController.update);
 
     /**
    * Categoria routes.
@@ -87,7 +91,8 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
   app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
-  app.get('/user/:id/makeadmin', passportConfig.isAuthenticated, userController.makeAdmin)
+  app.get('/user/:id/makeadmin', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.makeAdmin);
+  app.get('/user/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.delete);
 
   /**
    * API examples routes.

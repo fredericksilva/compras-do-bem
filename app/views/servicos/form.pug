@@ -5,16 +5,18 @@ block styles
     #image_place img {
       width: 100% !important;
       height: auto;
+      border: 5px solid white;
     }
     #carroca img {
       width: 20% !important;
       height: auto;
       margin: 5px;
+      border: 5px solid white;
     }
 
 block content
   - var action = '/servico'
-  - action += servico.isNew? '' : '/' + servico
+  - action += servico.isNew? '' : '/' + servico.urlized
   - if (errors)
     p= errors
   section.reinvindicacao.cadastro
@@ -28,17 +30,20 @@ block content
           a(href='#!') Criar serviço
         .col.s12.m12.l12.bordaInferior
           h2.subtitles Publicar Negócio
-        form(method="POST", action=action, enctype='multipart/form-data')
-          //- input(type='hidden', name='_csrf', value=_csrf)
+        - var enc = false
+        - if (servico.isNew) { enc = 'multipart/form-data' }
+        form(method="POST", action=action, enctype=enc)
+          input(type='hidden', name='_csrf', value=_csrf)
 
           - if (!servico.isNew)
             input(type="hidden", name="_method", value="PUT")
             
 
           .col.s12.m7.l7
-            if (device)
+            if (device && servico.isNew)
               .row
                 .col.s12.m12.l12#image_place
+
                 .col.s12.m12.l12
                   #carroca
 
@@ -46,15 +51,15 @@ block content
                 .btn(style='width: 100%;')
                   span(style='font-size: 35px; margin-top: 0px;') 
                     i.material-icons.white-text(style='font-size: 40px; float: left;') image
-                    | Upload Image
+                    | Inserir Foto
                   input#image-input(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
                 .file-path-wrapper(style='display: none;')
                   input.file-pat
             br
             label(for='nome_negocio') NOME DO NEGÓCIO
-            input#nome_negocio.validate(placeholder='NOME DO NEGÓCIO', type='text', name='title', autofocus, required)
+            input#nome_negocio.validate(placeholder='NOME DO NEGÓCIO', type='text', name='title', value=servico.title, autofocus, required)
             label(for='site') SITE
-            input#end_site.validate(placeholder='SITE', type='text')
+            input#end_site.validate(placeholder='SITE', type='text', value=servico.site, name='site')
             br
             .row
               .col.s12.m6.l6
@@ -69,37 +74,59 @@ block content
               label Possui Endereço? 
                 br
                 | Não
-                input#edn_existe(type='checkbox', name='endereco.existe')
+                input#edn_existe(type='checkbox', name='endereco.existe', checked=servico.endereco.existe)
                 span.lever
                 | Sim
             br
-            #endereco(style='display: none;')
+            - var existe = 'none'
+            - if (servico.endereco.existe) { existe = 'block' }
+            #endereco(style='display: ' + existe + ';')
               label(for='rua') RUA
-              input#rua.validate(placeholder='RUA', type='text', name='rua')
+              input#rua.validate(placeholder='RUA', type='text', name='rua', value=servico.endereco.rua)
               .row
                 .col.s12.m6.l6
                   label(for='numero') NÚMERO
-                  input#numero.validate(placeholder='NÚMERO', type='text', name='numero')
+                  input#numero.validate(placeholder='NÚMERO', type='text', name='numero', value=servico.endereco.numero)
                 .col.s12.m6.l6
                   label(for='complemento') COMPLEMENTO
-                  input#complemento.validate(placeholder='COMPLEMENTO', type='text', name='complemento')
+                  input#complemento.validate(placeholder='COMPLEMENTO', type='text', name='complemento', value=servico.endereco.complemento)
             br
           .col.s12.m5.l5
             //- iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
-            if (!device)
+            if (!device && servico.isNew)
               .row
                 .col.s12.m12.l12#image_place
+
                 .col.s12.m12.l12
                   #carroca
 
               .file-field.input-field
-                .btn(style='width: 100%;')
+                .btn.pink.lighten-2(style='width: 100%; margin-left: 0 !important;')
                   span(style='font-size: 35px; margin-top: 0px;') 
                     i.material-icons.white-text(style='font-size: 40px; float: left;') image
-                    | Upload Image
+                    | Inserir Fotos
                   input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
                 .file-path-wrapper(style='display: none;')
                   input.file-path.validate(type='text', placeholder='Upload one or more files')
+            if (!servico.isNew)
+              .row
+                .col.s2.m2.l2
+                  | Dia
+                .col.s5.m5.l5
+                  | Abertura
+                .col.s5.m5.l5
+                  | Fechamento
+              .row
+                .col.s2.m2.l2
+                  strong seg
+                .col.s5.m5.l5
+                  select#seg_abertura(value=servico.horarios.seg.hora_abre+':'+servico.horarios.seg.min_abre)
+                    each hora in ['00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30']
+                      option #{hora}
+                .col.s5.m5.l5
+                  select#seg_fechamento(value=servico.horarios.seg.hora_fecha+':'+servico.horarios.seg.min_fecha)
+                    each hora in ['00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30']
+                      option #{hora}
 
           br(clear='all')
           .col.s12.m12.l12
@@ -109,7 +136,9 @@ block content
             .row
               each cat in categorias
                 .col.s6.m4.l4(class=cat._id)
-                  input(type='checkbox', class='filled-in', id=cat._id, name=cat.title)
+                  - var val = false
+                  - if (servico.categorias.indexOf(cat.title) !== -1) { val = 'checked'}
+                  input(type='checkbox', class='filled-in', id=cat._id, name=cat.title, checked=val)
                   label(for=cat._id)= cat.title
             br
             label tags
@@ -136,44 +165,59 @@ block content
                 textarea#textarea1.materialize-textarea(placeholder='Escrever comentário')
             br
             br
-            button.pink.lighten-2.waves-effect.waves-light.btn-large INSCREVA-SE
+            button.pink.lighten-2.waves-effect.waves-light.btn-large Cadastre o Serviço
 
 block scripts
   script(src='/js/lib/load-image.min.js')
-  script(type='text/javascript').
-    var image_place = document.getElementById('image_place');
-    var carrosel = document.getElementById('carroca');
-    document.getElementById('image-input').onchange = function (e) {
-      console.log(e.target.files)
-      image_place.innerHTML = ""
-      carrosel.innerHTML = ""
-      for (var i in e.target.files) {
-        if (i === '0') {
-          loadImage(
-            e.target.files[0],
-            function (img) {
-              image_place.appendChild(img);
-            },
-            {maxWidth: 600} // Options
-          );
-        } else {
-          loadImage(
-            e.target.files[i],
-            function (img) {
-              carrosel.appendChild(img);
-            },
-            {maxWidth: 600} // Options
-          );
-          if (e.target.files.length - 1 === i) {
-            $('.carousel').carousel();
+  - if (servico.isNew)
+    script(type='text/javascript').
+      var image_place = document.getElementById('image_place');
+      var carrosel = document.getElementById('carroca');
+      document.getElementById('image-input').onchange = function (e) {
+        console.log(e.target.files)
+        image_place.innerHTML = ""
+        carrosel.innerHTML = ""
+        for (var i in e.target.files) {
+          if (i === '0') {
+            loadImage(
+              e.target.files[0],
+              function (img) {
+                img.className = 'z-depth-1';
+                image_place.appendChild(img);
+              },
+              {maxWidth: 600} // Options
+            );
+          } else {
+            loadImage(
+              e.target.files[i],
+              function (img) {
+                img.className = 'z-depth-1';
+                carrosel.appendChild(img);
+              },
+              {maxWidth: 600} // Options
+            );
+            if (e.target.files.length - 1 === i) {
+              $('.carousel').carousel();
+            }
           }
         }
-      }
-    };
+      };
   script(type='text/javascript').
     $(document).ready(function() {
-
-      $('.chips').material_chip();
+      let tags = '#{servico.tags}';
+      tags = tags.split(',')
+      if (tags.length > 1) {
+        data = [];
+        for (let tag in tags) {
+          tag = {tag: tags[tag]};
+          data.push(tag);
+        }
+        $('.chips').material_chip({
+          data
+        });
+      } else {
+        $('.chips').material_chip();
+      }
 
       $('.chips').on('chip.add', function(e, chip) {
         let current = $('#tags').val()
@@ -219,26 +263,36 @@ block scripts
 				
         $("#estados").change(function () {				
 				
-          var options_cidades = '';
-          var str = "";					
+          updateCidades(data);
 					
-          $("#estados option:selected").each(function () {
-            str += $(this).text();
-          });
-					
-          $.each(data, function (key, val) {
-            if(val.nome == str) {							
-              $.each(val.cidades, function (key_city, val_city) {
-                options_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
-              });							
-            }
-          });
+        }).change();
 
-          $("#cidades").html(options_cidades);
-          $('select').material_select();
-					
-        }).change();		
-			
+        var estado = '#{servico.endereco.estado}';
+        if (estado !== '') {
+          $('#estados').parent().find('.select-dropdown').val(estado)
+        }
       });
+
+      var updateCidades = function(data) {
+        var options_cidades = '';
+        var str = "";					
+        
+        $("#estados option:selected").each(function () {
+          str += $(this).text();
+        });
+        
+        $.each(data, function (key, val) {
+          if(val.nome == str) {							
+            $.each(val.cidades, function (key_city, val_city) {
+              options_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
+            });
+          }
+        });
+
+        $("#cidades").html(options_cidades);
+        $('select').material_select();
+        var cidade = '#{servico.endereco.cidade}';
+        $('#cidades').parent().find('.select-dropdown').val(cidade);
+      }
 
     })

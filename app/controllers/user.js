@@ -1,10 +1,12 @@
 const bluebird = require('bluebird');
 const mongoose = require('mongoose');
 const crypto = bluebird.promisifyAll(require('crypto'));
+const { respondOrRedirect } = require('../utils');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
+const { wrap: async } = require('co');
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -15,6 +17,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const User = mongoose.model('User');
+
+
+exports.index = async(function* (req, res) {
+  const users = yield User.list();
+  res.json({ data: users });
+});
 
 /**
  * GET /login
@@ -98,7 +106,7 @@ exports.postSignup = (req, res, next) => {
     return res.redirect('/signup');
   }
 
-  let aniversario
+  let aniversario;
   if (req.body.aniv_ano && req.body.aniv_mes && req.body.aniv_dia) {
     aniversario = moment(`${req.body.aniv_ano}-${req.body.aniv_mes}-${req.body.aniv_dia}`);
   }
@@ -124,7 +132,7 @@ exports.postSignup = (req, res, next) => {
     return transporter.sendMail(verificationOptions)
       .then(() => {
         req.flash('success', { msg: 'Enviamos um email de verificação para seu email.' });
-        res.redirect('/');  
+        res.redirect('/');
       });
   };
 
@@ -136,7 +144,7 @@ exports.postSignup = (req, res, next) => {
     }
     user.save((err) => {
       if (err) { return next(err); }
-      var token = jwt.sign(user, process.env.SESSION_SECRET);
+      const token = jwt.sign(user, process.env.SESSION_SECRET);
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
@@ -154,12 +162,12 @@ exports.postSignup = (req, res, next) => {
 exports.verifyAccount = (req, res, next) => {
   const token = req.params.verifToken;
 
-  jwt.verify(token, process.env.SESSION_SECRET, function(err, decoded) {
+  jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
     if (decoded === undefined) {
       req.flash('errors', { msg: 'Erro na autenticação do token.' });
-      return res.redirect('/'); 
+      return res.redirect('/');
     } else {
-      User.findOne({ email: decoded['$__'].scope.email }, (err, user) => {
+      User.findOne({ email: decoded.$__.scope.email }, (err, user) => {
         if (err) { return next(err); }
         if (!user) {
           req.flash('errors', { msg: 'Esse usuário não existe.' });
@@ -177,6 +185,25 @@ exports.verifyAccount = (req, res, next) => {
       });
     }
   });
+};
+
+/**
+ * Delete
+ */
+exports.delete = function (req, res) {
+  if (req.user._id === req.params.id) {
+    req.flash('errors', { msg: 'Você não pode deletar a própria conta.' });
+    return res.redirect('/dashboard');
+  } else {
+    User.remove({
+      _id: req.params.id
+    }, (err) => {
+      if (err) {
+        console.log(err);
+      }
+      respondOrRedirect({ res }, '/dashboard', {});
+    });
+  }
 };
 
 /**
@@ -373,7 +400,7 @@ exports.postReset = (req, res, next) => {
     };
     return transporter.sendMail(mailOptions)
       .then(() => {
-        req.flash('success', { msg: 'Sucesso! Sua senha foi alterada.' });    
+        req.flash('success', { msg: 'Sucesso! Sua senha foi alterada.' });
       });
   };
 

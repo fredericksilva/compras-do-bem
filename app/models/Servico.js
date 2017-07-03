@@ -9,6 +9,7 @@ const servicoSchema = new mongoose.Schema({
   body: { type: String, default: '', trim: true },
   urlized: { type: String, default: '', trim: true },
   telefone: { type: String, default: '', trim: true },
+  whatsapp: { type: String, default: '', trim: true },
   email: { type: String, default: '', trim: true },
   site: { type: String, default: '', trim: true },
   categorias: [String],
@@ -20,52 +21,52 @@ const servicoSchema = new mongoose.Schema({
   horarios: {
     seg: {
       aberto: { type: Boolean, default: true },
-      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
-      min_abre: { type: Number, min: 0, max: 59, default: 0 },
-      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
-      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
+      hora_abre: { type: String, default: '08' },
+      min_abre: { type: String, default: '00' },
+      hora_fecha: { type: String, default: '18' },
+      min_fecha: { type: String, default: '00' }
     },
     ter: {
       aberto: { type: Boolean, default: true },
-      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
-      min_abre: { type: Number, min: 0, max: 59, default: 0 },
-      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
-      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
+      hora_abre: { type: String, default: '08' },
+      min_abre: { type: String, default: '00' },
+      hora_fecha: { type: String, default: '18' },
+      min_fecha: { type: String, default: '00' }
     },
     qua: {
       aberto: { type: Boolean, default: true },
-      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
-      min_abre: { type: Number, min: 0, max: 59, default: 0 },
-      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
-      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
+      hora_abre: { type: String, default: '08' },
+      min_abre: { type: String, default: '00' },
+      hora_fecha: { type: String, default: '18' },
+      min_fecha: { type: String, default: '00' }
     },
     qui: {
       aberto: { type: Boolean, default: true },
-      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
-      min_abre: { type: Number, min: 0, max: 59, default: 0 },
-      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
-      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
+      hora_abre: { type: String, default: '08' },
+      min_abre: { type: String, default: '00' },
+      hora_fecha: { type: String, default: '18' },
+      min_fecha: { type: String, default: '00' }
     },
     sex: {
       aberto: { type: Boolean, default: true },
-      hora_abre: { type: Number, min: 0, max: 23, default: 8 },
-      min_abre: { type: Number, min: 0, max: 59, default: 0 },
-      hora_fecha: { type: Number, min: 0, max: 23, default: 18 },
-      min_fecha: { type: Number, min: 0, max: 59, default: 0 }
+      hora_abre: { type: String, default: '08' },
+      min_abre: { type: String, default: '00' },
+      hora_fecha: { type: String, default: '18' },
+      min_fecha: { type: String, default: '00' }
     },
     sab: {
       aberto: { type: Boolean, default: false },
-      hora_abre: { type: Number, min: 0, max: 23 },
-      min_abre: { type: Number, min: 0, max: 59 },
-      hora_fecha: { type: Number, min: 0, max: 23 },
-      min_fecha: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: String, default: '08' },
+      min_abre: { type: String, default: '08' },
+      hora_fecha: { type: String, default: '08' },
+      min_fecha: { type: String, default: '08' }
     },
     dom: {
       aberto: { type: Boolean, default: false },
-      hora_abre: { type: Number, min: 0, max: 23 },
-      min_abre: { type: Number, min: 0, max: 59 },
-      hora_fecha: { type: Number, min: 0, max: 23 },
-      min_fecha: { type: Number, min: 0, max: 59 }
+      hora_abre: { type: String, default: '08' },
+      min_abre: { type: String, default: '08' },
+      hora_fecha: { type: String, default: '08' },
+      min_fecha: { type: String, default: '08' }
     }
   },
   endereco: {
@@ -144,7 +145,7 @@ servicoSchema.statics = {
     const page = options.page || 0;
     const limit = options.limit || 30;
     return this.find(criteria)
-      .populate('user', 'name username')
+      .populate('proprietario', 'profile email')
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(limit * page)

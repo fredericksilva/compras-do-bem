@@ -21,23 +21,21 @@ $(document).ready(function() {
 //formulario
     // ele pega os valor dos datas e coloca num input hidden, para enviar cok method get para a  busca
 
-    $(".dropForm li").click(function(){
-        var valor =$(this).data('valor');
-        var id =$(this).data('id');
-        var destino =$(this).data('destino');
-        
+    // $(".dropForm li").on('click', function(){
+    //     var valor =$(this).data('valor');
+    //     var id =$(this).data('id');
+    //     var destino =$(this).data('destino');
+
+    //     //troca o valor do campo na busca
+    //     $("."+destino).text(valor);
+    //     var  enviando = "."+destino+"_Enviar";
+    //     //alert(enviando);
+    //     $(enviando).val(id);
+
+    //     //$("."+destino).val(id);
 
 
-        //troca o valor do campo na busca
-        $("."+destino).text(valor);
-        var  enviando = "."+destino+"_Enviar";
-        //alert(enviando);
-        $(enviando).val(id);
-
-        //$("."+destino).val(id);
-
-
-    });
+    // });
 //abrir comentario
     $("#escreverComentario").click(function(){
         $(".exibirComentario").fadeToggle(500);

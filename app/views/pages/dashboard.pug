@@ -1,4 +1,4 @@
-extends ../layouts/default
+extends ../layouts/admin
 
 block styles
   link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css')
@@ -20,62 +20,92 @@ block styles
     }
 
 block content
-  section.cadastro
+  nav.nav-extended(style='background: #c83579;')
+   .container
+      .nav-content
+        ul.tabs.tabs-transparent
+          li.tab
+            a(href='#categorias') Categorias
+          li.tab
+            a(href='#usuarios') Usuários
+          li.tab
+            a(href='#servicos') Serviços
+  #categ_modal.modal.modal-fixed-footer
+    form#nova-categ(action='/categoria/nova', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .modal-content
+        h4 Nova Categoria
+        br
+        .row
+          .col.s12.m12.l12
+            label(for='categ_nome') Nome
+            input#categ_nome(type='text', name='title')
+          .col.s12.m12.l12
+            label(for='categ_desc') Descriçao
+            textarea#categ_desc.materialize-textarea(type='text', name='body')
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Criar Nova
+
+  #categ_edit.modal.modal-fixed-footer
+    form#edit-categ(action='/categoria/_id', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .modal-content
+        h4#categ_title Categoria: X
+        br
+        .row
+          .col.s12.m12.l12
+            label(for='categ_nome_edit') Nome
+            input#categ_nome_edit(type='text', name='title')
+          .col.s12.m12.l12
+            label(for='categ_desc_edit') Descriçao
+            textarea#categ_desc_edit.materialize-textarea(type='text', name='body')
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Editar Categoria
+
+  #categ_delete.modal.modal-fixed-footer
+      .modal-content
+        form#delete-categ(action='/categoria/_id', method='GET')
+          input(type='hidden', name='_csrf', value=_csrf)
+          h4#categ_title_del Categoria: X
+          h6 Tem certeza que deseja deletar a categoria?
+          .row
+            .col.s12.m12.l12
+              button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Categoria
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+  #user_delete.modal.modal-fixed-footer
+      .modal-content
+        form#delete-user(action='/user/_id', method='GET')
+          input(type='hidden', name='_csrf', value=_csrf)
+          h4#user_title_del Usuário: X
+          h6 Tem certeza que deseja deletar o usuario?
+          .row
+            .col.s12.m12.l12
+              button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Usuário
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+  #servico_delete.modal.modal-fixed-footer
+      .modal-content
+        form#delete-servico(action='/servico/_id', method='GET')
+          input(type='hidden', name='_csrf', value=_csrf)
+          h4#servico_title_del Servico: X
+          h6 Tem certeza que deseja deletar o usuario?
+          .row
+            .col.s12.m12.l12
+              button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Servico
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+  section#categorias.cadastro
     .container
       .row
-        .col.s12.breadcrumb
-          a(href='/')
-            i.pink-text.material-icons home
-          i.material-icons navigate_next
-          a(href='#!') Dashboard
         .col.s12.m12.l12
           h2 Categorias
             a.btn-floating.btn-small.waves-effect.waves-light.pink#categ_modal-btn(href='#', style='margin-left: 20px;')
               i.material-icons add
 
-          #categ_modal.modal.modal-fixed-footer
-            form#nova-categ(action='/categoria/nova', method='POST')
-              input(type='hidden', name='_csrf', value=_csrf)
-              .modal-content
-                h4 Nova Categoria
-                br
-                .row
-                  .col.s12.m12.l12
-                    label(for='categ_nome') Nome
-                    input#categ_nome(type='text', name='title')
-                  .col.s12.m12.l12
-                    label(for='categ_desc') Descriçao
-                    textarea#categ_desc.materialize-textarea(type='text', name='body')
-              .modal-footer
-                button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Criar Nova
-
-          #categ_edit.modal.modal-fixed-footer
-            form#edit-categ(action='/categoria/_id', method='POST')
-              input(type='hidden', name='_csrf', value=_csrf)
-              .modal-content
-                h4#categ_title Categoria: X
-                br
-                .row
-                  .col.s12.m12.l12
-                    label(for='categ_nome_edit') Nome
-                    input#categ_nome_edit(type='text', name='title')
-                  .col.s12.m12.l12
-                    label(for='categ_desc_edit') Descriçao
-                    textarea#categ_desc_edit.materialize-textarea(type='text', name='body')
-              .modal-footer
-                button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Editar Categoria
-
-          #categ_delete.modal.modal-fixed-footer
-              .modal-content
-                form#delete-categ(action='/categoria/_id', method='GET')
-                  input(type='hidden', name='_csrf', value=_csrf)
-                  h4#categ_title_del Categoria: X
-                  h6 Tem certeza que deseja deletar a categoria?
-                  .row
-                    .col.s12.m12.l12
-                      button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Categoria
-              .modal-footer
-                button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
 
         .col.s12.m12.l12
           table#categ_table.highlight.bordered
@@ -83,6 +113,48 @@ block content
               tr
                 th Nome
                 th Descricao
+                th Acao
+            tbody
+
+  section#usuarios.cadastro
+    .container
+      .row
+        .col.s6.m6.l6
+          h2 Usuarios
+        .col.s12.m12.l12
+          | Procurar:
+          .input-field.inline
+            input#user_busca(type='text')
+            label(for='user_busca')
+        .col.s12.m12.l12
+          table#user_table.highlight.bordered(style='width: 100%;')
+            thead
+              tr
+                th Nome
+                th Email
+                th Admin
+                th Acao
+            tbody
+
+  section#servicos.cadastro
+    .container
+      .row
+        .col.s6.m6.l6
+          h2 Serviços
+        .col.s12.m12.l12
+          | Procurar:
+          .input-field.inline
+            input#servico_busca(type='text')
+            label(for='servico_busca')
+        .col.s12.m12.l12
+          table#servico_table.highlight.bordered(style='width: 100%;')
+            thead
+              tr
+                th Nome
+                th Email
+                th Telefone
+                th Site
+                th Proprietario
                 th Acao
             tbody
         
@@ -93,7 +165,7 @@ block scripts
   script(type='text/javascript').
     $(document).ready(function() {
 
-      var table = $('#categ_table').DataTable({
+      var categ_table = $('#categ_table').DataTable({
         ajax: {
           url: '/categorias',
           type: 'GET'
@@ -114,6 +186,84 @@ block scripts
         pageLength: 5
       });
 
+      var user_table = $('#user_table').DataTable({
+        ajax: {
+          url: '/users',
+          type: 'GET'
+        },
+        columns: [
+          { 
+            data: 'profile',
+            render: function (data, type, full, meta) {
+              return data.first_name + ' ' + data.second_name
+            },
+            sortable: true
+          },
+          { data: 'email' },
+          { 
+            data: 'admin',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return 'Admin'
+              } else {
+                return '<a href="/user/' + full._id + '/makeadmin" class="btn btn-table">Tornar Admin</a>'
+              }
+            },
+            sortable: false
+          },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete_user/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: true, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
+      var servico_table = $('#servico_table').DataTable({
+        ajax: {
+          url: '/servicos',
+          type: 'GET'
+        },
+        columns: [
+          { 
+            data: 'title',
+            render: function (data, type, full, meta) {
+              console.log(full);
+              return '<a href="/servico/' + full.urlized + '" target="_blank">' + data +'</a>'
+            },
+            sortable: true
+          },
+          { data: 'email' },
+          { data: 'telefone' },
+          { data: 'site' },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              if (full.proprietario) {
+                return full.proprietario.profile.first_name + ' ' + full.proprietario.profile.second_name
+              } else {
+                return 'Não Reinvindicado'
+              }
+            }
+          },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete_servico/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a><a class="btn-floating btn-table yellow black-text categ_edit" href="/servico/' + full.urlized + '/edit"><i class="material-icons">mode_edit</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: true, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
       $('.dataTables_length').parent().parent().css('display', 'none');
 
       $('#categ_modal-btn').on('click', function(e) {
@@ -123,12 +273,16 @@ block scripts
         $('#categ_modal').modal('open');
       });
 
+      $('#user_busca').on('keyup', function() {
+        user_table.search( this.value ).draw();
+      })
+
       $(window).on('hashchange', function() {
         var hash = location.hash;
         if (hash !== '') {
           if (hash.split('edit/').length > 1) {
             var index = hash.split('edit/')[1]
-            var item = table.data()[index]
+            var item = categ_table.data()[index]
             $('#categ_title').text('Categoria: ' + item.title)
             $('#categ_nome_edit').val(item.title)
             $('#categ_desc_edit').val(item.body)
@@ -137,12 +291,24 @@ block scripts
             location.hash = ''
           } else if (hash.split('delete/').length > 1) {
             var index = hash.split('delete/')[1]
-            var item = table.data()[index]
+            var item = categ_table.data()[index]
             $('#categ_title_del').text('Categoria: ' + item.title)
-            $('#categ_nome_delete').val(item.title)
-            $('#categ_desc_delete').val(item.body)
-            $('#delete-categ').attr('action', '/categoria/' + item._id + '/delete', item.body)
+            $('#delete-categ').attr('action', '/categoria/' + item._id + '/delete')
             $('#categ_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_user/').length > 1) {
+            var index = hash.split('delete_user/')[1]
+            var item = user_table.data()[index]
+            $('#user_title_del').text('User: ' + item.profile.first_name + ' ' + item.profile.second_name)
+            $('#delete-user').attr('action', '/user/' + item._id + '/delete')
+            $('#user_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_servico/').length > 1) {
+            var index = hash.split('delete_servico/')[1]
+            var item = servico_table.data()[index]
+            $('#servico_title_del').text('User: ' + item.title)
+            $('#delete-servico').attr('action', '/servico/' + item._id + '/delete')
+            $('#servico_delete').modal('open');
             location.hash = ''
           } else {
             location.hash = ''

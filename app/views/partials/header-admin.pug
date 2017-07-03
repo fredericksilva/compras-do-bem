@@ -1,0 +1,16 @@
+header.interno
+  .container
+    section.navegacao
+      .row(style='margin-bottom: 0;')
+        .white-text.hide-on-small-only
+          a.logobranco(href='.')
+            img(src='/img/logo_fundo_branco.png')
+        .col.abreMenu.s1.m1.l1.white-text.hide-on-med-and-up
+          i.material-icons menu
+        .col.s4.m2.l2.white-text
+          h5 Dashboard
+        .col.s8.m8.l8.menuLinks.hide-on-small-only
+          ul(style='float: right;')
+            li
+              a(href='/', title='Home') Home
+        include user_menu.pug

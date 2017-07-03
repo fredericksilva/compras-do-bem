@@ -3,16 +3,37 @@ header.interno
     section.navegacao
       .row(style='margin-bottom: 0;')
         .white-text.hide-on-small-only
-          a.logobranco(href='.')
+          a.logobranco(href='/')
             img(src='/img/logo_fundo_branco.png')
-        .col.abreMenu.s1.m1.l1.white-text
+        .col.abreMenu.s1.m1.l1.white-text.hide-on-med-and-up
           i.material-icons menu
-        .col.s8.m9.l9.menuLinks.hide-on-small-only
-          ul
-            li
-              a(href='/', title='Home') Home
-            li
-              a(href='/servico/novo', title='Serviço') Serviço
-            li
-              a(href='/account', title='Perfil Usuário') Perfil Usuário
+        .col.s8.m10.l10.menuLinks.hide-on-small-only
+          .busca
+            .row
+              .caixaBusca.col.s12
+                form(method='get', action='')
+                  .col.l5.m12.s12.buscador
+                    input(placeholder='Pesquisar ...', type='text')
+                  .col.m5.l3.s5.b_cidade.dropdown-button(data-activates='cidade', style='overflow: hidden;')
+                    i.material-icons keyboard_arrow_down
+                    span.cid Rio de Janeiro - RJ 
+                  .col.m5.l3.s5.b_categoria.dropdown-button(data-activates='categoria', style='overflow: hidden;')
+                    i.material-icons room
+                    span.cat Todas as categorias 
+                  .col.m2.l1.s2.b_botao
+                    i.material-icons.btnBuscar.pink-text.text-lighten-3 search
+                  input.cid_Enviar(type='hidden', value='', name='categoria')
+                  input.cat_Enviar(type='hidden', value='', name='cidade')
+            ul#cidade.dropForm.dropdown-content
+              li
+              li(data-destino='cid', data-valor='Rio de Janeiro - RJ', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+                a Rio de Janeiro - RJ
+              li(data-destino='cid', data-valor='Minha Localização', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+                a 
+                  i.material-icons send
+                  | Meu Local
+            ul#categoria.dropForm.dropdown-content
+              li
+              li(data-destino='cat', data-valor='Todas as categorias', data-id='')
+                a Todas as categorias
         include user_menu.pug

@@ -1,0 +1,20 @@
+doctype html
+html
+  //- Inclui metatags e CSS
+  include ../partials/head
+
+  body(style='display: flex; min-height: 100vh; flex-direction: column;')
+    .fundoNegro
+    //- Inclui o header
+    include ../partials/menu-suspenso
+    include ../partials/header-admin
+    
+    //- Inclui componente de mensagens de erro / sucesso / info
+    include ../partials/flash
+    //- Conteúdo da página
+    block content
+    
+    //- Inclui Footer
+    include ../partials/footer
+    //- Inclui Scripts
+    include ../partials/foot
