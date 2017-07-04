@@ -30,6 +30,11 @@ block content
             a(href='#usuarios') Usuários
           li.tab
             a(href='#servicos') Serviços
+          li.tab
+            a(href='#avaliacoes') Avaliações
+          li.tab
+            a(href='#updates') Updates
+
   #categ_modal.modal.modal-fixed-footer
     form#nova-categ(action='/categoria/nova', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
@@ -91,10 +96,22 @@ block content
         form#delete-servico(action='/servico/_id', method='GET')
           input(type='hidden', name='_csrf', value=_csrf)
           h4#servico_title_del Servico: X
-          h6 Tem certeza que deseja deletar o usuario?
+          h6 Tem certeza que deseja deletar o serviço?
           .row
             .col.s12.m12.l12
               button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Servico
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+  #update_delete.modal.modal-fixed-footer
+      .modal-content
+        form#delete-update(action='/update/_id', method='GET')
+          input(type='hidden', name='_csrf', value=_csrf)
+          h4#update_title_del Update: X
+          h6 Tem certeza que deseja deletar o update?
+          .row
+            .col.s12.m12.l12
+              button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Update
       .modal-footer
         button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
 
@@ -155,6 +172,34 @@ block content
                 th Telefone
                 th Site
                 th Proprietario
+                th Acao
+            tbody
+  section#updates.cadastro
+    .container
+      .row
+        .col.s6.m6.l6
+          h2 Updates
+        .col.s12.m12.l12
+          table#update_table.highlight.bordered(style='width: 100%;')
+            thead
+              tr
+                th User
+                th Negócio
+                th Tipo
+                th Acao
+            tbody
+
+  section#avaliacoes.cadastro
+    .container
+      .row
+        .col.s6.m6.l6
+          h2 Avaliações
+        .col.s12.m12.l12
+          table#avaliacao_table.highlight.bordered(style='width: 100%;')
+            thead
+              tr
+                th User
+                th Negócio
                 th Acao
             tbody
         
@@ -233,7 +278,6 @@ block scripts
           { 
             data: 'title',
             render: function (data, type, full, meta) {
-              console.log(full);
               return '<a href="/servico/' + full.urlized + '" target="_blank">' + data +'</a>'
             },
             sortable: true
@@ -264,11 +308,85 @@ block scripts
         pageLength: 5
       });
 
+      var avaliacao_table = $('#avaliacao_table').DataTable({
+        ajax: {
+          url: '/avaliacoes',
+          type: 'GET'
+        },
+        columns: [
+          { 
+            data: 'user',
+            render: function (data, type, full, meta) {
+              return '<a href="/user/' + data._id + '" target="_blank">' + data.profile.first_name + ' ' + data.profile.second_name +'</a>'
+            },
+            sortable: true
+          },
+          { 
+            data: 'servico',
+            render: function (data, type, full, meta) {
+              return '<a href="/servico/' + data.urlized + '" target="_blank">' + data.title +'</a>'
+            },
+            sortable: true
+          },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete_avaliacao/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: true, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
+      var update_table = $('#update_table').DataTable({
+        ajax: {
+          url: '/updates',
+          type: 'GET'
+        },
+        columns: [
+          { 
+            data: 'user',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return '<a href="/user/' + data._id + '" target="_blank">' + data.profile.first_name + ' ' + data.profile.second_name +'</a>'
+              } else {
+                return 'Anônimo'
+              }
+            },
+            sortable: true
+          },
+          { 
+            data: 'servico',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return '<a href="/servico/' + data.urlized + '" target="_blank">' + data.title +'</a>'
+              } else {
+                return 'Anônimo'
+              }
+            },
+            sortable: true
+          },
+          { data: 'type' },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete_update/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: true, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
       $('.dataTables_length').parent().parent().css('display', 'none');
 
       $('#categ_modal-btn').on('click', function(e) {
         e.preventDefault();
-        console.log(e);
 
         $('#categ_modal').modal('open');
       });
@@ -309,6 +427,13 @@ block scripts
             $('#servico_title_del').text('User: ' + item.title)
             $('#delete-servico').attr('action', '/servico/' + item._id + '/delete')
             $('#servico_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_update/').length > 1) {
+            var index = hash.split('delete_update/')[1]
+            var item = update_table.data()[index]
+            $('#update_title_del').text('Update: ' + item._id)
+            $('#delete-update').attr('action', '/update/' + item._id + '/delete')
+            $('#update_delete').modal('open');
             location.hash = ''
           } else {
             location.hash = ''

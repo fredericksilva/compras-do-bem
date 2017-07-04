@@ -14,6 +14,8 @@ const userController = require('../app/controllers/user');
 // const apiController = require('../app/controllers/api');
 const servicoController = require('../app/controllers/servico');
 const contactController = require('../app/controllers/contact');
+const updateController = require('../app/controllers/update');
+const avaliacaoController = require('../app/controllers/avaliacao');
 
 // const upload = multer({ dest: path.join(__dirname, '../public/uploads') });
 
@@ -48,21 +50,29 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/user/:id', pagesController.userShow);
   app.get('/servico', servicoController.index);
   app.param('urlized', servicoController.load);
+  app.get('/dashboard', passportConfig.isAuthenticated, passportConfig.isAdmin, pagesController.dashboard);
+  app.get('/categorias', categoriaController.index);
+  app.get('/users', userController.index);
+  app.get('/servicos', servicoController.ajax);
+  app.get('/avaliacoes', avaliacaoController.ajax);
+
+  /**
+   * Updates routes.
+   */
+  app.get('/updates', updateController.list);
+  app.get('/update/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, updateController.delete);
+
+  /**
+   * Servico routes.
+   */
   app.get('/servico/novo', passportConfig.isAuthenticated, servicoController.new);
   app.get('/servico/servico', servicoController.showStatic);
   app.get('/servico/:urlized', servicoController.show);
   app.get('/servico/:urlized/edit', passportConfig.isAuthenticated, servicoController.edit);
   app.get('/servico/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.delete);
-  app.get('/dashboard', passportConfig.isAuthenticated, passportConfig.isAdmin, pagesController.dashboard);
-  app.get('/categorias', categoriaController.index);
-  app.get('/users', userController.index);
-  app.get('/servicos', servicoController.ajax);
-
-  /**
-   * Servico routes.
-   */
   app.post('/servico', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.create);
   app.post('/servico/:urlized', passportConfig.isAuthenticated, servicoController.update);
+  app.post('/servico/:urlized/upload', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.upload);
 
     /**
    * Categoria routes.

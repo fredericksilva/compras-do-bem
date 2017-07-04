@@ -8,10 +8,36 @@ block styles
       border: 5px solid white;
     }
     #carroca img {
-      width: 20% !important;
+      width: calc(25% - 10px) !important;
       height: auto;
       margin: 5px;
       border: 5px solid white;
+    }
+    .upload-image {
+      top: -32px;
+      width: 100%;
+      margin: 0;
+    }
+    .upload-image .btn{
+      width: 100%;
+      padding: 0 30px;
+      margin-left: 0 !important;
+      border-top: 1px solid gainsboro;
+      border-radius: 0 0 5px 5px;
+    }
+    .upload-image span{
+      font-size: 17px !important;
+      margin-top: 0px !important;
+      color: #3fa084 !important;
+      font-weight: 900 !important;
+    }
+    .upload-image i.material-icons {
+      font-size: 40px !important;
+      float: left !important;
+      color: #3fa084 !important;
+    }
+    .character-counter {
+      margin: 0 !important;
     }
 
 block content
@@ -25,11 +51,17 @@ block content
         .col.s12.breadcrumb
           a(href='#!')
             i.pink-text.material-icons home
-          a(href='#!') Serviços
+          a(href='/') Serviços
           i.material-icons navigate_next
-          a(href='#!') Criar serviço
+          if (servico.isNew)
+            a(href='#!') Cadastrar Negócio
+          else
+            a(href='/servico/'+servico.urlized) #{servico.title}
         .col.s12.m12.l12.bordaInferior
-          h2.subtitles Publicar Negócio
+          if (servico.isNew)
+            h2.subtitles Cadastrar Negócio
+          else
+            h2.subtitles Editar Negócio
         - var enc = false
         - if (servico.isNew) { enc = 'multipart/form-data' }
         form(method="POST", action=action, enctype=enc)
@@ -40,35 +72,36 @@ block content
             
 
           .col.s12.m7.l7
-            if (device && servico.isNew)
-              .row
-                .col.s12.m12.l12#image_place
-
-                .col.s12.m12.l12
-                  #carroca
-
-              .file-field.input-field
-                .btn(style='width: 100%;')
-                  span(style='font-size: 35px; margin-top: 0px;') 
-                    i.material-icons.white-text(style='font-size: 40px; float: left;') image
-                    | Inserir Foto
-                  input#image-input(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
-                .file-path-wrapper(style='display: none;')
-                  input.file-pat
             br
-            label(for='nome_negocio') NOME DO NEGÓCIO
+            label(for='nome_negocio') NOME
             input#nome_negocio.validate(placeholder='NOME DO NEGÓCIO', type='text', name='title', value=servico.title, autofocus, required)
-            label(for='site') SITE
-            input#end_site.validate(placeholder='SITE', type='text', value=servico.site, name='site')
+            .file-field.input-field
+              textarea#oque_faz.materialize-textarea(placeholder='DESCREVA BREVEMENTE A ATIVIDADE.', name='body', data-length='120', required)= servico.body
+              label(for='oque_faz') O QUE FAZ?
             br
+            if (!servico.isNew)
+              h5 Contato
+              label(for='site') SITE
+              input#end_site.validate(placeholder='SITE', type='text', value=servico.site, name='site')
+              br
+              label(for='telefone') TELEFONE
+              input#telefone.validate(placeholder='TELEFONE COM CÓDIGO DE AREA', type='tel', name='telefone', value=servico.telefone, autofocus)
+              br
+              label(for='whatsapp') WHATSAPP
+              input#whatsapp.validate(placeholder='WHATSAPP COM CÓDIGO DE AREA', type='tel', name='whatsapp', value=servico.whatsapp, autofocus)
+              br
+              label(for='email') EMAIL
+              input#email.validate(placeholder='EMAIL', type='email', name='email', value=servico.email, autofocus)
+              br
+            h5 Local
             .row
               .col.s12.m6.l6
                 label(for='estado') ESTADO
-                select#estados(name='estado', required)
+                select#estados(name='estado')
                   option.corinput(value='') SELECIONAR...
               .col.s12.m6.l6
                 label(for='cidade') CIDADE
-                select#cidades(name='cidade', required)
+                select#cidades(name='cidade')
                   option.corinput(value='') SELECIONAR...
             .switch
               label Possui Endereço? 
@@ -93,40 +126,60 @@ block content
             br
           .col.s12.m5.l5
             //- iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
-            if (!device && servico.isNew)
+            if (servico.isNew)
               .row
                 .col.s12.m12.l12#image_place
+                  img.z-depth-1(src='/img/padrao-compras.png')
 
-                .col.s12.m12.l12
-                  #carroca
 
-              .file-field.input-field
-                .btn.pink.lighten-2(style='width: 100%; margin-left: 0 !important;')
-                  span(style='font-size: 35px; margin-top: 0px;') 
-                    i.material-icons.white-text(style='font-size: 40px; float: left;') image
+              .file-field.input-field.upload-image
+                .btn.pink.lighten-2(style='margin-left: 0 !important; background-color: rgb(232, 232, 232) !important;')
+                  span
+                    i.material-icons.white-text camera
                     | Inserir Fotos
-                  input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
+                  if (device)
+                    input#image-input(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
+                  else
+                    input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
                 .file-path-wrapper(style='display: none;')
                   input.file-path.validate(type='text', placeholder='Upload one or more files')
+              .row
+                .col.s12.m12.l12
+                  #carroca
             if (!servico.isNew)
+              .row
+                .col.s12.m12.l12
+                  h5 Horários de funcionamento
               .row
                 .col.s2.m2.l2
                   | Dia
-                .col.s5.m5.l5
+                .col.s4.m4.l4
                   | Abertura
-                .col.s5.m5.l5
+                .col.s4.m4.l4
                   | Fechamento
-              .row
                 .col.s2.m2.l2
-                  strong seg
-                .col.s5.m5.l5
-                  select#seg_abertura(value=servico.horarios.seg.hora_abre+':'+servico.horarios.seg.min_abre)
-                    each hora in ['00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30']
-                      option #{hora}
-                .col.s5.m5.l5
-                  select#seg_fechamento(value=servico.horarios.seg.hora_fecha+':'+servico.horarios.seg.min_fecha)
-                    each hora in ['00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30']
-                      option #{hora}
+                  | Aberto?
+                each dia in ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom']
+                  .row
+                    .col.s2.m2.l2(style='padding-top: 10px; text-align: right;')
+                      strong #{dia}
+                    .col.s4.m4.l4
+                      select(id='hora_abre_'+dia, name=dia+'_abre')
+                        each hora in ['00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30']
+                          if (hora === servico.horarios[dia].hora_abre+':'+servico.horarios[dia].min_abre)
+                            option(selected) #{hora}
+                          else
+                            option #{hora}
+                    .col.s4.m4.l4
+                      select(id='hora_fecha_'+dia, name=dia+'_fecha')
+                        each hora in ['00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30','05:00','05:30','06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30']
+                          if (hora === servico.horarios[dia].hora_fecha+':'+servico.horarios[dia].min_fecha)
+                            option(selected) #{hora}
+                          else
+                            option #{hora}
+                    .col.s2.m2.l2(style='padding-top: 15px;')
+                      input(type='checkbox', checked=servico.horarios[dia].aberto, id=dia+'-check', name=dia+'_aberto')
+                      label(for=dia+'-check')
 
           br(clear='all')
           .col.s12.m12.l12
@@ -137,8 +190,8 @@ block content
               each cat in categorias
                 .col.s6.m4.l4(class=cat._id)
                   - var val = false
-                  - if (servico.categorias.indexOf(cat.title) !== -1) { val = 'checked'}
-                  input(type='checkbox', class='filled-in', id=cat._id, name=cat.title, checked=val)
+                  - if (!servico.isNew && categ.indexOf(cat.title) !== -1) { val = 'checked' }
+                  input(type='checkbox', class='filled-in', id=cat._id, name=cat._id, checked=val)
                   label(for=cat._id)= cat.title
             br
             label tags
@@ -147,25 +200,28 @@ block content
                 input(type='hidden', value='', name='tags', id='tags')
                 //- p.caption Tags
                 .input-field.col.s12.chips
+            //- br
+            //- input#escreverComentario(type='checkbox')
+            //- label(for='escreverComentario') ESCREVA UM COMENTÁRIO PARA ESTE NEGÓCIO
+            //- .exibirComentario
+            //-   .ratting
+            //-     .row
+            //-       .col.s2.m2.l2
+            //-         i.material-icons.white-text.estrela star_rate
+            //-         i.material-icons.white-text.estrela star_rate
+            //-         i.material-icons.white-text.estrela star_rate
+            //-         i.material-icons.white-text.estrela star_rate
+            //-         i.material-icons.white-text.estrela star_rate
+            //-       .col.s10.m10.l10.grey-text.text-accent-1
+            //-         | Faça sua avaliação
+            //-   .escreverComentario
+            //-     textarea#textarea1.materialize-textarea(placeholder='Escrever comentário')
             br
-            input#escreverComentario(type='checkbox')
-            label(for='escreverComentario') ESCREVA UM COMENTÁRIO PARA ESTE NEGÓCIO
-            .exibirComentario
-              .ratting
-                .row
-                  .col.s2.m2.l2
-                    i.material-icons.white-text.estrela star_rate
-                    i.material-icons.white-text.estrela star_rate
-                    i.material-icons.white-text.estrela star_rate
-                    i.material-icons.white-text.estrela star_rate
-                    i.material-icons.white-text.estrela star_rate
-                  .col.s10.m10.l10.grey-text.text-accent-1
-                    | Faça sua avaliação
-              .escreverComentario
-                textarea#textarea1.materialize-textarea(placeholder='Escrever comentário')
             br
-            br
-            button.pink.lighten-2.waves-effect.waves-light.btn-large Cadastre o Serviço
+            if (servico.isNew)
+              button.pink.lighten-2.waves-effect.waves-light.btn-large Cadastre Negócio
+            else
+              button.pink.lighten-2.waves-effect.waves-light.btn-large Editar Negócio
 
 block scripts
   script(src='/js/lib/load-image.min.js')
@@ -254,9 +310,14 @@ block scripts
       $.getJSON('/estados.json', function (data) {
         var items = [];
         var options = '<option value="">escolha um estado</option>';	
+        var estado = '#{servico.endereco.estado}';
 
         $.each(data, function (key, val) {
-          options += '<option value="' + val.nome + '">' + val.nome + '</option>';
+          if (estado === val.nome) {
+            options += '<option value="' + val.nome + '" selected>' + val.nome + '</option>';
+          } else {
+            options += '<option value="' + val.nome + '">' + val.nome + '</option>';
+          }
         });
         $("#estados").html(options);
         $('select').material_select();
@@ -267,15 +328,15 @@ block scripts
 					
         }).change();
 
-        var estado = '#{servico.endereco.estado}';
-        if (estado !== '') {
-          $('#estados').parent().find('.select-dropdown').val(estado)
-        }
+        //- if (estado !== '') {
+        //-   $('#estados').parent().find('.select-dropdown').val(estado)
+        //- }
       });
 
       var updateCidades = function(data) {
         var options_cidades = '';
         var str = "";					
+        var cidade = '#{servico.endereco.cidade}';
         
         $("#estados option:selected").each(function () {
           str += $(this).text();
@@ -284,15 +345,18 @@ block scripts
         $.each(data, function (key, val) {
           if(val.nome == str) {							
             $.each(val.cidades, function (key_city, val_city) {
-              options_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
+              if (cidade === val_city) {
+                options_cidades += '<option value="' + val_city + '" selected>' + val_city + '</option>';
+              } else {
+                options_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
+              }
             });
           }
         });
 
         $("#cidades").html(options_cidades);
         $('select').material_select();
-        var cidade = '#{servico.endereco.cidade}';
-        $('#cidades').parent().find('.select-dropdown').val(cidade);
+        //- $('#cidades').parent().find('.select-dropdown').val(cidade);
       }
 
     })

@@ -4,7 +4,7 @@ block styles
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css')
   style(type='text/css').
     .fotoProduto .material-placeholder {
-      height: 450px;
+      height: 400px;
     }
     .fotoProduto img {
       height: 100%;
@@ -24,7 +24,7 @@ block styles
     }
 
     .fotoProduto .carousel.carousel-slider.center {
-      height: 450px !important;
+      height: 400px !important;
     }
 
     .fotoProduto span {
@@ -38,7 +38,46 @@ block styles
     .carousel-item.active.aberto {
       z-index: 1 !important;
     }
-    
+    .image_place img {
+      width: 100% !important;
+      height: auto;
+      border: 5px solid white;
+    }
+    .carroca img {
+      width: calc(50% - 10px) !important;
+      height: auto;
+      margin: 5px;
+      border: 5px solid white;
+    }
+    .carousel .indicators .indicator-item {
+      margin: 40px 4px !important;
+    }
+    .upload-image {
+      top: -32px;
+      width: 100%;
+      margin: 0;
+    }
+    .upload-image .btn{
+      width: 100%;
+      padding: 0 30px;
+      margin-left: 0 !important;
+      border-top: 1px solid gainsboro;
+      border-radius: 0 0 5px 5px;
+    }
+    .upload-image span{
+      font-size: 17px !important;
+      margin-top: 0px !important;
+      color: #3fa084 !important;
+      font-weight: 900 !important;
+    }
+    .upload-image i.material-icons {
+      font-size: 40px !important;
+      float: left !important;
+      color: #3fa084 !important;
+    }
+    .character-counter {
+      margin: 0 !important;
+    }
 
 block content
   section.reinvindicacao
@@ -62,7 +101,7 @@ block content
                 - var coma = ','
                 - if (servico.categorias.length === index + 1) { coma = '' }
                 - if (categoria !== 'endereco.existe')
-                  a(href='#') #{categoria}
+                  a(href='#') #{categoria.title}
                   | #{coma}
             .col.s12.m12.l12
               a(href='/servico/'+servico.urlized+'/edit')
@@ -72,26 +111,78 @@ block content
         .col.s12.m3.l3
           .row
             .col.s12.m12.l12(style='text-align: center;')
-              a.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
+              a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
                 i.material-icons.white-text star_rate
                 | Escrever uma Avaliação
-              strong 15 avaliações 
+              if (servico.avaliacoes.length > 1)
+                strong #{servico.avaliacoes.length} avaliações 
+              else if (servico.avaliacoes.length === 1)
+                strong #{servico.avaliacoes.length} avaliação
+              else
+                strong Nenhuma avaliação
             .col.s6.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
               | Impacto Social
               #rate_heart(style='padding:0 2px;')
-              strong(style='font-size:20px;') 3.0
+              strong(style='font-size:20px;')= servico.soc_med | '0.0'
             .col.s6.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
               | Impacto Ambiental
               #rate_leaf(style='padding:0 2px;')
-              strong(style='font-size:20px;') 3.0
+              strong(style='font-size:20px; color: #7fbd61 !important;')= servico.amb_med | '0.0'
+
+  #modal-avaliar.modal.bottom-sheet(style='max-height: 100%;')
+    form(action='/servico/' + servico.urlized + '/avaliar', method='POST', enctype='multipart/form-data')
+      .modal-content
+        .container
+          h4 Escrever uma avaliação
+          .row
+            .col.s12.m6.l6
+              .row
+                .col.s12.m12.l12
+                  input#avaliar-heart-input(type='hidden', name='avaliar_heart', value='3')
+                  #avaliar-heart
+              .row
+                .col.s12.m12.l12
+                  input#avaliar-leaf-input(type='hidden', name='avaliar_leaf', value='3')
+                  #avaliar-leaf
+              .row
+                .col.s12.m12.l12
+                  #carroca-avaliar.carroca
+
+              .file-field.input-field.upload-image
+                .btn.pink.lighten-2(style='margin-left: 0 !important; background-color: rgb(232, 232, 232) !important;')
+                  span
+                    i.material-icons.white-text camera
+                    | Inserir Fotos
+                  if (device)
+                    input#image-input(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
+                  else
+                    input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
+                .file-path-wrapper(style='display: none;')
+                  input.file-path.validate(type='text', placeholder='Upload one or more files')
+      .modal-footer
+        .container
+          a#avaliar-enviar.btmodal-action.waves-effect.waves-green.btn.left Enviar
+          a.btmodal-action.modal-close.waves-effect.waves-green.btn.right Cancelar
+
   .linhapontilhada
   section.btnDecoracao
     .container
       .row
         .col.s12.m8.l8
-          a.btn.btnacoes.pink.lighten-2(href='#')
-            i.material-icons.left add_a_photo
-            | Adicionar Foto
+          form#foto-form(action='/servico/' + servico.urlized + '/upload', method='POST', enctype='multipart/form-data')
+            .file-field.input-field
+              .btn.btnacoes.pink.lighten-2(style='margin-left: 0 !important; height: 36px;')
+                i.material-icons.left.white-text add_a_photo
+                | Adicionar Foto
+                if (device)
+                  input#image(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
+                else
+                  input#image(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
+              .file-path-wrapper(style='display: none;')
+                input.file-path.validate(type='text', placeholder='Upload one or more files')
+          //- a.btn.btnacoes.pink.lighten-2(href='#modal-foto')
+          //-   i.material-icons.left add_a_photo
+          //-   | Adicionar Foto
           a.btn.btnacoes.pink.lighten-2(href='#')
             i.material-icons.left redo
             | Compartilhar
@@ -102,13 +193,34 @@ block content
           a.tt.pink-text.lighten-2.left-align(href='#')
             i.small.material-icons.left check_circle
             | Reivindicar esta empresa
+
+  #modal-foto.modal.bottom-sheet(style='max-height: 100%;')
+    .modal-content
+      .container
+        h4 Fotos a serem enviadas
+        .row
+          .col.s12.m12.l12
+            #carroca.carroca
+    .modal-footer
+      .container
+        a#foto-enviar.btmodal-action.waves-effect.waves-green.btn.left Enviar
+        a.btmodal-action.modal-close.waves-effect.waves-green.btn.right Cancelar
+
   section.comercio
     .container
       .row
         .col.s12.m8.l8
-          .fotoProduto(style='height: 450px;')
+          .fotoProduto(style='height: 400px;')
             .carousel.carousel-slider.center(data-indicators='true')
-              span.carousel-fixed-item.center(style='bottom: 0;')
+              if (servico.fotos.length > 1)
+                span.carousel-fixed-item.center(style='bottom: 0; height: 100%;')
+                  #prev-wrap(style='position: absolute; height: 100%; padding: calc(36% - 50px) 0; left: 0;')
+                    a(href='#')
+                      i.material-icons(style='font-size: 50px;') chevron_left
+                  #next-wrap(style='position: absolute; height: 100%; padding: calc(36% - 50px) 0; right: 0;')
+                    a(href='#')
+                      i.material-icons(style='font-size: 50px;') chevron_right
+              span.carousel-fixed-item.center(style='bottom: 0; background-color: rgba(206, 206, 206, 0.69) !important;')
                 .row
                   .col.s6.m6.l6.left-align
                     a(href='#')
@@ -120,10 +232,11 @@ block content
                       |  Compartilhar
               if (servico.fotos.length > 0)
                 each foto in servico.fotos
-                  .carousel-item(style='height: 450px;')
+                  .carousel-item(style='height: 400px;')
                     img(src=foto)
               else
-                .carousel-item(style='height: 450px;')
+                .carousel-item(style='height: 400px;')
+                  img(src='/img/padrao-compras.png')
           each loop in [0, 1, 2, 3, 4, 5, 6]
             // loop resultado
             .resultados
@@ -153,11 +266,13 @@ block content
                 | 										(21) 2557-2377
             // fim loop resultado
         .col.s12.m4.l4.dadosComercio
-          span
-            strong.pink-text.lighten-2 Local: 
-            | #{servico.endereco.rua}, #{servico.endereco.numero} #{servico.endereco.complemento}
-            br
-            | #{servico.endereco.estado}, #{servico.endereco.cidade}
+          - if (servico.endereco.estado && servico.endereco.cidade)
+            span
+              strong.pink-text.lighten-2 Local: 
+              - if(servico.endereco.existe)
+                | #{servico.endereco.rua}, #{servico.endereco.numero} #{servico.endereco.complemento}
+                br
+              | #{servico.endereco.estado}, #{servico.endereco.cidade}
           - if (servico.site)
             span
               strong.pink-text.lighten-2 Site: 
@@ -248,9 +363,9 @@ block content
                 - else
                   strong(class='red-text') fechado
           span
-            strong.pink-text.lighten-2 Foto:
-            |  Alexandre Macieira
-          span.pink-text.lighten-2 08 de Junho de 2017
+            a(href='/servico/'+servico.urlized+'/edit')
+              i.material-icons edit
+              | Editar informações
           hr
           h2 EXPLORE SUA CIDADE
           ul.collection
@@ -294,6 +409,7 @@ block content
 
 block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js')
+  script(src='/js/lib/load-image.min.js')
   script(type='text/javascript').
     (function() {
       var ev = new $.Event('style'),
@@ -306,10 +422,16 @@ block scripts
   script(type='text/javascript').
     $(document).ready(function() {
       var car = $('.carousel.carousel-slider').carousel({fullWidth: true});
+      var soc_med = '#{servico.soc_med}' | 0;
+      console.log('soc_med: ', soc_med);
+      var amb_med = '#{servico.amb_med}' | 0;
+      console.log('amb_med: ', amb_med);
+      soc_med = parseFloat(soc_med);
+      amb_med = parseFloat(amb_med);
       $('#rate_heart').rateYo({
         ratedFill: '#c83579',
         starWidth: '20px',
-        rating: 3,
+        rating: soc_med,
         readOnly: true,
         starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z"></path></svg>'
       });
@@ -317,7 +439,78 @@ block scripts
         ratedFill: '#7fbd61',
         starWidth: '20px',
         readOnly: true,
-        rating: 3,
+        rating: amb_med,
         starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z"></path></svg>'
       });
+
+      $('#avaliar-heart').rateYo({
+        ratedFill: '#c83579',
+        starWidth: '40px',
+        rating: 3,
+        fullStar: true,
+        starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z"></path></svg>',
+        onSet: function(rating) {
+          $('#avaliar-heart-input').val(rating);
+        }
+      });
+      $('#avaliar-leaf').rateYo({
+        ratedFill: '#7fbd61',
+        starWidth: '40px',
+        rating: 3,
+        fullStar: true,
+        starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z"></path></svg>',
+        onSet: function(rating) {
+          $('#avaliar-leaf-input').val(rating);
+        }
+      });
+
+      var carrosel = document.getElementById('carroca');
+      document.getElementById('image').onchange = function (e) {
+        carrosel.innerHTML = ""
+        for (var i in e.target.files) {
+          loadImage(
+            e.target.files[i],
+            function (img) {
+              img.className = 'z-depth-1';
+              carrosel.appendChild(img);
+            },
+            {maxWidth: 600} // Options
+          );
+        }
+        $('#modal-foto').modal('open');
+      };
+
+      var carrosel_aval = document.getElementById('carroca-avaliar');
+      document.getElementById('image-input').onchange = function (e) {
+        carrosel_aval.innerHTML = ""
+        for (var i in e.target.files) {
+          loadImage(
+            e.target.files[i],
+            function (img) {
+              img.className = 'z-depth-1';
+              carrosel_aval.appendChild(img);
+            },
+            {maxWidth: 600} // Options
+          );
+        }
+      };
+
+      $('#foto-enviar').on('click', function() {
+        $('#foto-form').submit();
+      })
+
+      $('#prev-wrap a').on('click', function(e) {
+        e.preventDefault();
+        $('.carousel.carousel-slider').carousel('prev');
+      })
+
+      $('#next-wrap a').on('click', function(e) {
+        e.preventDefault();
+        $('.carousel.carousel-slider').carousel('next');
+      })
+
+      $('#avaliar').on('click', function(e) {
+        e.preventDefault();
+        $('#modal-avaliar').modal('open');
+      })
     })

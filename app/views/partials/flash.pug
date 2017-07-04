@@ -1,24 +1,36 @@
 if messages.errors
-  section.flash
-    .container
-      #alert.card-panel.red.darken-1.white-text(style='position: relative;')
-        button#alert-close.close2.btn-flat.transparent(type='button')
-          i.material-icons close
-        for error in messages.errors
-          div= error.msg
+  script(type='text/javascript').
+    var msg = '#{messages.errors[0].msg}'
+    Materialize.toast(msg, 4000)
+
+  //- section.flash
+  //-   .container
+  //-     #alert.card-panel.red.darken-1.white-text(style='position: relative;')
+  //-       button#alert-close.close2.btn-flat.transparent(type='button')
+  //-         i.material-icons close
+  //-       for error in messages.errors
+  //-         div= error.msg
 if messages.info
-  section.flash
-    .container
-      #alert.card-panel.teal.darken-1.white-text(style='position: relative;')
-        button#alert-close.close2.btn-flat.transparent(type='button')
-          i.material-icons close
-        for info in messages.info
-          div= info.msg
+  script(type='text/javascript').
+    var msg = '#{messages.info[0].msg}'
+    Materialize.toast(msg, 4000)
+
+  //- section.flash
+  //-   .container
+  //-     #alert.card-panel.teal.darken-1.white-text(style='position: relative;')
+  //-       button#alert-close.close2.btn-flat.transparent(type='button')
+  //-         i.material-icons close
+  //-       for info in messages.info
+  //-         div= info.msg
 if messages.success
-  section.flash
-    .container
-      #alert.card-panel.green.darken-1.white-text(style='position: relative;')
-        button#alert-close.close2.btn-flat.transparent(type='button')
-          i.material-icons close
-        for success in messages.success
-          div= success.msg
+  script(type='text/javascript').
+    var msg = '#{messages.success[0].msg}'
+    Materialize.toast(msg, 4000)
+  
+  //- section.flash
+  //-   .container
+  //-     #alert.card-panel.green.darken-1.white-text(style='position: relative;')
+  //-       button#alert-close.close2.btn-flat.transparent(type='button')
+  //-         i.material-icons close
+  //-       for success in messages.success
+  //-         div= success.msg

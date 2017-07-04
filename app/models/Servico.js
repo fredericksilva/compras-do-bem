@@ -12,10 +12,14 @@ const servicoSchema = new mongoose.Schema({
   whatsapp: { type: String, default: '', trim: true },
   email: { type: String, default: '', trim: true },
   site: { type: String, default: '', trim: true },
-  categorias: [String],
+  categorias: [{ type: mongoose.Schema.ObjectId, ref: 'Categoria' }],
+  avaliacoes: [{ type: mongoose.Schema.ObjectId, ref: 'Avaliacao' }],
+  soc_med: {type: Number, default: 0, min: 0, max: 5 },
+  amb_med: {type: Number, default: 0, min: 0, max: 5 },
   fotos: [String],
   proprietario: { type: mongoose.Schema.ObjectId, ref: 'User' },
   proAuth: { type: Boolean, default: false },
+  active: { type: Boolean, default: true },
   tags: { type: [], get: getTags, set: setTags },
   createdAt: { type: Date, default: Date.now },
   horarios: {
@@ -130,6 +134,7 @@ servicoSchema.statics = {
 
   load(urlized) {
     return this.findOne({ urlized })
+      .populate('categorias', 'title body img _id')
       .exec();
   },
 
@@ -146,6 +151,7 @@ servicoSchema.statics = {
     const limit = options.limit || 30;
     return this.find(criteria)
       .populate('proprietario', 'profile email')
+      .populate('categorias', 'title body img _id')
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(limit * page)

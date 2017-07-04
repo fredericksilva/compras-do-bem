@@ -8,6 +8,7 @@ const { respond, respondOrRedirect } = require('../utils');
 
 const Servico = mongoose.model('Servico');
 const Categoria = mongoose.model('Categoria');
+const Update = mongoose.model('Update');
 const assign = Object.assign;
 
 /**
@@ -30,7 +31,9 @@ exports.index = async(function* (req, res) {
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const _id = req.query.item;
   const limit = 30;
+  const criteria = { active: true };
   const options = {
+    criteria,
     limit,
     page
   };
@@ -80,11 +83,11 @@ exports.create = async(function* (req, res, next) {
   // console.log(req.body)
   // console.log('-----')
   // console.log(req.files)
-  const servico = new Servico(only(req.body, 'title tags site'));
+  const servico = new Servico(only(req.body, 'title tags body'));
   var categorias = [];
   for (var i in req.body) {
-    if (req.body[i] === 'on') {
-      categorias.push(i)
+    if (req.body[i] === 'on' && i.split(' ').length === 1 && i.split('_').length === 1 && i.split('.').length === 1) {
+      categorias.push(i);
     }
   }
   servico.categorias = categorias;
@@ -96,7 +99,6 @@ exports.create = async(function* (req, res, next) {
     servico.endereco.numero = req.body.numero;
     servico.endereco.complemento = req.body.complemento;
   }
-  console.log(req.files);
   for (var foto in req.files) {
     servico.fotos.push(req.files[foto].location);
   }
@@ -104,6 +106,12 @@ exports.create = async(function* (req, res, next) {
   // servico.user = req.user;
   try {
     yield servico.save();
+    const up = new Update();
+    up.type = 'servico';
+    up.body = servico.body;
+    up.user = req.user._id;
+    up.servico = servico._id;
+    up.save();
     respondOrRedirect({ req, res }, `/servico/${servico.urlized}`, servico, {
       type: 'success',
       text: 'Successfully created servico!'
@@ -122,9 +130,15 @@ exports.create = async(function* (req, res, next) {
  */
 exports.edit = function (req, res) {
   Categoria.list().then((categorias) => {
+    var categ = [];
+    for (var i = 0; i < req.servico.categorias.length; i++) {
+      categ.push(req.servico.categorias[i].title);
+    }
+    console.log('req.servico: ', req.servico);
     res.render('servicos/edit', {
       title: req.servico.title,
       servico: req.servico,
+      categ,
       categorias,
       device: req.device.type === 'phone' || req.device.type === 'tablet'
     });
@@ -138,11 +152,11 @@ exports.edit = function (req, res) {
  */
 exports.update = async(function* (req, res) {
   const servico = req.servico;
-  assign(servico, only(req.body, 'title tags site'));
-  var categorias = [];
-  for (var i in req.body) {
-    if (req.body[i] === 'on') {
-      categorias.push(i)
+  assign(servico, only(req.body, 'title tags site body telefone whatsapp email'));
+  const categorias = [];
+  for (const i in req.body) {
+    if (req.body[i] === 'on' && i.split(' ').length === 1 && i.split('_').length === 1 && i.split('.').length === 1) {
+      categorias.push(i);
     }
   }
   servico.categorias = categorias;
@@ -154,15 +168,57 @@ exports.update = async(function* (req, res) {
     servico.endereco.numero = req.body.numero;
     servico.endereco.complemento = req.body.complemento;
   }
+  var horarios = req.servico.horarios;
+  for (const dia in horarios) {
+    if (horarios.hasOwnProperty(dia) && dia.length === 3 && dia[0] !== '_') {
+      const abre = `${dia}_abre`;
+      const fecha = `${dia}_fecha`;
+      const aberto = `${dia}_aberto`;
+      if (req.body[aberto] && req.body[aberto] === 'on') {
+        req.servico.horarios[dia].aberto = true;
+      } else {
+        req.servico.horarios[dia].aberto = false;
+      }
+      req.servico.horarios[dia].hora_abre = req.body[abre].split(':')[0];
+      req.servico.horarios[dia].min_abre = req.body[abre].split(':')[1];
+      req.servico.horarios[dia].hora_fecha = req.body[fecha].split(':')[0];
+      req.servico.horarios[dia].min_fecha = req.body[fecha].split(':')[1];
+    }
+  }
   try {
     yield servico.save();
     respondOrRedirect({ res }, `/servico/${servico.urlized}`, servico);
   } catch (err) {
+    console.log('err: ', err);
     respond(res, 'servicos/edit', {
       title: `Edit ${servico.title}`,
       errors: [err.toString()],
       servico
     }, 422);
+  }
+});
+
+/**
+ * Upload servico
+ */
+exports.upload = async(function* (req, res) {
+  const servico = req.servico;
+  for (var foto in req.files) {
+    servico.fotos.push(req.files[foto].location);
+  }
+  try {
+    yield servico.save();
+    const up = new Update();
+    up.type = 'fotos';
+    up.user = req.user._id;
+    up.servico = servico._id;
+    up.fotos = servico.fotos;
+    up.save();
+    req.flash('success', { msg: `${req.files.length} fotos enviadas` });
+    res.redirect(`/servico/${servico.urlized}`);
+  } catch (err) {
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${servico.urlized}`);
   }
 });
 

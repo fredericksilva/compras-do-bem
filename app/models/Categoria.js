@@ -4,6 +4,7 @@ const slug = require('../../public/js/lib/makeslug');
 const categoriaSchema = new mongoose.Schema({
   title: { type: String, default: '', trim: true },
   body: { type: String, default: '', trim: true },
+  img: { type: String, default: '', trim: true },
   urlized: { type: String, default: '', trim: true }
 }, { timestamps: true });
 
