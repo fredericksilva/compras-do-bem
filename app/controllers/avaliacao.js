@@ -56,33 +56,6 @@ exports.ajax = async(function* (req, res) {
 });
 
 /**
- * Create an avaliacao
- * Upload an image
- */
-exports.create = async(function* (req, res, next) {
-  const avaliacao = new Avaliacao(only(req.body, 'title tags body'));
-  try {
-    yield avaliacao.save();
-    const up = new Avaliacao();
-    up.type = 'avaliacao';
-    up.body = avaliacao.body;
-    up.user = req.user._id;
-    up.avaliacao = avaliacao._id;
-    up.save();
-    respondOrRedirect({ req, res }, `/avaliacao/${avaliacao.urlized}`, avaliacao, {
-      type: 'success',
-      text: 'Successfully created avaliacao!'
-    });
-  } catch (err) {
-    respond(res, 'avaliacoes/new', {
-      title: avaliacao.title || 'New avaliacao',
-      errors: [err.toString()],
-      avaliacao
-    }, 422);
-  }
-});
-
-/**
  * Avaliacao avaliacao
  */
 exports.update = async(function* (req, res) {

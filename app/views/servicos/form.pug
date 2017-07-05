@@ -42,7 +42,7 @@ block styles
 
 block content
   - var action = '/servico'
-  - action += servico.isNew? '' : '/' + servico.urlized
+  - action += servico.isNew? '' : '/' + servico.urlized + '/put'
   - if (errors)
     p= errors
   section.reinvindicacao.cadastro

@@ -4,7 +4,7 @@ const updateSchema = new mongoose.Schema({
   type: { type: String, default: '', trim: true },
   body: { type: String, default: '', trim: true },
   user: { type: mongoose.Schema.ObjectId, ref: 'User' },
-  avaliacao: { type: mongoose.Schema.ObjectId, ref: 'Update' },
+  avaliacao: { type: mongoose.Schema.ObjectId, ref: 'Avaliacao' },
   servico: { type: mongoose.Schema.ObjectId, ref: 'Servico' },
   fotos: [String]
 }, { timestamps: true });
@@ -45,7 +45,7 @@ updateSchema.statics = {
    * @api private
    */
 
-  list() {
+  list(options) {
     const criteria = {};
     return this.find(criteria)
       .sort({ createdAt: -1 })

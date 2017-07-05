@@ -48,8 +48,8 @@ avaliacaoSchema.statics = {
    * @api private
    */
 
-  list() {
-    const criteria = {};
+  list(options) {
+    const criteria = options || {};
     return this.find(criteria)
       .sort({ createdAt: -1 })
       .populate('user', 'profile')

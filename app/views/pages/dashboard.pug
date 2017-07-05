@@ -115,6 +115,18 @@ block content
       .modal-footer
         button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
 
+  #avaliacao_delete.modal.modal-fixed-footer
+      .modal-content
+        form#delete-avaliacao(action='/avaliacao/_id', method='GET')
+          input(type='hidden', name='_csrf', value=_csrf)
+          h4#avaliacao_title_del Avaliação: X
+          h6 Tem certeza que deseja deletar a avaliação?
+          .row
+            .col.s12.m12.l12
+              button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Avaliação
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
   section#categorias.cadastro
     .container
       .row
@@ -317,14 +329,22 @@ block scripts
           { 
             data: 'user',
             render: function (data, type, full, meta) {
-              return '<a href="/user/' + data._id + '" target="_blank">' + data.profile.first_name + ' ' + data.profile.second_name +'</a>'
+              if (data) {
+                return '<a href="/user/' + data._id + '" target="_blank">' + data.profile.first_name + ' ' + data.profile.second_name +'</a>'
+              } else {
+                return 'Anônimo'
+              }
             },
             sortable: true
           },
           { 
             data: 'servico',
             render: function (data, type, full, meta) {
-              return '<a href="/servico/' + data.urlized + '" target="_blank">' + data.title +'</a>'
+              if (data) {
+                return '<a href="/servico/' + data.urlized + '" target="_blank">' + data.title +'</a>'
+              } else {
+                return 'Anônimo'
+              }
             },
             sortable: true
           },
@@ -361,6 +381,7 @@ block scripts
           { 
             data: 'servico',
             render: function (data, type, full, meta) {
+              console.log(full);
               if (data) {
                 return '<a href="/servico/' + data.urlized + '" target="_blank">' + data.title +'</a>'
               } else {
@@ -434,6 +455,13 @@ block scripts
             $('#update_title_del').text('Update: ' + item._id)
             $('#delete-update').attr('action', '/update/' + item._id + '/delete')
             $('#update_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_avaliacao/').length > 1) {
+            var index = hash.split('delete_avaliacao/')[1]
+            var item = avaliacao_table.data()[index]
+            $('#avaliacao_title_del').text('Avaliacao: ' + item._id)
+            $('#delete-avaliacao').attr('action', '/avaliacao/' + item._id + '/delete')
+            $('#avaliacao_delete').modal('open');
             location.hash = ''
           } else {
             location.hash = ''

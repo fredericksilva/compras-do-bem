@@ -8,6 +8,7 @@ const { respond, respondOrRedirect } = require('../utils');
 
 const Servico = mongoose.model('Servico');
 const Categoria = mongoose.model('Categoria');
+const Avaliacao = mongoose.model('Avaliacao');
 const Update = mongoose.model('Update');
 const assign = Object.assign;
 
@@ -223,15 +224,66 @@ exports.upload = async(function* (req, res) {
 });
 
 /**
+ * Criar a avaliacao
+ */
+exports.avaliar = async(function* (req, res, next) {
+  const avaliacao = new Avaliacao(only(req.body, 'body'));
+  console.log(req.body);
+  const soc = req.body.avaliar_heart;
+  const amb = req.body.avaliar_leaf;
+  avaliacao.soc = soc;
+  avaliacao.amb = amb;
+  avaliacao.servico = req.servico._id;
+  avaliacao.user = req.user._id;
+  for (var foto in req.files) {
+    avaliacao.fotos.push(req.files[foto].location);
+  }
+  try {
+    yield avaliacao.save();
+    const up = new Update();
+    up.type = 'avaliacao';
+    up.body = avaliacao.body;
+    up.user = req.user._id;
+    up.avaliacao = avaliacao._id;
+    up.servico = req.servico._id;
+    up.save();
+    respondOrRedirect({ req, res }, `/servico/${req.servico.urlized}`, avaliacao, {
+      type: 'success',
+      text: 'Avaliação completa! Obrigado!'
+    });
+  } catch (err) {
+    console.log(err);
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${req.servico.urlized}`);
+  }
+});
+/**
  * Show
  */
 exports.show = function (req, res) {
   Categoria.list().then((categorias) => {
-    res.render('servicos/show', {
-      title: req.servico.title,
-      servico: req.servico,
-      categorias,
-      device: req.device.type === 'phone' || req.device.type === 'tablet'
+    Avaliacao.list({ servico: req.servico._id }).then((avaliacoes) => {
+      let amb = 0.0;
+      let soc = 0.0;
+      for (var i = 0; i < avaliacoes.length; i++) {
+        amb += avaliacoes[i].amb;
+        soc += avaliacoes[i].soc;
+      }
+      amb /= avaliacoes.length;
+      soc /= avaliacoes.length;
+      soc = parseFloat(soc).toFixed(1);
+      amb = parseFloat(amb).toFixed(1);
+      res.render('servicos/show', {
+        title: req.servico.title,
+        servico: req.servico,
+        soc,
+        amb,
+        categorias,
+        avaliacoes,
+        device: req.device.type === 'phone' || req.device.type === 'tablet'
+      });
+    }).catch((err) => {
+      console.log(err);
     });
   }).catch((err) => {
     console.log(err);

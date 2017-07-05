@@ -8,8 +8,8 @@ else
         if user.profile.picture
           img(src=user.profile.picture)
         else
-          img(src=user.gravatar(60))
-        i.material-icons keyboard_arrow_down
+          img(src='/img/avatar-default.png')
+        i.material-icons(style='background-color: #3fa084;') keyboard_arrow_down
       ul#dropdown1.dropdown-content
         li(style='margin: 0;')
           a(href='/account') Perfil

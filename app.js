@@ -101,7 +101,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/servico' || req.path.split('upload').length > 1) {
+  if (req.path === '/servico' || req.path.split('upload').length > 1 || req.path.split('avaliar').length > 1) {
     next();
   } else {
     lusca.csrf()(req, res, next);

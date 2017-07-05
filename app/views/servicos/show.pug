@@ -114,23 +114,24 @@ block content
               a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
                 i.material-icons.white-text star_rate
                 | Escrever uma Avaliação
-              if (servico.avaliacoes.length > 1)
-                strong #{servico.avaliacoes.length} avaliações 
-              else if (servico.avaliacoes.length === 1)
-                strong #{servico.avaliacoes.length} avaliação
+              if (avaliacoes.length > 1)
+                strong #{avaliacoes.length} avaliações 
+              else if (avaliacoes.length === 1)
+                strong #{avaliacoes.length} avaliação
               else
                 strong Nenhuma avaliação
             .col.s6.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
               | Impacto Social
               #rate_heart(style='padding:0 2px;')
-              strong(style='font-size:20px;')= servico.soc_med | '0.0'
+              strong(style='font-size:20px;') #{soc}
             .col.s6.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
               | Impacto Ambiental
               #rate_leaf(style='padding:0 2px;')
-              strong(style='font-size:20px; color: #7fbd61 !important;')= servico.amb_med | '0.0'
+              strong(style='font-size:20px; color: #7fbd61 !important;') #{amb}
 
   #modal-avaliar.modal.bottom-sheet(style='max-height: 100%;')
-    form(action='/servico/' + servico.urlized + '/avaliar', method='POST', enctype='multipart/form-data')
+    form#avaliar-form(method='POST', action='/servico/' + servico.urlized + '/avaliar', enctype='multipart/form-data')
+      input#urlized(type='hidden', name='urlized', value=servico.urlized)
       .modal-content
         .container
           h4 Escrever uma avaliação
@@ -138,9 +139,17 @@ block content
             .col.s12.m6.l6
               .row
                 .col.s12.m12.l12
+                  h5 Impacto Social 
+                    strong#nota_soc(style='font-size: 40px; margin-left: 10px; color: #c83579 !important;') 3
+                  p(style='margin-top:0; margin-bottom: 20px;') De uma graduação para o impacto social desse negócio
+                .col.s12.m12.l12
                   input#avaliar-heart-input(type='hidden', name='avaliar_heart', value='3')
                   #avaliar-heart
               .row
+                .col.s12.m12.l12
+                  h5 Impacto Ambiental 
+                    strong#nota_amb(style='font-size: 40px; margin-left: 10px; color: #7fbd61 !important;') 3
+                  p(style='margin-top:0; margin-bottom: 20px;') De uma graduação para o impacto ambiental desse negócio
                 .col.s12.m12.l12
                   input#avaliar-leaf-input(type='hidden', name='avaliar_leaf', value='3')
                   #avaliar-leaf
@@ -159,9 +168,16 @@ block content
                     input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
                 .file-path-wrapper(style='display: none;')
                   input.file-path.validate(type='text', placeholder='Upload one or more files')
+            .col.s12.m6.l6
+              .row
+                .col.s12.m12.l12
+                  h5 Descreva sua experiência
+                  .file-field.input-field
+                    textarea#descreva.materialize-textarea(placeholder='DESCRIÇÃO', name='body', required)
+                    label(for='descreva')
       .modal-footer
         .container
-          a#avaliar-enviar.btmodal-action.waves-effect.waves-green.btn.left Enviar
+          button#avaliar-enviar.btmodal-action.waves-effect.waves-green.btn.left Enviar
           a.btmodal-action.modal-close.waves-effect.waves-green.btn.right Cancelar
 
   .linhapontilhada
@@ -237,33 +253,76 @@ block content
               else
                 .carousel-item(style='height: 400px;')
                   img(src='/img/padrao-compras.png')
-          each loop in [0, 1, 2, 3, 4, 5, 6]
+          each ava in avaliacoes
             // loop resultado
             .resultados
-              .col.s2
-                img.responsive-img(src='img/exemplo.jpg', alt='')
+              .col.s4.m4.l4
+                if (ava.user.profile.picture)
+                  img.responsive-img(src=ava.user.profile.picture, alt='')
+                else
+                  img.responsive-img(src='/img/avatar-default.png', alt='')
                 // notice the "circle" class
-              .col.s5
-                h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                .avaliacaoBusca
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons star_rate
-                  | 																	(30)
-                .preco
-                  | $$$ 
-                  i.material-icons brightness_1
-                  |  Árabe, Lanchonetes
-              .col.s5
-                strong Catete
-                br
-                | 										Largo do Machado, 29
-                br
-                | 										Rio de Janeiro - RJ 23510-600
-                br
-                | 										(21) 2557-2377
+                span
+                  a(href='#') #{ava.user.profile.first_name.charAt(0).toUpperCase()}#{ava.user.profile.first_name.slice(1)} #{ava.user.profile.second_name.charAt(0).toUpperCase()}.
+              .col.s8.m8.l8
+                .row
+                  .col.s12.m12.l12!= ava.body
+                .row
+                  .col.s12.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
+                    | Impacto Social
+                    .jq-ry-container(style='padding: 0px 2px; width: 150px;', readonly='readonly')
+                      .jq-ry-group-wrapper
+                        .jq-ry-normal-group.jq-ry-group
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                        .jq-ry-rated-group.jq-ry-group(style='width: ' + (ava.soc * 100) / 5 + '%;')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                    
+                  .col.s12.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
+                    | Impacto Ambiental
+                    .jq-ry-container(style='padding: 0px 2px; width: 150px;', readonly='readonly')
+                      .jq-ry-group-wrapper
+                        .jq-ry-normal-group.jq-ry-group
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                        .jq-ry-rated-group.jq-ry-group(style='width: ' + (ava.amb * 100) / 5 + '%;')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+
+
             // fim loop resultado
         .col.s12.m4.l4.dadosComercio
           - if (servico.endereco.estado && servico.endereco.cidade)
@@ -422,10 +481,8 @@ block scripts
   script(type='text/javascript').
     $(document).ready(function() {
       var car = $('.carousel.carousel-slider').carousel({fullWidth: true});
-      var soc_med = '#{servico.soc_med}' | 0;
-      console.log('soc_med: ', soc_med);
-      var amb_med = '#{servico.amb_med}' | 0;
-      console.log('amb_med: ', amb_med);
+      var soc_med = '#{soc}';
+      var amb_med = '#{amb}';
       soc_med = parseFloat(soc_med);
       amb_med = parseFloat(amb_med);
       $('#rate_heart').rateYo({
@@ -451,6 +508,7 @@ block scripts
         starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z"></path></svg>',
         onSet: function(rating) {
           $('#avaliar-heart-input').val(rating);
+          $('#nota_soc').text(rating);
         }
       });
       $('#avaliar-leaf').rateYo({
@@ -461,6 +519,7 @@ block scripts
         starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z"></path></svg>',
         onSet: function(rating) {
           $('#avaliar-leaf-input').val(rating);
+          $('#nota_amb').text(rating);
         }
       });
 
