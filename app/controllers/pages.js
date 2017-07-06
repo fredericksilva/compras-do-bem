@@ -23,6 +23,7 @@ exports.index = (req, res) => {
     limit,
     page
   };
+  console.log(req.session);
 
   const count = Update.count();
 

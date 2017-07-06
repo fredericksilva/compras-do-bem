@@ -26,6 +26,7 @@ exports.load = async(function* (req, res, next, urlized) {
  * List
  */
 exports.index = async(function* (req, res) {
+  console.log(req.session);
   const categorias = yield Categoria.list();
   res.json({ data: categorias });
 });
