@@ -77,6 +77,7 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/servico', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.create);
   app.post('/servico/:urlized/put', passportConfig.isAuthenticated, servicoController.update);
   app.post('/servico/:urlized/upload', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.upload);
+  app.post('/servico/:urlized/avatar', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.avatar);
   app.post('/servico/:urlized/avaliar', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.avaliar);
 
     /**
@@ -108,19 +109,6 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
   app.get('/user/:id/makeadmin', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.makeAdmin);
   app.get('/user/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.delete);
-
-  /**
-   * API examples routes.
-   */
-  // app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
-  // app.get('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTwitter);
-  // app.post('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postTwitter);
-  // app.get('/api/paypal', apiController.getPayPal);
-  // app.get('/api/paypal/success', apiController.getPayPalSuccess);
-  // app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-  // app.get('/api/upload', apiController.getFileUpload);
-  // app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
-  // app.get('/api/google-maps', apiController.getGoogleMaps);
 
   /**
    * OAuth authentication routes. (Sign in)

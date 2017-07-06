@@ -78,6 +78,73 @@ block styles
     .character-counter {
       margin: 0 !important;
     }
+    img.avatar {
+      height: 100%;
+      width: auto;
+    }
+    .avatar-wrapper {
+      position: relative !important;
+      height: 180px;
+      overflow: hidden;
+      padding: 0 !important;
+      margin-top: 20px;
+      border: 0.5rem solid white;
+    }
+    .avatar-wrapper .file-field.input-field {
+      position: absolute;
+      bottom: 13px;
+      left: 20px;
+    }
+    .avatar-wrapper .btn {
+      margin-left: 0 !important;
+      height: 36px !important;
+      padding: 0 12px;
+      position: relative;
+      line-height: 2.5rem !important;
+    }
+    .avatar-wrapper .material-icons {
+      font-size: 1rem;
+    }
+    .avatar-wrapper input#image-avatar {
+      width: 100%;
+      height: 36px;
+    }
+    .avatar-wrapper #avatar-backdrop {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: 9999999;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      display: none;
+    }
+    .avatar-wrapper.edit #avatar-backdrop {
+      display: inherit;
+    }
+    .avatar-wrapper.edit img.avatar {
+      z-index: 99999999999999999999999999999999999999999;
+      position: relative;
+    }
+
+    .btnDecoracao {
+      min-height: 50px !important;
+    }
+    .btnDecoracao .file-field {
+      margin: 0;
+    }
+    .btnDecoracao .btn.btnacoes {
+      margin-left: 0 !important;
+      height: 36px;
+      padding: 0 1rem;
+      position: relative;
+      line-height: 2.4rem;
+      width: 100%;
+    }
+    .btnDecoracao .btn.btnacoes i {
+      width: 20px !important;
+      font-size: 1.5rem !important;
+    }
 
 block content
   section.reinvindicacao
@@ -91,26 +158,43 @@ block content
         //-   a(href='#!') Fotos e vídeos
         .col.s12.m9.l9
           .row
-            .col.s12.m12.l12
-              h1.subtitles(style='margin-bottom: 0;')=servico.title
-              span.reinvindicando(style='margin-top: 0;')
-                i.material-icons.tiny help
-                | Não reivindicada
-            .col.s12.m12.l12
-              each categoria, index in servico.categorias
-                - var coma = ','
-                - if (servico.categorias.length === index + 1) { coma = '' }
-                - if (categoria !== 'endereco.existe')
-                  a(href='#') #{categoria.title}
-                  | #{coma}
-            .col.s12.m12.l12
-              a(href='/servico/'+servico.urlized+'/edit')
-                i.material-icons edit
-                | Editar informações
+            .col.s3.m3.l3.avatar-wrapper.z-depth-1(style='position: relative;')
+              #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none;')
+                img#avatar.avatar(src='/img/avatar-default.png')
+              #avatar-backdrop
+              form#avatar-form(action='/servico/' + servico.urlized + '/avatar', method='POST', enctype='multipart/form-data')
+                input(type='hidden', value='0%', name='offset')
+                .file-field.input-field
+                  .btn.pink.lighten-2(style='')
+                    i.material-icons.left.white-text add_a_photo
+                    if (device)
+                      input#image-avatar(type='file', name='photos', style='', accept='image/*', capture='camera')
+                    else
+                      input#image-avatar(type='file', name='photos', style='')
+                  .file-path-wrapper(style='display: none;')
+                    input.file-path.validate(type='text', placeholder='Upload one or more files')
+            .col.s9.m9.l9
+              .row
+                .col.s12.m12.l12
+                  h1.subtitles(style='margin-bottom: 0;')=servico.title
+                  span.reinvindicando(style='margin-top: 0;')
+                    i.material-icons.tiny help
+                    | Não reivindicada
+                .col.s12.m12.l12
+                  each categoria, index in servico.categorias
+                    - var coma = ','
+                    - if (servico.categorias.length === index + 1) { coma = '' }
+                    - if (categoria !== 'endereco.existe')
+                      a(href='#') #{categoria.title}
+                      | #{coma}
+                .col.s12.m12.l12
+                  a(href='/servico/'+servico.urlized+'/edit')
+                    i.material-icons edit
+                    | Editar informações
             
         .col.s12.m3.l3
           .row
-            .col.s12.m12.l12(style='text-align: center;')
+            .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
               a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
                 i.material-icons.white-text star_rate
                 | Escrever uma Avaliação
@@ -123,11 +207,11 @@ block content
             .col.s6.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
               | Impacto Social
               #rate_heart(style='padding:0 2px;')
-              strong(style='font-size:20px;') #{soc}
+              strong(style='font-size:20px;') #{soc | 0}
             .col.s6.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
               | Impacto Ambiental
               #rate_leaf(style='padding:0 2px;')
-              strong(style='font-size:20px; color: #7fbd61 !important;') #{amb}
+              strong(style='font-size:20px; color: #7fbd61 !important;') #{amb | 0}
 
   #modal-avaliar.modal.bottom-sheet(style='max-height: 100%;')
     form#avaliar-form(method='POST', action='/servico/' + servico.urlized + '/avaliar', enctype='multipart/form-data')
@@ -185,26 +269,30 @@ block content
     .container
       .row
         .col.s12.m8.l8
-          form#foto-form(action='/servico/' + servico.urlized + '/upload', method='POST', enctype='multipart/form-data')
-            .file-field.input-field
-              .btn.btnacoes.pink.lighten-2(style='margin-left: 0 !important; height: 36px;')
-                i.material-icons.left.white-text add_a_photo
-                | Adicionar Foto
-                if (device)
-                  input#image(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
-                else
-                  input#image(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
-              .file-path-wrapper(style='display: none;')
-                input.file-path.validate(type='text', placeholder='Upload one or more files')
-          //- a.btn.btnacoes.pink.lighten-2(href='#modal-foto')
-          //-   i.material-icons.left add_a_photo
-          //-   | Adicionar Foto
-          a.btn.btnacoes.pink.lighten-2(href='#')
-            i.material-icons.left redo
-            | Compartilhar
-          a.btn.btnacoes.pink.lighten-2(href='#')
-            i.material-icons star_rate
-            | Favoritos
+          .row
+            .col.s12.m4.l4
+              form#foto-form(action='/servico/' + servico.urlized + '/upload', method='POST', enctype='multipart/form-data')
+                .file-field.input-field
+                  .btn.btnacoes.pink.lighten-2(style='')
+                    i.material-icons.left.white-text add_a_photo
+                    | Adicionar Fotos
+                    if (device)
+                      input#image(type='file', multiple='multiple', name='photos', style='width: 100%; height: 36px;', accept='image/*', capture='camera')
+                    else
+                      input#image(type='file', multiple='', name='photos', style='width: 100%; height: 36px;')
+                  .file-path-wrapper(style='display: none;')
+                    input.file-path.validate(type='text', placeholder='Upload one or more files')
+              //- a.btn.btnacoes.pink.lighten-2(href='#modal-foto')
+              //-   i.material-icons.left add_a_photo
+              //-   | Adicionar Foto
+            .col.s12.m4.l4
+              a.btn.btnacoes.pink.lighten-2(href='#')
+                i.material-icons.left redo
+                | Compartilhar
+            .col.s12.m4.l4
+              a.btn.btnacoes.pink.lighten-2(href='#')
+                i.material-icons.left star_rate
+                | Favoritos
         .col.s12.m4.l4.left-align
           a.tt.pink-text.lighten-2.left-align(href='#')
             i.small.material-icons.left check_circle
@@ -226,33 +314,32 @@ block content
     .container
       .row
         .col.s12.m8.l8
-          .fotoProduto(style='height: 400px;')
-            .carousel.carousel-slider.center(data-indicators='true')
-              if (servico.fotos.length > 1)
-                span.carousel-fixed-item.center(style='bottom: 0; height: 100%;')
-                  #prev-wrap(style='position: absolute; height: 100%; padding: calc(36% - 50px) 0; left: 0;')
-                    a(href='#')
-                      i.material-icons(style='font-size: 50px;') chevron_left
-                  #next-wrap(style='position: absolute; height: 100%; padding: calc(36% - 50px) 0; right: 0;')
-                    a(href='#')
-                      i.material-icons(style='font-size: 50px;') chevron_right
-              span.carousel-fixed-item.center(style='bottom: 0; background-color: rgba(206, 206, 206, 0.69) !important;')
-                .row
-                  .col.s6.m6.l6.left-align
-                    a(href='#')
-                      i.material-icons.tiny apps
-                      |  Ver tudo
-                  .col.s6.m6.l6.right-align
-                    a(href='#')
-                      i.material-icons.tiny share
-                      |  Compartilhar
-              if (servico.fotos.length > 0)
+          if (servico.fotos.length > 0)
+            .fotoProduto(style='height: 400px;')
+              .carousel.carousel-slider.center(data-indicators='true')
+                if (servico.fotos.length > 1)
+                  span.carousel-fixed-item.center(style='bottom: 0; height: 100%;')
+                    #prev-wrap(style='position: absolute; height: 100%; padding: calc(36% - 50px) 0; left: 0;')
+                      a(href='#')
+                        i.material-icons(style='font-size: 50px;') chevron_left
+                    #next-wrap(style='position: absolute; height: 100%; padding: calc(36% - 50px) 0; right: 0;')
+                      a(href='#')
+                        i.material-icons(style='font-size: 50px;') chevron_right
+                span.carousel-fixed-item.center(style='bottom: 0; background-color: rgba(206, 206, 206, 0.69) !important;')
+                  .row
+                    .col.s6.m6.l6.left-align
+                      a(href='#')
+                        i.material-icons.tiny apps
+                        |  Ver tudo
+                    .col.s6.m6.l6.right-align
+                      a(href='#')
+                        i.material-icons.tiny share
+                        |  Compartilhar
                 each foto in servico.fotos
                   .carousel-item(style='height: 400px;')
                     img(src=foto)
-              else
-                .carousel-item(style='height: 400px;')
-                  img(src='/img/padrao-compras.png')
+          h5(style='text-align: center;') Avaliações
+          .divider
           each ava in avaliacoes
             // loop resultado
             .resultados
@@ -324,6 +411,17 @@ block content
 
 
             // fim loop resultado
+            if (avaliacoes.lenght > 10)
+              section.resultadoBusca
+                .container
+                  .row
+                    .col.s12.m8.l8.ol
+                      .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
+                        span.palavraUsada
+                          i.material-icons keyboard_arrow_down
+                          |   Mostrar
+                        |  atividades: Rio de Janeiro
+                    .col.s12.m4.l4.ol
         .col.s12.m4.l4.dadosComercio
           - if (servico.endereco.estado && servico.endereco.cidade)
             span
@@ -436,35 +534,6 @@ block content
             i.material-icons.tuny keyboard_arrow_left
             |  Ampliar mapa
           iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
-  section.resultadoBusca
-    .container
-      .row
-        .col.s12.m8.l8.ol
-          .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
-            span.palavraUsada
-              i.material-icons keyboard_arrow_down
-              |   Mostrar
-            |  atividades: Rio de Janeiro
-        .col.s12.m4.l4.ol
-  section.paginacao
-    .container
-      ul.pagination
-        li.disabled
-          a(href='#!')
-            i.material-icons chevron_left
-        li.active
-          a(href='#!') 1
-        li.waves-effect
-          a(href='#!') 2
-        li.waves-effect
-          a(href='#!') 3
-        li.waves-effect
-          a(href='#!') 4
-        li.waves-effect
-          a(href='#!') 5
-        li.waves-effect
-          a(href='#!')
-            i.material-icons chevron_right
 
 block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js')
@@ -481,8 +550,8 @@ block scripts
   script(type='text/javascript').
     $(document).ready(function() {
       var car = $('.carousel.carousel-slider').carousel({fullWidth: true});
-      var soc_med = '#{soc}';
-      var amb_med = '#{amb}';
+      var soc_med = '#{soc | 0}';
+      var amb_med = '#{amb | 0}';
       soc_med = parseFloat(soc_med);
       amb_med = parseFloat(amb_med);
       $('#rate_heart').rateYo({
@@ -553,6 +622,26 @@ block scripts
           );
         }
       };
+
+      var avatar = document.getElementById('avatar-wrapper');
+      document.getElementById('image-avatar').onchange = function (e) {
+        avatar.innerHTML = ""
+        for (var i in e.target.files) {
+          loadImage(
+            e.target.files[i],
+            function (img) {
+              img.className = 'z-depth-1 avatar';
+              avatar.appendChild(img);
+              editarAvatar();
+            },
+            {maxWidth: 600} // Options
+          );
+        }
+      };
+
+      function editarAvatar () {
+        $('.avatar-wrapper').addClass('edit');
+      } 
 
       $('#foto-enviar').on('click', function() {
         $('#foto-form').submit();

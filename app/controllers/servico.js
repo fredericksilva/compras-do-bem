@@ -223,6 +223,26 @@ exports.upload = async(function* (req, res) {
   }
 });
 
+
+/**
+ * Upload avatar
+ */
+exports.avatar = async(function* (req, res) {
+  const servico = req.servico;
+  if (req.files.length > 0) {
+    servico.avatar.img = req.files[0].location;
+  }
+  servico.avatar.offset = req.body.offset;
+  try {
+    yield servico.save();
+    req.flash('success', { msg: 'Foto de capa atualizada' });
+    res.redirect(`/servico/${servico.urlized}`);
+  } catch (err) {
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${servico.urlized}`);
+  }
+});
+
 /**
  * Criar a avaliacao
  */
