@@ -29,6 +29,10 @@ const upload = multer({
     s3: s3,
     bucket: process.env.BUCKET,
     acl: 'public-read',
+    cacheControl: 'max-age=31536000',
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString())
+    }
     metadata: function (req, file, cb) {
       cb(null, {fieldName: file.fieldname});
     },
