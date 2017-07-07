@@ -31,7 +31,13 @@
         a(href='/servico/' + up.servico.urlized)= up.servico.title
     .card-content(style='padding: 0 10px 10px 10px;')
       if (up.body)
-        p!= up.body || up.avaliacao.body
+        - var bod = up.body || up.avaliacao.body
+        - bod = bod.split('\n')
+        each b in bod
+          if (b.length > 1)
+            p= b
+          else
+            br
       if (up.fotos.length > 1 || up.avaliacao && up.avaliacao.fotos.length > 1)
         .row(style='margin-bottom: 0; ')
           each foto, index in up.fotos || up.avaliacao.fotos
@@ -101,7 +107,7 @@
 
 
 
-    .card-reveal
+    .card-reveal(style='z-index: 999999;')
       span.card-title
         | Card Title
         i.material-icons.right close

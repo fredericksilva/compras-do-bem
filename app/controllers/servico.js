@@ -112,6 +112,7 @@ exports.create = async(function* (req, res, next) {
     up.body = servico.body;
     up.user = req.user._id;
     up.servico = servico._id;
+    up.fotos = servico.fotos;
     up.save();
     respondOrRedirect({ req, res }, `/servico/${servico.urlized}`, servico, {
       type: 'success',

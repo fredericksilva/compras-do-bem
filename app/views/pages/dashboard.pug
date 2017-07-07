@@ -398,6 +398,7 @@ block scripts
             data: 'user',
             render: function (data, type, full, meta) {
               if (data) {
+                console.log(full.body.split('\n')[1].length);
                 return '<a href="/user/' + data._id + '" target="_blank">' + data.profile.first_name + ' ' + data.profile.second_name +'</a>'
               } else {
                 return 'Anônimo'
