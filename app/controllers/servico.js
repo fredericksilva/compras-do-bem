@@ -205,8 +205,10 @@ exports.update = async(function* (req, res) {
  */
 exports.upload = async(function* (req, res) {
   const servico = req.servico;
+  const fotos = [];
   for (var foto in req.files) {
     servico.fotos.push(req.files[foto].location);
+    fotos.push(req.files[foto].location);
   }
   try {
     yield servico.save();
@@ -214,7 +216,7 @@ exports.upload = async(function* (req, res) {
     up.type = 'fotos';
     up.user = req.user._id;
     up.servico = servico._id;
-    up.fotos = servico.fotos;
+    up.fotos = fotos;
     up.save();
     req.flash('success', { msg: `${req.files.length} fotos enviadas` });
     res.redirect(`/servico/${servico.urlized}`);
