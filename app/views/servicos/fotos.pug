@@ -210,13 +210,50 @@ block content
   section(style='margin-top: 10px;')
     .container
       .row
-        each foto in servico.fotos
-          .col.s12.m3.l3(style='margin-top: 20px;')
-            img.responsive-img.materialboxed.z-depth-1(src=foto)
-        each ava in avaliacoes
-          each avaFoto in ava.fotos
-            .col.s12.m3.l3(style='margin-top: 20px;')
-              img.responsive-img.materialboxed.z-depth-1(src=avaFoto)
+        .col.s12.m3.l3(style='margin-top: 20px;')
+          each foto, index in servico.fotos
+            if (index % 4 === 0)
+              .col.s12.m12.l12(style='margin-top: 20px;')
+                img.responsive-img.materialboxed.z-depth-1(src=foto)
+          each ava in avaliacoes
+            each avaFoto, index in ava.fotos
+              if (index % 4 === 0)
+                .col.s12.m12.l12(style='margin-top: 20px;')
+                  img.responsive-img.materialboxed.z-depth-1(src=avaFoto)
+                
+        .col.s12.m3.l3(style='margin-top: 20px;')
+          each foto, index in servico.fotos
+            if (index % 4 === 1)
+              .col.s12.m12.l12(style='margin-top: 20px;')
+                img.responsive-img.materialboxed.z-depth-1(src=foto)
+          each ava in avaliacoes
+            each avaFoto, index in ava.fotos
+              if (index % 4 === 1)
+                .col.s12.m12.l12(style='margin-top: 20px;')
+                  img.responsive-img.materialboxed.z-depth-1(src=avaFoto)
+
+        .col.s12.m3.l3(style='margin-top: 20px;')
+          each foto, index in servico.fotos
+            if (index % 4 === 2)
+              .col.s12.m12.l12(style='margin-top: 20px;')
+                img.responsive-img.materialboxed.z-depth-1(src=foto)
+          each ava in avaliacoes
+            each avaFoto, index in ava.fotos
+              if (index % 4 === 2)
+                .col.s12.m12.l12(style='margin-top: 20px;')
+                  img.responsive-img.materialboxed.z-depth-1(src=avaFoto)
+
+        .col.s12.m3.l3(style='margin-top: 20px;')
+          each foto, index in servico.fotos
+            if (index % 4 === 3)
+              .col.s12.m12.l12(style='margin-top: 20px;')
+                img.responsive-img.materialboxed.z-depth-1(src=foto)
+          each ava in avaliacoes
+            each avaFoto, index in ava.fotos
+              if (index % 4 === 3)
+                .col.s12.m12.l12(style='margin-top: 20px;')
+                  img.responsive-img.materialboxed.z-depth-1(src=avaFoto)
+
 
 
 block scripts

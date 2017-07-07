@@ -51,7 +51,7 @@ exports.index = async(function* (req, res) {
  * List Ajax
  */
 exports.ajax = async(function* (req, res) {
-  const avaliacoes = yield Avaliacao.list({ limit: 0 });
+  const avaliacoes = yield Avaliacao.list();
   res.json({ data: avaliacoes });
 });
 
