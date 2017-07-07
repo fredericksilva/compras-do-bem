@@ -198,7 +198,7 @@ block content
             .col.s8.m3.l3.offset-s2.avatar-wrapper(style='position: relative;', class=hasAvatar)
               #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none;')
                 if (servico.avatar.img)
-                  img#avatar.avatar(src=servico.avatar.img)
+                  img#avatar.avatar(src=servico.avatar.img, style='margin-left: ' + servico.avatar.offset + ';')
                 else
                   img#avatar.avatar(src='/img/avatar-default.png')
               #avatar-backdrop
@@ -721,10 +721,6 @@ block scripts
           })
         })
 
-      $('#avatar-enviar').on('click', function(e) {
-        $('#avatar-form').submit();
-      });
-
         $('.avatar').off('mouseup', function(e) {
           e.preventDefault();
           $(window).off('mousemove', function(e) {
@@ -734,6 +730,11 @@ block scripts
         })
         avatar.innerHTML = oldAvatar;
       })
+
+      $('#avatar-enviar').on('click', function(e) {
+        console.log(e);
+        $('#avatar-form').submit();
+      });
 
       $('#foto-enviar').on('click', function() {
         $('#foto-form').submit();
