@@ -277,6 +277,7 @@ exports.avaliar = async(function* (req, res, next) {
     res.redirect(`/servico/${req.servico.urlized}`);
   }
 });
+
 /**
  * Show
  */
@@ -304,6 +305,22 @@ exports.show = function (req, res) {
       });
     }).catch((err) => {
       console.log(err);
+    });
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+/**
+ * Fotos
+ */
+exports.fotos = function (req, res) {
+  Avaliacao.list({ servico: req.servico._id }).then((avaliacoes) => {
+    res.render('servicos/fotos', {
+      title: req.servico.title,
+      servico: req.servico,
+      avaliacoes,
+      device: req.device.type === 'phone' || req.device.type === 'tablet'
     });
   }).catch((err) => {
     console.log(err);

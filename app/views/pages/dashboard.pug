@@ -140,6 +140,7 @@ block content
           table#categ_table.highlight.bordered
             thead
               tr
+                th Icone
                 th Nome
                 th Descricao
                 th Acao
@@ -220,6 +221,11 @@ block scripts
   script(src='//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js')
   script(src='https://cdn.datatables.net/1.10.15/js/dataTables.material.min.js')
   script(type='text/javascript').
+    function uploadIcon (id) {
+      var c = document.getElementsByClassName('form-icone');
+      c[id].submit();
+    }
+    
     $(document).ready(function() {
 
       var categ_table = $('#categ_table').DataTable({
@@ -228,6 +234,17 @@ block scripts
           type: 'GET'
         },
         columns: [
+          { 
+            data: 'img',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return '<img src="' + data + '" class="circle responsive-image" style="width: 30px;">'
+              } else {
+                return '<form id="' + full.urlized + '-form" action="/categoria/' + full.urlized + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0 17px;"><i class="material-icons left white-text" style="margin: 0;">add_a_photo</i><input id="image-' + full.urlized + '" type="file" name="photos" onchange="uploadIcon(' + meta.row + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
+              }
+            },
+            sortable: false
+          },
           { data: 'title' },
           { data: 'body' },
           { 
@@ -256,7 +273,17 @@ block scripts
             },
             sortable: true
           },
-          { data: 'email' },
+          { 
+            data: 'email',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return data
+              } else {
+                return 'Não informado'
+              }
+            },
+            sortable: true
+          },
           { 
             data: 'admin',
             render: function (data, type, full, meta) {
@@ -381,7 +408,6 @@ block scripts
           { 
             data: 'servico',
             render: function (data, type, full, meta) {
-              console.log(full);
               if (data) {
                 return '<a href="/servico/' + data.urlized + '" target="_blank">' + data.title +'</a>'
               } else {
@@ -414,7 +440,7 @@ block scripts
 
       $('#user_busca').on('keyup', function() {
         user_table.search( this.value ).draw();
-      })
+      });
 
       $(window).on('hashchange', function() {
         var hash = location.hash;

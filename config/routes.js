@@ -43,6 +43,7 @@ const upload = multer({
  */
 
 module.exports = (app, passportConfig, passport) => {
+  app.use(categoriaController.load);
   /**
    * Pages routes.
    */
@@ -73,11 +74,12 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/servico/novo', passportConfig.isAuthenticated, servicoController.new);
   app.get('/servico/:urlized', servicoController.show);
   app.get('/servico/:urlized/edit', passportConfig.isAuthenticated, servicoController.edit);
+  app.get('/servico/:urlized/fotos', servicoController.fotos);
   app.get('/servico/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.delete);
   app.post('/servico', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.create);
   app.post('/servico/:urlized/put', passportConfig.isAuthenticated, servicoController.update);
   app.post('/servico/:urlized/upload', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.upload);
-  app.post('/servico/:urlized/avatar', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.avatar);
+  app.post('/servico/:urlized/avatar/upload', passportConfig.isAuthenticated, upload.array('photos', 1), servicoController.avatar);
   app.post('/servico/:urlized/avaliar', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.avaliar);
 
     /**
@@ -86,6 +88,7 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/categoria/nova', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.create);
   app.post('/categoria/:id/edit', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.update);
   app.get('/categoria/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.delete);
+  app.post('/categoria/:id/upload', passportConfig.isAuthenticated, passportConfig.isAdmin, upload.array('photos', 1), categoriaController.upload);
 
   /**
    * User routes.

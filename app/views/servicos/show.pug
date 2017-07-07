@@ -93,7 +93,7 @@ block styles
     .avatar-wrapper .file-field.input-field {
       position: absolute;
       bottom: 13px;
-      left: 20px;
+      left: 13px;
     }
     .avatar-wrapper .btn {
       margin-left: 0 !important;
@@ -126,6 +126,34 @@ block styles
       z-index: 99999999999999999999999999999999999999999;
       position: relative;
     }
+    .avatar-wrapper.has-avatar .btn {
+      opacity: 0;
+    }
+    .avatar-wrapper.has-avatar:hover .btn {
+      opacity: 1;
+    }
+    .img-edit {
+      position: absolute;
+      left: 200px;
+      height: 150px;
+      width: 100%;
+      border-radius: 10px;
+      z-index: 99999999999999999999999;
+      top: 35px;
+      padding: 20px;
+      background-color: rgb(236, 236, 236);
+      display: none;
+    }
+    .img-edit.edit {
+      display: block;
+    }
+    .img-edit h5 {
+      text-align: center;
+      color: black;
+    }
+    .img-edit button.enviar {
+      float: right;
+    }
 
     .btnDecoracao {
       min-height: 50px !important;
@@ -157,13 +185,25 @@ block content
         //-   i.material-icons navigate_next
         //-   a(href='#!') Fotos e vídeos
         .col.s12.m9.l9
-          .row
-            .col.s3.m3.l3.avatar-wrapper.z-depth-1(style='position: relative;')
+          .row(style='position: relative;')
+            .img-edit.z-depth-4
+              h5 Arraste a imagem para melhorar o enquadramento.
+              .row
+                .col.s6.m6.l6
+                  button#avatar-enviar.btn.enviar Enviar
+                .col.s6.m6.l6
+                  button#avatar-cancel.btn.cancelar Cancelar
+            - var hasAvatar = '';
+            - if (servico.avatar.img) { hasAvatar = 'has-avatar' }
+            .col.s8.m3.l3.offset-s2.avatar-wrapper(style='position: relative;', class=hasAvatar)
               #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none;')
-                img#avatar.avatar(src='/img/avatar-default.png')
+                if (servico.avatar.img)
+                  img#avatar.avatar(src=servico.avatar.img)
+                else
+                  img#avatar.avatar(src='/img/avatar-default.png')
               #avatar-backdrop
-              form#avatar-form(action='/servico/' + servico.urlized + '/avatar', method='POST', enctype='multipart/form-data')
-                input(type='hidden', value='0%', name='offset')
+              form#avatar-form(action='/servico/' + servico.urlized + '/avatar/upload', method='POST', enctype='multipart/form-data')
+                input#avatar-offset(type='hidden',value='0px', name='offset')
                 .file-field.input-field
                   .btn.pink.lighten-2(style='')
                     i.material-icons.left.white-text add_a_photo
@@ -328,7 +368,7 @@ block content
                 span.carousel-fixed-item.center(style='bottom: 0; background-color: rgba(206, 206, 206, 0.69) !important;')
                   .row
                     .col.s6.m6.l6.left-align
-                      a(href='#')
+                      a(href='/servico/' + servico.urlized + '/fotos')
                         i.material-icons.tiny apps
                         |  Ver tudo
                     .col.s6.m6.l6.right-align
@@ -528,7 +568,10 @@ block content
           ul.collection
             each categoria in categorias
               li.collection-item
-                i.small.pink-text.lighten-2.material-icons.left mode_edit
+                if (categoria.img)
+                  img.small.left(src=categoria.img, style='width: 25px; margin-right: 20px;')
+                else
+                  i.small.pink-text.lighten-2.material-icons.left mode_edit
                 | #{categoria.title}
           .sobremapa
             i.material-icons.tuny keyboard_arrow_left
@@ -624,6 +667,7 @@ block scripts
       };
 
       var avatar = document.getElementById('avatar-wrapper');
+      var oldAvatar = avatar.innerHTML;
       document.getElementById('image-avatar').onchange = function (e) {
         avatar.innerHTML = ""
         for (var i in e.target.files) {
@@ -631,6 +675,7 @@ block scripts
             e.target.files[i],
             function (img) {
               img.className = 'z-depth-1 avatar';
+              img.id = 'avatar';
               avatar.appendChild(img);
               editarAvatar();
             },
@@ -641,7 +686,54 @@ block scripts
 
       function editarAvatar () {
         $('.avatar-wrapper').addClass('edit');
-      } 
+        $('.img-edit').addClass('edit');
+
+        $('.avatar').on('mousedown', function(e) {
+          e.preventDefault();
+          let inicial = e.clientX;
+          let left = parseInt($('.avatar').css('margin-left'));
+          let width = $('.avatar').width();
+          let wrapper = $('#avatar-wrapper').width();
+          $(window).on('mousemove', { inicial: inicial, left: left, width: width, wrapper: wrapper }, changeLeft);
+        })
+
+        function changeLeft (e) {
+          if (e.data.left + e.clientX - e.data.inicial <= 0 && e.data.left + e.clientX - e.data.inicial >  (e.data.width - e.data.wrapper) * -1) {
+            $('.avatar').css('margin-left', e.data.left + e.clientX - e.data.inicial + 'px');
+            $('#avatar-offset').val(e.data.left + e.clientX - e.data.inicial + 'px')
+          }
+        }
+
+        $(window).on('mouseup', function(e) {
+          $(window).off('mousemove', changeLeft);
+        })
+      }
+
+      $('#avatar-cancel').on('click', function(e) {
+        $('.avatar-wrapper').removeClass('edit');
+        $('.img-edit').removeClass('edit');
+
+        $('.avatar').off('mousedown', function(e) {
+          e.preventDefault();
+          $(window).on('mousemove', function(e) {
+            e.preventDefault();
+            console.log(e);
+          })
+        })
+
+      $('#avatar-enviar').on('click', function(e) {
+        $('#avatar-form').submit();
+      });
+
+        $('.avatar').off('mouseup', function(e) {
+          e.preventDefault();
+          $(window).off('mousemove', function(e) {
+            e.preventDefault();
+            console.log(e);
+          })
+        })
+        avatar.innerHTML = oldAvatar;
+      })
 
       $('#foto-enviar').on('click', function() {
         $('#foto-form').submit();

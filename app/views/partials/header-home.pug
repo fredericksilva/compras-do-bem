@@ -27,22 +27,17 @@ header.pai
             input.cat_Enviar(type='hidden', value='', name='cidade')
       ul#cidade.dropForm.dropdown-content
         li
-        li(data-destino='cid', data-valor='Rio de Janeiro', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-          a Rio de Janeiro (Capital)
-        li(data-destino='cid', data-valor='Campos', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-          a Campos
-        li(data-destino='cid', data-valor='São Paulo', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-          a São Paulo
+        li(data-destino='cid', data-valor='Rio de Janeiro - RJ', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a Rio de Janeiro - RJ
+        li(data-destino='cid', data-valor='Minha Localização', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+          a 
+            i.material-icons send
+            | Meu Local
       ul#categoria.dropForm.dropdown-content
         li
-        li(data-destino='cat', data-valor='Restaurantes', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-          a Restaurantes
-        li(data-destino='cat', data-valor='Compras', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-          a Compras
-        li(data-destino='cat', data-valor='Vida Noturna', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-          a Vida Noturna
-        li(data-destino='cat', data-valor='Vida ativa', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-          a Vida ativa
+        each categoria in categorias
+          li(data-destino='cat', data-valor=categoria.title, data-id=categoria._id)
+            a= categoria.title
     section.logo
       .container
         .row

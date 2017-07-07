@@ -1,0 +1,223 @@
+extends ../layouts/default
+
+block styles
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css')
+  style(type='text/css').
+    .fotoProduto .material-placeholder {
+      height: 400px;
+    }
+    .fotoProduto img {
+      height: 100%;
+      width: auto;
+    }
+    .fotoProduto a {
+      color: white;
+      font-weight: 900;
+      font-size: 15px;
+      text-shadow: 2px 2px 2px black;
+    }
+    .fotoProduto .left-align a {
+      margin-left: 10px;
+    }
+    .fotoProduto .right-align a {
+      margin-right: 10px;
+    }
+
+    .fotoProduto .carousel.carousel-slider.center {
+      height: 400px !important;
+    }
+
+    .fotoProduto span {
+      background-color: transparent !important;
+    }
+
+    .dadosComercio .collection {
+      z-index: -1;
+    }
+
+    .carousel-item.active.aberto {
+      z-index: 1 !important;
+    }
+    .image_place img {
+      width: 100% !important;
+      height: auto;
+      border: 5px solid white;
+    }
+    .carroca img {
+      width: calc(50% - 10px) !important;
+      height: auto;
+      margin: 5px;
+      border: 5px solid white;
+    }
+    .carousel .indicators .indicator-item {
+      margin: 40px 4px !important;
+    }
+    .upload-image {
+      top: -32px;
+      width: 100%;
+      margin: 0;
+    }
+    .upload-image .btn{
+      width: 100%;
+      padding: 0 30px;
+      margin-left: 0 !important;
+      border-top: 1px solid gainsboro;
+      border-radius: 0 0 5px 5px;
+    }
+    .upload-image span{
+      font-size: 17px !important;
+      margin-top: 0px !important;
+      color: #3fa084 !important;
+      font-weight: 900 !important;
+    }
+    .upload-image i.material-icons {
+      font-size: 40px !important;
+      float: left !important;
+      color: #3fa084 !important;
+    }
+    .character-counter {
+      margin: 0 !important;
+    }
+    img.avatar {
+      height: 100%;
+      width: auto;
+    }
+    .avatar-wrapper {
+      position: relative !important;
+      height: 180px;
+      overflow: hidden;
+      padding: 0 !important;
+      margin-top: 20px;
+      border: 0.5rem solid white;
+    }
+    .avatar-wrapper .file-field.input-field {
+      position: absolute;
+      bottom: 13px;
+      left: 13px;
+    }
+    .avatar-wrapper .btn {
+      margin-left: 0 !important;
+      height: 36px !important;
+      padding: 0 12px;
+      position: relative;
+      line-height: 2.5rem !important;
+    }
+    .avatar-wrapper .material-icons {
+      font-size: 1rem;
+    }
+    .avatar-wrapper input#image-avatar {
+      width: 100%;
+      height: 36px;
+    }
+    .avatar-wrapper #avatar-backdrop {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: 9999999;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      display: none;
+    }
+    .avatar-wrapper.edit #avatar-backdrop {
+      display: inherit;
+    }
+    .avatar-wrapper.edit img.avatar {
+      z-index: 99999999999999999999999999999999999999999;
+      position: relative;
+    }
+    .avatar-wrapper.has-avatar .btn {
+      opacity: 0;
+    }
+    .avatar-wrapper.has-avatar:hover .btn {
+      opacity: 1;
+    }
+    .img-edit {
+      position: absolute;
+      left: 200px;
+      height: 150px;
+      width: 100%;
+      border-radius: 10px;
+      z-index: 99999999999999999999999;
+      top: 35px;
+      padding: 20px;
+      background-color: rgb(236, 236, 236);
+      display: none;
+    }
+    .img-edit.edit {
+      display: block;
+    }
+    .img-edit h5 {
+      text-align: center;
+      color: black;
+    }
+    .img-edit button.enviar {
+      float: right;
+    }
+
+    .btnDecoracao {
+      min-height: 50px !important;
+    }
+    .btnDecoracao .file-field {
+      margin: 0;
+    }
+    .btnDecoracao .btn.btnacoes {
+      margin-left: 0 !important;
+      height: 36px;
+      padding: 0 1rem;
+      position: relative;
+      line-height: 2.4rem;
+      width: 100%;
+    }
+    .btnDecoracao .btn.btnacoes i {
+      width: 20px !important;
+      font-size: 1.5rem !important;
+    }
+
+block content
+  section.reinvindicacao
+    .container
+      .row
+        .col.s12.m9.l9
+          .row
+            .col.s8.m3.l3.offset-s2.avatar-wrapper(style='position: relative;')
+              #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none;')
+                if (servico.avatar.img)
+                  img#avatar.avatar(src=servico.avatar.img)
+                else
+                  img#avatar.avatar(src='/img/avatar-default.png')
+            .col.s9.m9.l9
+              .row
+                .col.s12.m12.l12
+                  a(href='/servico/' + servico.urlized)
+                    h1.subtitles(style='margin-bottom: 0; color: #949897;')=servico.title
+                  span.reinvindicando(style='margin-top: 0;')
+                    i.material-icons.tiny help
+                    | Não reivindicada
+                .col.s12.m12.l12
+                  each categoria, index in servico.categorias
+                    - var coma = ','
+                    - if (servico.categorias.length === index + 1) { coma = '' }
+                    - if (categoria !== 'endereco.existe')
+                      a(href='#') #{categoria.title}
+                      | #{coma}
+                .col.s12.m12.l12
+                  a(href='/servico/'+servico.urlized+'/edit')
+                    i.material-icons edit
+                    | Editar informações
+
+  .linhapontilhada
+  section(style='margin-top: 10px;')
+    .container
+      .row
+        each foto in servico.fotos
+          .col.s12.m3.l3(style='margin-top: 20px;')
+            img.responsive-img.materialboxed.z-depth-1(src=foto)
+        each ava in avaliacoes
+          each avaFoto in ava.fotos
+            .col.s12.m3.l3(style='margin-top: 20px;')
+              img.responsive-img.materialboxed.z-depth-1(src=avaFoto)
+
+
+block scripts
+  

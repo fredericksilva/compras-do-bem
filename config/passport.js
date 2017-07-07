@@ -60,7 +60,7 @@ passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_ID,
   clientSecret: process.env.FACEBOOK_SECRET,
   callbackURL: '/auth/facebook/callback',
-  profileFields: ['name', 'email', 'link', 'locale', 'timezone'],
+  profileFields: ['name', 'email', 'link', 'locale', 'timezone', 'location'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
@@ -75,7 +75,9 @@ passport.use(new FacebookStrategy({
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
           user.active = true;
-          user.profile.name = user.profile.name || `${profile.name.givenName} ${profile.name.familyName}`;
+          user.profile.first_name = user.profile.first_name || `${profile.name.givenName}`;
+          user.profile.second_name = user.profile.second_name || `${profile.name.familyName}`;
+          user.email = user.email || profile.email;
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || `https://graph.facebook.com/${profile.id}/picture?type=large`;
           user.save((err) => {
@@ -102,7 +104,8 @@ passport.use(new FacebookStrategy({
           user.facebook = profile.id;
           user.active = true;
           user.tokens.push({ kind: 'facebook', accessToken });
-          user.profile.name = `${profile.name.givenName} ${profile.name.familyName}`;
+          user.profile.first_name = profile.name.givenName;
+          user.profile.second_name = profile.name.familyName;
           user.profile.gender = profile._json.gender;
           user.profile.picture = `https://graph.facebook.com/${profile.id}/picture?type=large`;
           user.profile.location = (profile._json.location) ? profile._json.location.name : '';

@@ -34,6 +34,7 @@ header.interno
                   | Meu Local
             ul#categoria.dropForm.dropdown-content
               li
-              li(data-destino='cat', data-valor='Todas as categorias', data-id='')
-                a Todas as categorias
+              each categoria in categorias
+                li(data-destino='cat', data-valor=categoria.title, data-id=categoria._id)
+                  a= categoria.title
         include user_menu.pug

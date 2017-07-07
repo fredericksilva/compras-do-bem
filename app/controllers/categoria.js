@@ -12,10 +12,11 @@ const assign = Object.assign;
 /**
  * Load
  */
-exports.load = async(function* (req, res, next, urlized) {
+exports.load = async(function* (req, res, next) {
   try {
-    req.categoria = yield Categoria.load(urlized);
-    if (!req.categoria) return next(new Error('categoria não encontrado'));
+    req.categorias = yield Categoria.list();
+    res.locals.categorias = req.categorias;
+    if (!req.categorias) return next(new Error('categorias não encontradas'));
   } catch (err) {
     return next(err);
   }
@@ -26,9 +27,7 @@ exports.load = async(function* (req, res, next, urlized) {
  * List
  */
 exports.index = async(function* (req, res) {
-  console.log(req.session);
-  const categorias = yield Categoria.list();
-  res.json({ data: categorias });
+  res.json({ data: req.categorias });
 });
 
 /**
@@ -94,19 +93,28 @@ exports.update = async(function* (req, res) {
         title: 'Categoria atualizada!'
       });
     });
-  })
-  const categoria = req.categoria;
-  assign(categoria, only(req.body, 'title body'));
-  try {
-    yield categoria.save();
-    respondOrRedirect({ res }, '/dashboard', categoria);
-  } catch (err) {
-    respond(res, 'pages/dashboard', {
-      title: `Edit ${categoria.title}`,
-      errors: [err.toString()],
-      categoria
-    }, 422);
-  }
+  });
+});
+
+/**
+ * Upload icone
+ */
+exports.upload = async(function* (req, res) {
+  Categoria.findOne({ urlized: req.params.id }, function (err, categoria) {
+    if (err) return res.send(err);
+    if (req.files.length > 0) {
+      categoria.img = req.files[0].location;
+    }
+
+    categoria.save(function(err) {
+      if (err) return console.log(err);
+
+      respondOrRedirect({ req, res }, '/dashboard', categoria, {
+        type: 'success',
+        title: 'Icone uploadeado!'
+      });
+    });
+  });
 });
 
 /**

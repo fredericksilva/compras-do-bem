@@ -32,7 +32,7 @@ $(document).ready(function() {
     //     //alert(enviando);
     //     $(enviando).val(id);
 
-    //     //$("."+destino).val(id);
+    //     $("."+destino).val(id);
 
 
     // });

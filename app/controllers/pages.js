@@ -23,7 +23,6 @@ exports.index = (req, res) => {
     limit,
     page
   };
-  console.log(req.session);
 
   const count = Update.count();
 
@@ -36,7 +35,7 @@ exports.index = (req, res) => {
       pages: Math.ceil(count / limit)
     });
   }).catch((err) => {
-    console.log(err)
+    console.log(err);
   });
 };
 

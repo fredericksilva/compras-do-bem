@@ -65,30 +65,23 @@ $(document).ready(function() {
     })
   })
 
-  // if ($('header .busca').length > 0) {
-  //   $.getJSON('/categorias', function(data) {
-  //     $.each(data.data, function(key, val) {
-  //       $('#categoria').append('<li data-destino="cat" data-valor="' + val.title + '" data-id="' + val._id + '"><a>' + val.title + '</a></li>')
-  //     });
-  //     $(".dropForm li").on('click', function(){
-  //       if ($(this).data('valor') === 'Minha Localização') {
-  //         getLocation()
-  //       } else {
-  //         var valor =$(this).data('valor');
-  //         var id =$(this).data('id');
-  //         var destino =$(this).data('destino');
+  $(".dropForm li").on('click', function(){
+    if ($(this).data('valor') === 'Minha Localização') {
+      getLocation()
+    } else {
+      var valor =$(this).data('valor');
+      var id =$(this).data('id');
+      var destino =$(this).data('destino');
 
-  //         //troca o valor do campo na busca
-  //         $("."+destino).text(valor);
-  //         var  enviando = "."+destino+"_Enviar";
-  //         //alert(enviando);
-  //         $(enviando).val(id);
+      //troca o valor do campo na busca
+      $("."+destino).text(valor);
+      var  enviando = "."+destino+"_Enviar";
+      //alert(enviando);
+      $(enviando).val(id);
 
-  //         //$("."+destino).val(id);
-  //       }
+      $("."+destino).val(id);
+    }
 
-  //     });
-  //   });
-  // }
+  });
 
 });

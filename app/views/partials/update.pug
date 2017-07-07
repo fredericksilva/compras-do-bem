@@ -1,0 +1,110 @@
+// inicio cards
+.s12.m12.l12.col.cards
+  .card
+    .card-content(style='padding-top: 10px; padding-bottom: 0px;')
+      .row(style='margin-bottom: 0px;')
+        .col.s3.m3.l3
+          if (up.user.profile.picture)
+            img.circle.responsive-img(src=up.user.profile.picture)
+          else
+            img.circle.responsive-img(src='/img/avatar-default.png')
+        .col.s9.m9.l9(style='line-height: 0rem;')
+          .row
+            .col.s12.m12.l12
+              span.card-title.activator.cardNome
+                | #{up.user.profile.first_name.charAt(0).toUpperCase()}#{up.user.profile.first_name.slice(1)} #{up.user.profile.second_name.charAt(0).toUpperCase()}.
+            .col.s12.m12.l12
+              if (up.type === 'fotos')
+                if (up.fotos.length === 1)
+                  span.cardAcao  Adicionou uma foto
+                else
+                  span.cardAcao  Adicionou #{up.fotos.length} fotos
+              else if (up.type === 'avaliacao')
+                span.cardAcao  Fez uma avaliação
+              else if (up.type === 'servico')
+                span.cardAcao  Cadastrou um serviço
+    if (up.fotos.length > 0 || up.avaliacao && up.avaliacao.fotos.length > 0)
+      .card-image.waves-effect.waves-block.waves-light
+        img.activator(src=up.fotos[0] || up.avaliacao.fotos[0])
+    .card-content(style='border-top: 1px solid rgba(160, 160, 160, 0.2); padding: 10px;')
+      p.cardCidade.pink-text.text-lighten-2(style='margin: 0;')
+        a(href='/servico/' + up.servico.urlized)= up.servico.title
+    .card-content(style='padding: 0 10px 10px 10px;')
+      if (up.body)
+        p!= up.body || up.avaliacao.body
+      if (up.fotos.length > 1 || up.avaliacao && up.avaliacao.fotos.length > 1)
+        .row(style='margin-bottom: 0; ')
+          each foto, index in up.fotos || up.avaliacao.fotos
+            if (index > 0 && index < 3)
+              .col.s12.m6.l6
+                img.responsive-img.z-depth-1(src=foto)
+          if (up.fotos.length > 3 || up.avaliacao && up.avaliacao.fotos.length > 3)
+            .col.s12.m12.l12
+              a(href='/servico/' +  up.servico.urlized + '/fotos')
+                small(style='margin-bottom: 0; text-align: center;') +#{up.fotos.length - 3 || up.avaliacao && up.avaliacao.fotos.length - 3} fotos
+    if (up.type === 'avaliacao')
+      .card-action(style='padding-top: 0;')
+        .row(style='margin-bottom: 0;')
+          .col.s12.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
+            | Impacto Social
+            .jq-ry-container(style='padding: 0px 2px; width: 100px;', readonly='readonly')
+              .jq-ry-group-wrapper
+                .jq-ry-normal-group.jq-ry-group
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                .jq-ry-rated-group.jq-ry-group(style='width: ' + (up.avaliacao.soc * 100) / 5 + '%;')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#c83579')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                    path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+            
+          .col.s12.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
+            | Impacto Ambiental
+            .jq-ry-container(style='padding: 0px 2px; width: 100px;', readonly='readonly')
+              .jq-ry-group-wrapper
+                .jq-ry-normal-group.jq-ry-group
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                .jq-ry-rated-group.jq-ry-group(style='width: ' + (up.avaliacao.amb * 100) / 5 + '%;')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#7fbd61')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                  svg(xmlns='http://www.w3.org/2000/svg', width='20px', height='20px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                    path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+
+
+
+    .card-reveal
+      span.card-title
+        | Card Title
+        i.material-icons.right close
+      p
+        | Here is some more information about this product that is only revealed once clicked on.
+// fim cards
