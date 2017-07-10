@@ -47,7 +47,12 @@ exports.new = function (req, res){
  */
 exports.create = async(function* (req, res) {
   const categoria = new Categoria({ title: req.body.title, body: req.body.body });
-
+  if (req.body.mae !== '') {
+    categoria.mae = req.body.mae;
+  }
+  if (req.body.selo === 'on') {
+    categoria.selo = true;
+  }
   // categoria.user = req.user;
   try {
     yield categoria.save();
@@ -84,6 +89,12 @@ exports.update = async(function* (req, res) {
     if (err) return res.send(err);
     categoria.title = req.body.title;
     categoria.body = req.body.body;
+    if (req.body.mae !== '') {
+      categoria.mae = req.body.mae;
+    }
+    if (req.body.selo === 'on') {
+      categoria.selo = true;
+    }
 
     categoria.save(function(err) {
       if (err) return console.log(err);

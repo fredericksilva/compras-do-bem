@@ -5,7 +5,9 @@ const categoriaSchema = new mongoose.Schema({
   title: { type: String, default: '', trim: true },
   body: { type: String, default: '', trim: true },
   img: { type: String, default: '', trim: true },
-  urlized: { type: String, default: '', trim: true }
+  urlized: { type: String, default: '', trim: true },
+  selo: { type: Boolean, default: false },
+  mae: { type: mongoose.Schema.ObjectId, ref: 'Categoria' }
 }, { timestamps: true });
 
 /**
@@ -52,6 +54,7 @@ categoriaSchema.statics = {
 
   load(urlized) {
     return this.findOne({ urlized })
+      .populate('mae')
       .exec();
   },
 
@@ -65,6 +68,7 @@ categoriaSchema.statics = {
   list() {
     const criteria = {};
     return this.find(criteria)
+      .populate('mae')
       .sort({ createdAt: -1 })
       .exec();
   }

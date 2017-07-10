@@ -27,9 +27,11 @@ exports.index = (req, res) => {
   const count = Update.count();
 
   Update.list(options).then((updates) => {
+    const up = JSON.stringify(updates);
     res.render('pages/home', {
       title: 'Home',
       updates,
+      up,
       device: req.device.type === 'phone' || req.device.type === 'tablet',
       page: page + 1,
       pages: Math.ceil(count / limit)

@@ -86,10 +86,22 @@ const servicoSchema = new mongoose.Schema({
     complemento: { type: String, default: '', trim: true },
     cep: { type: String, default: '', trim: true }
   },
+  pontos: [{
+    title: { type: String, default: '' },
+    estado: { type: String, default: '', trim: true },
+    cidade: { type: String, default: '', trim: true },
+    rua: { type: String, default: '', trim: true },
+    numero: { type: String, default: '', trim: true },
+    complemento: { type: String, default: '', trim: true },
+    cep: { type: String, default: '', trim: true }
+  }],
   clipping: [{
     title: { type: String },
+    desc: { type: String },
     img: { type: String },
+    site: { type: String },
     data: { type: Date },
+    selos: [{ type: mongoose.Schema.ObjectId, ref: 'Categoria' }],
     link: { type: String }
   }]
 }, { timestamps: true });
@@ -138,7 +150,9 @@ servicoSchema.statics = {
 
   load(urlized) {
     return this.findOne({ urlized })
-      .populate('categorias', 'title body img _id')
+      .populate('proprietario', 'profile email')
+      .populate('categorias')
+      .populate('clipping.selos')
       .exec();
   },
 
@@ -155,7 +169,8 @@ servicoSchema.statics = {
     const limit = options.limit || 30;
     return this.find(criteria)
       .populate('proprietario', 'profile email')
-      .populate('categorias', 'title body img _id')
+      .populate('categorias')
+      .populate('clipping.selos')
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(limit * page)

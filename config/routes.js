@@ -82,6 +82,10 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/servico/:urlized/upload', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.upload);
   app.post('/servico/:urlized/avatar/upload', passportConfig.isAuthenticated, upload.array('photos', 1), servicoController.avatar);
   app.post('/servico/:urlized/avaliar', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.avaliar);
+  app.post('/servico/:urlized/ponto', passportConfig.isAuthenticated, servicoController.ponto);
+  app.post('/servico/:urlized/selo', passportConfig.isAuthenticated, servicoController.scrape, servicoController.selo);
+  app.get('/servico/:urlized/delete/clipping/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removeclip);
+  app.get('/servico/:urlized/delete/categoria/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removecat);
 
     /**
    * Categoria routes.

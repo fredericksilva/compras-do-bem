@@ -42,12 +42,26 @@ block content
         h4 Nova Categoria
         br
         .row
+          .col.s12.m12.l12(style='margin-bottom: 20px;')
+            .switch
+              label Selo? 
+                br
+                | Não
+                input#selo(type='checkbox', name='selo')
+                span.lever
+                | Sim
           .col.s12.m12.l12
             label(for='categ_nome') Nome
             input#categ_nome(type='text', name='title')
           .col.s12.m12.l12
             label(for='categ_desc') Descriçao
             textarea#categ_desc.materialize-textarea(type='text', name='body')
+          .col.s12.m12.l12
+            label(for='mae') Categoria Mãe
+            select#mae(name='mae')
+              option.corinput(value='') SELECIONAR...
+              each categoria in categorias
+                option(value=categoria._id)= categoria.title
       .modal-footer
         button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Criar Nova
 
@@ -58,12 +72,26 @@ block content
         h4#categ_title Categoria: X
         br
         .row
+          .col.s12.m12.l12(style='margin-bottom: 20px;')
+            .switch
+              label Selo? 
+                br
+                | Não
+                input#selo_edit(type='checkbox', name='selo')
+                span.lever
+                | Sim
           .col.s12.m12.l12
             label(for='categ_nome_edit') Nome
             input#categ_nome_edit(type='text', name='title')
           .col.s12.m12.l12
             label(for='categ_desc_edit') Descriçao
             textarea#categ_desc_edit.materialize-textarea(type='text', name='body')
+          .col.s12.m12.l12
+            label(for='mae_edit') Categoria Mãe
+            select#mae_edit(name='mae_edit')
+              option.corinput(value='') SELECIONAR...
+              each categoria in categorias
+                option(value=categoria._id, id=categoria._id)= categoria.title
       .modal-footer
         button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Editar Categoria
 
@@ -141,6 +169,7 @@ block content
             thead
               tr
                 th Icone
+                th Selo
                 th Nome
                 th Descricao
                 th Acao
@@ -244,6 +273,17 @@ block scripts
               }
             },
             sortable: false
+          },
+          { 
+            data: 'selo',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return 'Sim'
+              } else {
+                return 'Não'
+              }
+            },
+            sortable: true
           },
           { data: 'title' },
           { data: 'body' },
@@ -398,7 +438,7 @@ block scripts
             data: 'user',
             render: function (data, type, full, meta) {
               if (data) {
-                console.log(full.body.split('\n')[1].length);
+                console.log(full)
                 return '<a href="/user/' + data._id + '" target="_blank">' + data.profile.first_name + ' ' + data.profile.second_name +'</a>'
               } else {
                 return 'Anônimo'
@@ -451,6 +491,10 @@ block scripts
             var item = categ_table.data()[index]
             $('#categ_title').text('Categoria: ' + item.title)
             $('#categ_nome_edit').val(item.title)
+            if (item.mae) {
+              $('#mae_edit').parent().find('input').val(item.mae.title)
+            }
+            $('#selo_edit').attr('checked', item.selo)
             $('#categ_desc_edit').val(item.body)
             $('#edit-categ').attr('action', '/categoria/' + item._id + '/edit', item.body)
             $('#categ_edit').modal('open');

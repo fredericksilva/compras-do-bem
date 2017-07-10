@@ -21,15 +21,29 @@
                   span.cardAcao  Adicionou #{up.fotos.length} fotos
               else if (up.type === 'avaliacao')
                 span.cardAcao  Fez uma avaliação
+              else if (up.type === 'clipping')
+                span.cardAcao  Adicionou uma notícia
               else if (up.type === 'servico')
                 span.cardAcao  Cadastrou um serviço
+              else if (up.type === 'ponto')
+                span.cardAcao  Cadastrou um ponto de venda
     if (up.fotos.length > 0 || up.avaliacao && up.avaliacao.fotos.length > 0)
       .card-image.waves-effect.waves-block.waves-light(style='max-height: 330px;')
         img.activator(src=up.fotos[0] || up.avaliacao.fotos[0])
+    if (up.type === 'ponto')
+      .card-image
+        div.mapa_up(id='mapa_' + up.clip.numero + '+' + up.clip.rua.replace(/ /g, '+') + ',+' + up.clip.cidade.replace(/ /g, '+'), data-adress=up.clip.numero + '+' + up.clip.rua.replace(/ /g, '+') + ',+' + up.clip.cidade.replace(/ /g, '+'))
     .card-content(style='border-top: 1px solid rgba(160, 160, 160, 0.2); padding: 10px;')
       p.cardCidade.pink-text.text-lighten-2(style='margin: 0;')
         a(href='/servico/' + up.servico.urlized)= up.servico.title
     .card-content(style='padding: 0 10px 10px 10px;')
+      if (up.type === 'clipping')
+        strong= up.clip.title
+      if (up.type === 'ponto')
+        strong #{up.clip.title}
+        p #{up.clip.rua} #{up.clip.numero}
+          br
+          | #{up.clip.cidade}, #{up.clip.estado}
       if (up.body)
         - var bod = up.body || up.avaliacao.body
         - bod = bod.split('\n')
@@ -38,6 +52,8 @@
             p= b
           else
             br
+      if (up.type === 'clipping')
+        a(href=up.clip.link, target='_blank') Ler notícia
       if (up.fotos.length > 1 || up.avaliacao && up.avaliacao.fotos.length > 1)
         .row(style='margin-bottom: 0; ')
           each foto, index in up.fotos || up.avaliacao.fotos

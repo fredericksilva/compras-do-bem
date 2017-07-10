@@ -6,10 +6,10 @@ else
     .icones_profile_foto
       .abreprofile.dropdown-button(data-activates='dropdown1', data-beloworigin='true', style='padding: 0;')
         if user.profile.picture
-          img(src=user.profile.picture)
+          img.circle(src=user.profile.picture)
         else
-          img(src='/img/avatar-default.png')
-        i.material-icons(style='background-color: #3fa084;') keyboard_arrow_down
+          img.circle(src='/img/avatar-default.png')
+        i.material-icons keyboard_arrow_down
       ul#dropdown1.dropdown-content
         li(style='margin: 0;')
           a(href='/account') Perfil

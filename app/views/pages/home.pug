@@ -2,6 +2,11 @@ extends ../layouts/home
 
 block styles
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css')
+  style(type='text/css').
+    .mapa_up {
+      width: 100%;
+      height: 150px;
+    }
 
 block content
   section.categorias
@@ -10,13 +15,14 @@ block content
       .row
         .exibe
           each categoria in categorias
-            .s12.m3.l3.col.boxCategoria.center-align
-              if (categoria.img)
-                .col.s12.m12.l12
-                  img(src=categoria.img, style='width: 50px; margin: auto; margin-top: 30px;')
-              else
-                i.material-icons.pink-text.text-lighten-2 restaurant_menu
-              | #{categoria.title.toUpperCase()}
+            if (!categoria.selo)
+              .s12.m3.l3.col.boxCategoria.center-align
+                if (categoria.img)
+                  .col.s12.m12.l12
+                    img(src=categoria.img, style='width: 50px; margin: auto; margin-top: 30px;')
+                else
+                  i.material-icons.pink-text.text-lighten-2 restaurant_menu
+                | #{categoria.title.toUpperCase()}
           //- .s12.m3.l3.col.boxCategoria.center-align.vermais(data-destino='nExibe')
           //-   i.material-icons.pink-text.text-lighten-2 more_horiz
           //-   | MAIS CATEGORIAS
@@ -70,3 +76,26 @@ block content
 
 
 block scripts
+  script(type='text/javascript').
+    var mapas = document.getElementsByClassName('mapa_up');
+    for (var i = 0; i < mapas.length; i++) {
+      console.log(mapas[i]);
+      var adress = mapas[i].attributes['data-adress'].value;
+      $.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + adress + '&key=AIzaSyBN9YP6_d0Iu3dE6tXgjHsucVUE2TsZATM', function (data) {
+        initMap(data.results[0].geometry.location, adress);
+      })
+    }
+    
+    function initMap(central, adress) {
+      var map = new google.maps.Map(document.getElementById('mapa_' + adress), {
+        zoom: 14,
+        center: {lat: central.lat, lng: central.lng}
+      });
+
+      var image = '/img/marker.png';
+      var central = new google.maps.Marker({
+        position: {lat: central.lat, lng: central.lng},
+        map: map,
+        icon: image
+      });
+    }

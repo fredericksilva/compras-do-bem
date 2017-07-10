@@ -1,6 +1,8 @@
 /**
  * Module dependencies.
  */
+const _ = require('underscore');
+const moment = require('moment');
 const mongoose = require('mongoose');
 const { wrap: async } = require('co');
 const only = require('only');
@@ -11,6 +13,7 @@ const Categoria = mongoose.model('Categoria');
 const Avaliacao = mongoose.model('Avaliacao');
 const Update = mongoose.model('Update');
 const assign = Object.assign;
+const scrape = require('html-metadata');
 
 /**
  * Load
@@ -247,6 +250,153 @@ exports.avatar = async(function* (req, res) {
 });
 
 /**
+ * Remove clipping
+ */
+exports.removeclip = async(function* (req, res) {
+  const servico = req.servico;
+  servico.clipping.splice(req.params.index, 1);
+  try {
+    yield servico.save();
+    req.flash('success', { msg: 'Clipping removido' });
+    res.redirect(`/servico/${servico.urlized}`);
+  } catch (err) {
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${servico.urlized}`);
+  }
+});
+
+/**
+ * Remove categoria
+ */
+exports.removecat = async(function* (req, res) {
+  const servico = req.servico;
+  servico.categorias.splice(req.params.index, 1);
+  try {
+    yield servico.save();
+    req.flash('success', { msg: 'Categoria removida' });
+    res.redirect(`/servico/${servico.urlized}`);
+  } catch (err) {
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${servico.urlized}`);
+  }
+});
+
+/**
+ * Novo Ponto de Venda
+ */
+exports.ponto = async(function* (req, res, next) {
+  const servico = req.servico;
+  const ponto = {
+    title: req.body.title,
+    estado: req.body.estado,
+    cidade: req.body.cidade,
+    rua: req.body.rua,
+    numero: req.body.numero,
+    complemento: req.body.complemento
+  };
+  servico.pontos.push(ponto);
+  try {
+    yield servico.save();
+    const up = new Update();
+    up.type = 'ponto';
+    up.user = req.user._id;
+    up.servico = servico._id;
+    up.clip = ponto;
+    up.save();
+    req.flash('success', { msg: 'Ponto de venda adicionado' });
+    res.redirect(`/servico/${servico.urlized}`);
+  } catch (err) {
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${servico.urlized}`);
+  }
+});
+
+/**
+ * Scrape
+ */
+exports.scrape = async(function* (req, res, next) {
+  let link = req.body.link;
+  if (link.split('http').length === 1) {
+    link = `http://${link}`;
+  }
+  scrape(link).then((metadata) => {
+    req.selo = metadata;
+    next();
+  }).catch((error) => {
+    console.log(error);
+    req.flash('error', { msg: 'Erro de URL' });
+    res.redirect(`/servico/${servico.urlized}`);
+  });
+});
+
+/**
+ * Create clipping
+ */
+exports.selo = async(function* (req, res) {
+  const servico = req.servico;
+  let clip = {
+    title: 'Título',
+    desc: 'Descrição',
+    site: '',
+    img: '',
+    data: Date.now(),
+    selos: [],
+    link: ''
+  };
+  for (var key in req.body) {
+    if (req.body[key] === 'true') {
+      clip.selos.push();
+      const has = _.find(servico.categorias, function(cat) {
+        return cat._id.toString() === key;
+      });
+      if (has === undefined) {
+        servico.categorias.push(key);
+      }
+      clip.selos.push(key);
+    }
+  }
+  if (req.selo.openGraph) {
+    clip.title = req.selo.openGraph.title || clip.title;
+    clip.desc = req.selo.openGraph.description || clip.desc;
+    clip.link = req.selo.openGraph.url || req.body.link;
+    clip.site = req.selo.openGraph.sitename || clip.site;
+    if (req.selo.openGraph.image) {
+      clip.img = req.selo.openGraph.image.url || clip.img;
+    }
+    if (moment(req.selo.openGraph.published_time).isValid()) {
+      clip.data = moment(req.selo.openGraph.published_time).toDate() || clip.data;
+    }
+  } else if (req.selo.general) {
+    clip.title = req.selo.general.title || clip.title;
+    clip.desc = req.selo.general.description || clip.desc;
+    clip.link = req.selo.general.canonical || req.body.link;
+    clip.site = req.selo.general.sitename || clip.site;
+    clip.img = req.selo.general.image || clip.img;
+    clip.data = req.selo.general.published_time || clip.data;
+  }
+  servico.clipping.push(clip);
+  try {
+    yield servico.save();
+    const up = new Update();
+    up.type = 'clipping';
+    up.body = clip.desc;
+    up.user = req.user._id;
+    up.servico = servico._id;
+    if (clip.img !== '') {
+      up.fotos.push(clip.img);
+    }
+    up.clip = clip;
+    up.save();
+    req.flash('success', { msg: 'Selo adicionado' });
+    res.redirect(`/servico/${servico.urlized}`);
+  } catch (err) {
+    console.log('err: ', err);
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${servico.urlized}`);
+  }
+});
+
+/**
  * Criar a avaliacao
  */
 exports.avaliar = async(function* (req, res, next) {
@@ -285,10 +435,13 @@ exports.avaliar = async(function* (req, res, next) {
  * Show
  */
 exports.show = function (req, res) {
+  console.log(req.servico.clipping);
   Categoria.list().then((categorias) => {
     Avaliacao.list({ servico: req.servico._id }).then((avaliacoes) => {
       let amb = 0.0;
       let soc = 0.0;
+      const endereco = JSON.stringify(req.servico.endereco);
+      const pontos = JSON.stringify(req.servico.pontos);
       for (var i = 0; i < avaliacoes.length; i++) {
         amb += avaliacoes[i].amb;
         soc += avaliacoes[i].soc;
@@ -302,6 +455,8 @@ exports.show = function (req, res) {
         servico: req.servico,
         soc,
         amb,
+        endereco,
+        pontos,
         categorias,
         avaliacoes,
         device: req.device.type === 'phone' || req.device.type === 'tablet'

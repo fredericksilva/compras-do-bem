@@ -174,6 +174,76 @@ block styles
       font-size: 1.5rem !important;
     }
 
+    #selos-negocio .row {
+      margin-bottom: 1.5rem !important;
+    }
+
+    #selos-negocio .col {
+      padding: .5rem 1.2rem !important;
+    }
+
+    #modal-selos {
+      max-height: 100%;
+    }
+    #modal-selos .modal-content {
+      padding: 0;
+    }
+    #modal-selos .container {
+      padding: 0 50px;
+    }
+    #modal-selos p {
+      margin: 0;;
+    }
+    #modal-selos .selo-box {
+      padding: .5rem;
+      margin: 0 .25rem;
+      background: rgba(175, 215, 202, 0.28);
+      position: relative;
+    }
+    #modal-selos .selo-box .img-box {
+      padding: 0rem 1.5rem;
+    }
+    #modal-selos .selo-box p {
+      text-align: center;
+    }
+    #modal-selos .selo-box p a {
+      font-size: 10px;
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      letter-spacing: 2px;
+      line-height: 11px;
+      margin-left: 3px;
+      margin-top: 6px;
+    }
+    #modal-selos .carousel {
+      overflow-y: scroll;
+    }
+    #modal-selos .carousel .carousel-item {
+      width: 100% !important;
+    }
+    #modal-selos .subtipo.chose .collapsible-header {
+      background: #3fa084;
+      color: white;
+    }
+    .tabs .indicator {
+      background: #c83579 !important;
+    }
+    .tabs .tab a {
+      color: #c83579 !important;
+    }
+    .tabs .tab a:hover, .tabs .tab a.active {
+      color: #c83579 !important;
+    }
+
+    #mapa {
+      width: 100%;
+      height: 250px;
+    }
+
 block content
   section.reinvindicacao
     .container
@@ -196,7 +266,7 @@ block content
             - var hasAvatar = '';
             - if (servico.avatar.img) { hasAvatar = 'has-avatar' }
             .col.s8.m3.l3.offset-s2.avatar-wrapper(style='position: relative;', class=hasAvatar)
-              #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none;')
+              #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none; height: 160px;')
                 if (servico.avatar.img)
                   img#avatar.avatar(src=servico.avatar.img, style='margin-left: ' + servico.avatar.offset + ';')
                 else
@@ -222,11 +292,12 @@ block content
                     | Não reivindicada
                 .col.s12.m12.l12
                   each categoria, index in servico.categorias
-                    - var coma = ','
-                    - if (servico.categorias.length === index + 1) { coma = '' }
-                    - if (categoria !== 'endereco.existe')
-                      a(href='#') #{categoria.title}
-                      | #{coma}
+                    if (!categoria.selo)
+                      - var coma = ','
+                      - if (servico.categorias.length === index + 1) { coma = '' }
+                      - if (categoria !== 'endereco.existe')
+                        a(href='#') #{categoria.title}
+                        | #{coma}
                 .col.s12.m12.l12
                   a(href='/servico/'+servico.urlized+'/edit')
                     i.material-icons edit
@@ -303,6 +374,105 @@ block content
         .container
           button#avaliar-enviar.btmodal-action.waves-effect.waves-green.btn.left Enviar
           a.btmodal-action.modal-close.waves-effect.waves-green.btn.right Cancelar
+
+  .linhapontilhada
+  section
+
+    #modal-selos.modal.bottom-sheet
+      .modal-content
+        ul#tabs-selos.tabs
+          li.active.tab.col.s3
+            a.active(href='#todos-selos-tab') Selos
+          li.tab.col.s3
+            a(href='#novo-selo-tab') Novo Selo
+        .tabs-content.carousel
+          #todos-selos-tab.col.s12.carousel-item
+            .row
+              .col.s12.m12.l12
+                h5 Selos
+                p.desc Selos são...
+                small
+                  a(href='#') Selos existentes
+            .row
+              each selo, index in servico.categorias
+                if (selo.selo)
+                  .col.s4.m1.l1.selo-box
+                    if (user.admin)
+                      a.btn-floating.red(href='/servico/' + servico.urlized + '/delete/categoria/' + index, style='position: absolute; top: -10px; right: -10px;')
+                        i.material-icons remove
+                    .col.s12.m12.l12.img-box
+                      img.circle.responsive-img(src=selo.img)
+                    .col.s12.m12.l12
+                      p #{selo.title}
+                        a.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.body, href='') ?
+            .row
+              each clip, index in servico.clipping
+                .col.s12.m3.l3
+                  a(href=clip.link, target='_blank')
+                    .card
+                      .card-image
+                        img(src=clip.img)
+                        if (user.admin)
+                          a.btn-floating.halfway-fab.red(href='/servico/' + servico.urlized + '/delete/clipping/' + index)
+                            i.material-icons remove
+                      .card-stacked
+                        .card-content(style='')
+                          span.card-title= clip.title
+                          | #{clip.desc}
+                        if (clip.selos.length > 0)
+                          .card-action
+                            .row(style='margin-bottom: 0;')
+                              each selo in clip.selos
+                                .col.s3.m3.l3
+                                  img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
+
+          #novo-selo-tab.col.s12.carousel-item
+            form(action='/servico/' + servico.urlized + '/selo', method='POST')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .row
+                .col.s12.m12.l12
+                  h5 Infrome o link de uma matéria sobre 
+                    strong #{servico.title}
+                  input#link-materia.validate(type='text', placeholder='Link matéria', name='link', required)
+                  label(for='link-materia')
+              .row
+                .col.s12.m12.l12 
+                  h5 Selos
+                  p Escolha os selos referentes a essa matéria.
+                  ul.collapsible(data-collapsible='expandable')
+                    each tipo in categorias
+                      if (tipo.selo && !tipo.mae)
+                        li
+                          .collapsible-header
+                            i.material-icons
+                              img.circle.responsive-img(src=tipo.img, style='padding-top: 5px;')
+                            | #{tipo.title}
+                          .collapsible-body
+                            span #{tipo.body}
+                            ul.collapsible(data-collapsible='expandable')
+                              each subtipo in categorias
+                                if (subtipo.mae && subtipo.mae._id.toString() === tipo._id.toString())
+                                  li.subtipo(data-id=subtipo._id)
+                                    input(type='hidden', name=subtipo._id, value='false')
+                                    .collapsible-header
+                                      i.material-icons
+                                        img.circle.responsive-img(src=subtipo.img, style='padding-top: 5px;')
+                                      | #{subtipo.title}
+                                    .collapsible-body
+                                      span #{subtipo.body}
+                                  
+              .modal-footer
+                button.btn(type='submit') button
+    .container#selos-negocio
+      .row
+        each selo in servico.categorias
+          if (selo.selo)
+            .col.s4.m1.l1
+              a.selo(href='')
+                img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
+        .col.s4.m1.l1
+          button#novo-selo.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Adicionar novo selo', style='margin-bottom: 5px;')
+            i.material-icons.left add
 
   .linhapontilhada
   section.btnDecoracao
@@ -565,23 +735,122 @@ block content
               i.material-icons edit
               | Editar informações
           hr
-          h2 EXPLORE SUA CIDADE
+          h2 CATEGORIAS
           ul.collection
-            each categoria in categorias
+            each categoria in servico.categorias
               li.collection-item
                 if (categoria.img)
                   img.small.left(src=categoria.img, style='width: 25px; margin-right: 20px;')
                 else
                   i.small.pink-text.lighten-2.material-icons.left mode_edit
                 | #{categoria.title}
-          .sobremapa
-            i.material-icons.tuny keyboard_arrow_left
-            |  Ampliar mapa
-          iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
+          h2 PONTOS DE VENDA
+          a#novo-ponto(href='#')
+            i.material-icons add
+            | Adicionar ponto
+          #modal-pontos.modal.bottom-sheet(style='max-height: 100%;')
+            form(action='/servico/' + servico.urlized + '/ponto', method='POST')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .modal-content
+                h4 Ponto de venda
+                .row
+                  .col.s12.m12.l12
+                    label(for='title') NOME
+                    input#title.validate(placeholder='NOME', type='text', name='title', value='', required)
+                  .col.s12.m6.l6
+                    label(for='estado') ESTADO
+                    select#estados(name='estado')
+                      option.corinput(value='') SELECIONAR...
+                  .col.s12.m6.l6
+                    label(for='cidade') CIDADE
+                    select#cidades(name='cidade')
+                      option.corinput(value='') SELECIONAR...
+                #endereco(style='display: block;')
+                  label(for='rua') RUA
+                  input#rua.validate(placeholder='RUA', type='text', name='rua', value='', required)
+                  .row
+                    .col.s12.m6.l6
+                      label(for='numero') NÚMERO
+                      input#numero.validate(placeholder='NÚMERO', type='text', name='numero', value='', required)
+                    .col.s12.m6.l6
+                      label(for='complemento') COMPLEMENTO
+                      input#complemento.validate(placeholder='COMPLEMENTO', type='text', name='complemento', value='', required)
+                br
+              .modal-footer
+                button.btn.left Enviar
+                a.btn.right.modal-close Cancelar
+          if (servico.endereco.existe || servico.pontos.length > 0)
+            if (servico.pontos.length > 0)
+              each ponto in servico.pontos
+                #modal-pontos-info.modal.bottom-sheet
+                  .modal-content
+                    h3 PONTOS DE VENDA
+                    .row
+                      .col.s12.m4.l4
+                        .card
+                          .card-content
+                            span.card-title= ponto.title
+                            p #{ponto.rua} #{ponto.numero}
+                              br
+                              | #{ponto.cidade}, #{ponto.estado}
+            .sobremapa
+              i.material-icons.tuny keyboard_arrow_left
+              |  Ampliar mapa
+            #mapa
+            //- iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
 
 block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js')
   script(src='/js/lib/load-image.min.js')
+  if (servico.endereco.existe || servico.pontos.length > 0)
+    script(type='text/javascript').
+      // This example adds a marker to indicate the position of Bondi Beach in Sydney,
+      // Australia.
+      var endereco = JSON.parse('!{endereco}');
+      var pontos = JSON.parse('!{pontos}');
+      var adress = endereco.numero + '+' +  endereco.rua.replace(/ /g, '+')  + ',+' + endereco.cidade.replace(/ /g, '+');
+      $.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + adress + '&key=AIzaSyBN9YP6_d0Iu3dE6tXgjHsucVUE2TsZATM', function (data) {
+        initMap(data.results[0].geometry.location);
+      })
+      function initMap(central) {
+        var map = new google.maps.Map(document.getElementById('mapa'), {
+          zoom: 10,
+          center: {lat: central.lat, lng: central.lng}
+        });
+        if (endereco.existe) {
+          var image = '/img/marker_central.png';
+          var central = new google.maps.Marker({
+            position: {lat: central.lat, lng: central.lng},
+            map: map,
+            icon: image
+          });
+          central.addListener('click', function() {
+            $('#modal-pontos-info').modal('open');
+          })
+        }
+
+
+        if (pontos.length > 0) {
+          getMarkers(map);
+        }
+      }
+      function getMarkers(map) {
+        var markers = [];
+        var image = '/img/marker.png';
+        for (var i = 0; i < pontos.length; i++) {
+          var mark = pontos[i].numero + '+' +  pontos[i].rua.replace(/ /g, '+')  + ',+' + pontos[i].cidade.replace(/ /g, '+');
+          $.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + mark + '&key=AIzaSyBN9YP6_d0Iu3dE6tXgjHsucVUE2TsZATM', function (data) {
+            var ponto = new google.maps.Marker({
+              position: {lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng},
+              map: map,
+              icon: image
+            });
+            ponto.addListener('click', function() {
+              $('#modal-pontos-info').modal('open');
+            })
+          })
+        }
+      }
   script(type='text/javascript').
     (function() {
       var ev = new $.Event('style'),
@@ -739,20 +1008,98 @@ block scripts
 
       $('#foto-enviar').on('click', function() {
         $('#foto-form').submit();
-      })
+      });
 
       $('#prev-wrap a').on('click', function(e) {
         e.preventDefault();
         $('.carousel.carousel-slider').carousel('prev');
-      })
+      });
 
       $('#next-wrap a').on('click', function(e) {
         e.preventDefault();
         $('.carousel.carousel-slider').carousel('next');
-      })
+      });
 
       $('#avaliar').on('click', function(e) {
         e.preventDefault();
         $('#modal-avaliar').modal('open');
+      });
+
+      $('.selo').on('click', function(e) {
+        e.preventDefault();
+        $('#modal-selos').modal('open');
+        $('#tabs-selos').tabs('select_tab', 'todos-selos-tab');
+      });
+
+      $('#novo-selo').on('click', function(e) {
+        $('#modal-selos').modal('open');
+        $('#tabs-selos').tabs('select_tab', 'novo-selo-tab');
+      });
+
+      $('.subtipo').on('click', function(e) {
+        console.log($(this).find('input').val());
+        $(this).toggleClass('chose');
+        if ($(this).find('input').val() === 'false') {
+          $(this).find('input').val('true');
+        } else {
+          $(this).find('input').val('false');
+        }
+      });
+
+      $('#novo-ponto').on('click', function(e) {
+        e.preventDefault();
+        $('#modal-pontos').modal('open');
       })
+
+      $.getJSON('/estados.json', function (data) {
+        var items = [];
+        var options = '<option value="">escolha um estado</option>';	
+        var estado = '#{servico.endereco.estado}';
+
+        $.each(data, function (key, val) {
+          if (estado === val.nome) {
+            options += '<option value="' + val.nome + '" selected>' + val.nome + '</option>';
+          } else {
+            options += '<option value="' + val.nome + '">' + val.nome + '</option>';
+          }
+        });
+        $("#estados").html(options);
+        $('select').material_select();
+				
+        $("#estados").change(function () {				
+				
+          updateCidades(data);
+					
+        }).change();
+
+        //- if (estado !== '') {
+        //-   $('#estados').parent().find('.select-dropdown').val(estado)
+        //- }
+      });
+
+      var updateCidades = function(data) {
+        var options_cidades = '';
+        var str = "";					
+        var cidade = '#{servico.endereco.cidade}';
+        
+        $("#estados option:selected").each(function () {
+          str += $(this).text();
+        });
+        
+        $.each(data, function (key, val) {
+          if(val.nome == str) {							
+            $.each(val.cidades, function (key_city, val_city) {
+              if (cidade === val_city) {
+                options_cidades += '<option value="' + val_city + '" selected>' + val_city + '</option>';
+              } else {
+                options_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
+              }
+            });
+          }
+        });
+
+        $("#cidades").html(options_cidades);
+        $('select').material_select();
+        //- $('#cidades').parent().find('.select-dropdown').val(cidade);
+      }
     })

@@ -6,6 +6,7 @@ const updateSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.ObjectId, ref: 'User' },
   avaliacao: { type: mongoose.Schema.ObjectId, ref: 'Avaliacao' },
   servico: { type: mongoose.Schema.ObjectId, ref: 'Servico' },
+  clip: { type: Object },
   fotos: [String]
 }, { timestamps: true });
 
