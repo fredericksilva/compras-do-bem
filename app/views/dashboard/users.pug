@@ -1,0 +1,219 @@
+extends ../layouts/dashboard
+
+block styles
+
+
+block content
+
+  #user_delete.modal.modal-fixed-footer
+    .modal-content
+      form#delete-user(action='/user/_id', method='GET')
+        input(type='hidden', name='_csrf', value=_csrf)
+        h4#user_title_del Usuário: X
+        h6 Tem certeza que deseja deletar o usuario?
+        .row
+          .col.s12.m12.l12
+            button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Usuário
+    .modal-footer
+      button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+  .row
+    .col.s12.m6.l6
+      .card
+        .card-content.black-text
+          p
+            i.mdi-social-group-add
+            |  Novos usuários
+          h4#novos_users.card-stats-number
+          p.card-stats-compare
+            i#novos_users_perc
+            span.deep-orange-text.text-lighten-2  essa semana
+    .col.s12.m6.l6
+      .card
+        .card-content.black-text
+          p
+            i.mdi-editor-attach-money
+            | Usuários
+          h4#users_total.card-stats-number 
+          p.card-stats-compare
+            i#users_total_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+  .row
+    .col.s12.m12.l12
+      section#usuarios.cadastro
+        .row
+          .col.s6.m6.l6
+            h2 Usuarios
+          .col.s12.m12.l12
+            | Procurar:
+            .input-field.inline
+              input#user_busca(type='text')
+              label(for='user_busca')
+          .col.s12.m12.l12
+            table#user_table.highlight.bordered(style='width: 100%;')
+              thead
+                tr
+                  th Nome
+                  th Email
+                  th Admin
+                  th Acao
+              tbody
+
+block scripts
+  script(type='text/javascript').
+    
+    $(document).ready(function() {
+
+      var user_table = $('#user_table').DataTable({
+        ajax: {
+          url: '/users',
+          type: 'GET'
+        },
+        columns: [
+          { 
+            data: 'profile',
+            render: function (data, type, full, meta) {
+              return data.first_name + ' ' + data.second_name
+            },
+            sortable: true
+          },
+          { 
+            data: 'email',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return data
+              } else {
+                return 'Não informado'
+              }
+            },
+            sortable: true
+          },
+          { 
+            data: 'admin',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return 'Admin'
+              } else {
+                return '<a href="/user/' + full._id + '/makeadmin" class="btn btn-table">Tornar Admin</a>'
+              }
+            },
+            sortable: false
+          },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete_user/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: true, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
+      setTimeout(function() {
+        var hoje = new Date();
+        var semana = new Date(hoje);
+        semana.setDate(semana.getDate() - 7);
+        var mes = new Date(hoje);
+        mes.setDate(mes.getDate() - 31);
+        var outra_sem = new Date(semana);
+        outra_sem.setDate(outra_sem.getDate() - 7);
+        var novos = _.filter(user_table.data(), function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() > semana.getTime()
+        })
+        var novos_ant =  _.filter(user_table.data(), function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() > outra_sem.getTime() && dat.getTime() < semana.getTime()
+        })
+        var users_ant =  _.filter(user_table.data(), function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() < mes.getTime()
+        })
+        var dif = novos.length - novos_ant.length;
+        var dif_total = user_table.data().length - users_ant.length;
+        var perc = (dif * 100) / novos_ant.length;
+        var perc_total = (dif_total * 100) / user_table.data().length;
+        if (perc > 0) {
+          $('#novos_users_perc').addClass('mdi-hardware-keyboard-arrow-up')
+        } else {
+          $('#novos_users_perc').addClass('mdi-hardware-keyboard-arrow-down')
+        }
+        if (perc_total > 0) {
+          $('#users_total_perc').addClass('mdi-hardware-keyboard-arrow-up')
+        } else {
+          $('#users_total_perc').addClass('mdi-hardware-keyboard-arrow-down')
+        }
+        $('#novos_users').text(novos.length);
+        $('#users_total').text(user_table.data().length);
+        $('#users_total_perc').text(perc_total+'%');
+        $('#novos_users_perc').text(perc+'%');
+      }, 500)
+
+      $('.dataTables_length').parent().parent().css('display', 'none');
+
+      $('#user_busca').on('keyup', function() {
+        user_table.search( this.value ).draw();
+      });
+
+      $(window).on('hashchange', function() {
+        var hash = location.hash;
+        if (hash !== '') {
+          if (hash.split('edit/').length > 1) {
+            var index = hash.split('edit/')[1]
+            var item = categ_table.data()[index]
+            $('#categ_title').text('Categoria: ' + item.title)
+            $('#categ_nome_edit').val(item.title)
+            if (item.mae) {
+              $('#mae_edit').parent().find('input').val(item.mae.title)
+            }
+            $('#selo_edit').attr('checked', item.selo)
+            $('#categ_desc_edit').val(item.body)
+            $('#edit-categ').attr('action', '/categoria/' + item._id + '/edit', item.body)
+            $('#categ_edit').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete/').length > 1) {
+            var index = hash.split('delete/')[1]
+            var item = categ_table.data()[index]
+            $('#categ_title_del').text('Categoria: ' + item.title)
+            $('#delete-categ').attr('action', '/categoria/' + item._id + '/delete')
+            $('#categ_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_user/').length > 1) {
+            var index = hash.split('delete_user/')[1]
+            var item = user_table.data()[index]
+            $('#user_title_del').text('User: ' + item.profile.first_name + ' ' + item.profile.second_name)
+            $('#delete-user').attr('action', '/user/' + item._id + '/delete')
+            $('#user_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_servico/').length > 1) {
+            var index = hash.split('delete_servico/')[1]
+            var item = servico_table.data()[index]
+            $('#servico_title_del').text('User: ' + item.title)
+            $('#delete-servico').attr('action', '/servico/' + item._id + '/delete')
+            $('#servico_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_update/').length > 1) {
+            var index = hash.split('delete_update/')[1]
+            var item = update_table.data()[index]
+            $('#update_title_del').text('Update: ' + item._id)
+            $('#delete-update').attr('action', '/update/' + item._id + '/delete')
+            $('#update_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_avaliacao/').length > 1) {
+            var index = hash.split('delete_avaliacao/')[1]
+            var item = avaliacao_table.data()[index]
+            $('#avaliacao_title_del').text('Avaliacao: ' + item._id)
+            $('#delete-avaliacao').attr('action', '/avaliacao/' + item._id + '/delete')
+            $('#avaliacao_delete').modal('open');
+            location.hash = ''
+          } else {
+            location.hash = ''
+          }
+        } else {
+          console.log('vazio')
+        }
+      })
+    })

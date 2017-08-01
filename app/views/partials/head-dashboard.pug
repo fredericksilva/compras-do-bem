@@ -1,0 +1,33 @@
+head
+  meta(charset='utf-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1.0')
+  meta(name='theme-color' content='#4DA5F4')
+  meta(name='csrf-token', content=_csrf)
+  meta(name='robots', content='noindex, nofollow')
+  title #{title} - Dashboard
+  link(rel='shortcut icon', href='/favicon.png')
+  block styles
+  link(rel='stylesheet', href='//fonts.googleapis.com/icon?family=Material+Icons')
+  link(href='/dashboard/css', rel='stylesheet', type='text/css')
+  link(href='/dashboard/materialize.css', type='text/css', rel='stylesheet', media='screen,projection')
+  link(href='/dashboard/chartist.min.css', type='text/css', rel='stylesheet', media='screen,projection')
+  link(href='/dashboard/style.css', type='text/css', rel='stylesheet', media='screen,projection')
+  link(href='/dashboard/icon', rel='stylesheet')
+  link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css')
+  link(rel='stylesheet', href='https://cdn.datatables.net/1.10.15/css/dataTables.material.min.css')
+  style(type='text/css').
+    .acao {
+      width: 80px;
+    }
+    .btn-floating.btn-table {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      float: right;
+      margin-right: 5px;
+    }
+    .btn-floating.btn-table i {
+      line-height: 30px;
+      font-size: 1rem;
+    }

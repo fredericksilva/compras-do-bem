@@ -1,0 +1,32 @@
+doctype html
+html
+  //- Inclui metatags e CSS
+  include ../partials/head-dashboard
+
+  body(style='display: flex; min-height: 100vh; flex-direction: column;')
+    //- Inclui o header
+    .loading.pink.darken-4(style='display: none;')
+      img(src='./index_files/logo.png', width='160')
+      br
+      .preloader-wrapper.big.active
+        .spinner-layer.spinner-red
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+    .page
+      include ../partials/header-dashboard
+      
+      main
+        //- Conteúdo da página
+        block content
+      main
+        #shell.shell
+          .shell-header.navegacao
+          .shell-content.login
+      //- Inclui Scripts
+      include ../partials/foot-dashboard
+      //- Inclui componente de mensagens de erro / sucesso / info
+      include ../partials/flash

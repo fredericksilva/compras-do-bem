@@ -9,7 +9,7 @@
   "author": "Jardim Digital",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=development node app.js",
+    "start": "NODE_ENV=development nodemon app.js",
     "test": "mocha --reporter spec",
     "postinstall": "npm rebuild node-sass"
   },

@@ -16,6 +16,7 @@ const servicoController = require('../app/controllers/servico');
 const contactController = require('../app/controllers/contact');
 const updateController = require('../app/controllers/update');
 const avaliacaoController = require('../app/controllers/avaliacao');
+const dashController = require('../app/controllers/dashboard');
 
 // const upload = multer({ dest: path.join(__dirname, '../public/uploads') });
 
@@ -56,6 +57,12 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/users', userController.index);
   app.get('/servicos', servicoController.ajax);
   app.get('/avaliacoes', avaliacaoController.ajax);
+
+  /**
+   * Dashboard routes.
+   */
+  app.get('/dash/users', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.users);
+  app.get('/dash/categorias', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.categorias);
 
   /**
    * Updates routes.
