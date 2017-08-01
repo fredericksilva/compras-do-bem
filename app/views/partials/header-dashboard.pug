@@ -1,0 +1,51 @@
+header
+  nav.navegacao
+    .nav-wrapper
+      a.button-collapse.top-nav.full.hide-on-large-only(href='https://720kb.github.io/hubuntu-ui/#', data-activates='nav-mobile')
+        i.mdi-navigation-menu
+      span.brand-logo.page-title(href='#')
+        img(src='/dashboard/logo.png', width='100')
+      ul.right.hide-on-med-and-down
+        li
+          a(href='https://720kb.github.io/hubuntu-ui/#')
+            span.nav-badge 3
+            i.material-icons chat_bubble
+        li
+          a(href='https://720kb.github.io/hubuntu-ui/#')
+            i.material-icons settings
+        li
+          a.tooltipped(href='https://720kb.github.io/hubuntu-ui/#', data-position='left', data-delay='50', data-tooltip='Logout', data-tooltip-id='0cf5c2d0-4de2-ef9e-167e-839fb6478775')
+            i.material-icons exit_to_app
+  ul#nav-mobile.side-nav.cor3.fixed.text-white(style='left: 0px;')
+    li.navegacao
+      .user
+        .chip.login.white-text
+          if user.profile.picture
+            img(src=user.profile.picture)
+          else
+            img(src='/img/avatar-default.png')
+          | #{user.profile.first_name.charAt(0).toUpperCase()}#{user.profile.first_name.slice(1)} #{user.profile.second_name.charAt(0).toUpperCase()}.
+    li.login
+      a.login
+        i.material-icons.deep-orange-text airplay
+        span Dashboard
+    li
+      a
+        i.material-icons perm_identity
+        |  Users
+    li
+      a
+        i.material-icons clear_all
+        |  Categorias
+    li
+      a
+        i.material-icons trending_up
+        |  Serviços
+    li
+      a
+        i.material-icons layers
+        |  Avaliações
+    li
+      a
+        i.material-icons storage
+        |  Updates

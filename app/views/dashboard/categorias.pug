@@ -1,0 +1,209 @@
+extends ../layouts/dashboard
+
+block styles
+
+
+block content
+
+  #categ_modal.modal.modal-fixed-footer
+    form#nova-categ(action='/categoria/nova', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .modal-content
+        h4 Nova Categoria
+        br
+        .row
+          .col.s12.m12.l12(style='margin-bottom: 20px;')
+            .switch
+              label Selo? 
+                br
+                | Não
+                input#selo(type='checkbox', name='selo')
+                span.lever
+                | Sim
+          .col.s12.m12.l12
+            label(for='categ_nome') Nome
+            input#categ_nome(type='text', name='title')
+          .col.s12.m12.l12
+            label(for='categ_desc') Descriçao
+            textarea#categ_desc.materialize-textarea(type='text', name='body')
+          .col.s12.m12.l12
+            label(for='mae') Categoria Mãe
+            select#mae(name='mae')
+              option.corinput(value='') SELECIONAR...
+              each categoria in categorias
+                option(value=categoria._id)= categoria.title
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Criar Nova
+
+  #categ_edit.modal.modal-fixed-footer
+    form#edit-categ(action='/categoria/_id', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .modal-content
+        h4#categ_title Categoria: X
+        br
+        .row
+          .col.s12.m12.l12(style='margin-bottom: 20px;')
+            .switch
+              label Selo? 
+                br
+                | Não
+                input#selo_edit(type='checkbox', name='selo')
+                span.lever
+                | Sim
+          .col.s12.m12.l12
+            label(for='categ_nome_edit') Nome
+            input#categ_nome_edit(type='text', name='title')
+          .col.s12.m12.l12
+            label(for='categ_desc_edit') Descriçao
+            textarea#categ_desc_edit.materialize-textarea(type='text', name='body')
+          .col.s12.m12.l12
+            label(for='mae_edit') Categoria Mãe
+            select#mae_edit(name='mae_edit')
+              option.corinput(value='') SELECIONAR...
+              each categoria in categorias
+                option(value=categoria._id, id=categoria._id)= categoria.title
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Editar Categoria
+
+  #categ_delete.modal.modal-fixed-footer
+      .modal-content
+        form#delete-categ(action='/categoria/_id', method='GET')
+          input(type='hidden', name='_csrf', value=_csrf)
+          h4#categ_title_del Categoria: X
+          h6 Tem certeza que deseja deletar a categoria?
+          .row
+            .col.s12.m12.l12
+              button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Categoria
+      .modal-footer
+        button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+  .row
+    .col.s12.m12.l12
+      section#categorias.cadastro
+        .row
+          .col.s12.m12.l12
+            h2 Categorias
+              a.btn-floating.btn-small.waves-effect.waves-light.pink#categ_modal-btn(href='#', style='margin-left: 20px;')
+                i.material-icons add
+
+
+          .col.s12.m12.l12
+            table#categ_table.highlight.bordered
+              thead
+                tr
+                  th Icone
+                  th Selo
+                  th Nome
+                  th Descricao
+                  th Acao
+              tbody
+
+block scripts
+  script(type='text/javascript').
+    
+    $(document).ready(function() {
+
+      var categ_table = $('#categ_table').DataTable({
+        ajax: {
+          url: '/categorias',
+          type: 'GET'
+        },
+        columns: [
+          { 
+            data: 'img',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return '<img src="' + data + '" class="circle responsive-image" style="width: 30px;">'
+              } else {
+                return '<form id="' + full.urlized + '-form" action="/categoria/' + full.urlized + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0 17px;"><i class="material-icons left white-text" style="margin: 0;">add_a_photo</i><input id="image-' + full.urlized + '" type="file" name="photos" onchange="uploadIcon(' + meta.row + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
+              }
+            },
+            sortable: false
+          },
+          { 
+            data: 'selo',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return 'Sim'
+              } else {
+                return 'Não'
+              }
+            },
+            sortable: true
+          },
+          { data: 'title' },
+          { data: 'body' },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a><a class="btn-floating btn-table yellow black-text categ_edit" href="#edit/' + meta.row + '"><i class="material-icons">mode_edit</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: false, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
+      $('.dataTables_length').parent().parent().css('display', 'none');
+
+      $(window).on('hashchange', function() {
+        var hash = location.hash;
+        if (hash !== '') {
+          if (hash.split('edit/').length > 1) {
+            var index = hash.split('edit/')[1]
+            var item = categ_table.data()[index]
+            $('#categ_title').text('Categoria: ' + item.title)
+            $('#categ_nome_edit').val(item.title)
+            if (item.mae) {
+              $('#mae_edit').parent().find('input').val(item.mae.title)
+            }
+            $('#selo_edit').attr('checked', item.selo)
+            $('#categ_desc_edit').val(item.body)
+            $('#edit-categ').attr('action', '/categoria/' + item._id + '/edit', item.body)
+            $('#categ_edit').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete/').length > 1) {
+            var index = hash.split('delete/')[1]
+            var item = categ_table.data()[index]
+            $('#categ_title_del').text('Categoria: ' + item.title)
+            $('#delete-categ').attr('action', '/categoria/' + item._id + '/delete')
+            $('#categ_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_user/').length > 1) {
+            var index = hash.split('delete_user/')[1]
+            var item = user_table.data()[index]
+            $('#user_title_del').text('User: ' + item.profile.first_name + ' ' + item.profile.second_name)
+            $('#delete-user').attr('action', '/user/' + item._id + '/delete')
+            $('#user_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_servico/').length > 1) {
+            var index = hash.split('delete_servico/')[1]
+            var item = servico_table.data()[index]
+            $('#servico_title_del').text('User: ' + item.title)
+            $('#delete-servico').attr('action', '/servico/' + item._id + '/delete')
+            $('#servico_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_update/').length > 1) {
+            var index = hash.split('delete_update/')[1]
+            var item = update_table.data()[index]
+            $('#update_title_del').text('Update: ' + item._id)
+            $('#delete-update').attr('action', '/update/' + item._id + '/delete')
+            $('#update_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_avaliacao/').length > 1) {
+            var index = hash.split('delete_avaliacao/')[1]
+            var item = avaliacao_table.data()[index]
+            $('#avaliacao_title_del').text('Avaliacao: ' + item._id)
+            $('#delete-avaliacao').attr('action', '/avaliacao/' + item._id + '/delete')
+            $('#avaliacao_delete').modal('open');
+            location.hash = ''
+          } else {
+            location.hash = ''
+          }
+        } else {
+          console.log('vazio')
+        }
+      })
+    })
