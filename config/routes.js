@@ -49,7 +49,6 @@ module.exports = (app, passportConfig, passport) => {
    * Pages routes.
    */
   app.get('/', pagesController.index);
-  app.get('/user/:id', pagesController.userShow);
   app.get('/servico', servicoController.index);
   app.get('/dashboard', passportConfig.isAuthenticated, passportConfig.isAdmin, pagesController.dashboard);
   app.get('/categorias', categoriaController.index);
@@ -98,6 +97,7 @@ module.exports = (app, passportConfig, passport) => {
   /**
    * User routes.
    */
+  app.param('id', userController.load);
   app.get('/login', userController.getLogin);
   app.post('/login', userController.postLogin);
   app.get('/logout', userController.logout);
@@ -108,7 +108,7 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/signup', userController.getSignup);
   app.post('/signup', userController.postSignup);
   app.get('/verificacao/:verifToken', userController.verifyAccount);
-  // app.get('/contact', contactController.getContact);
+  app.get('/user/:id', userController.show);
   app.post('/contact', contactController.postContact);
   app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
   app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);

@@ -11,7 +11,7 @@
         .col.s9.m9.l9(style='line-height: 0rem;')
           .row
             .col.s12.m12.l12
-              span.card-title.activator.cardNome
+              a.card-title.cardNome(href='/user/' + up.user._id)
                 | #{up.user.profile.first_name.charAt(0).toUpperCase()}#{up.user.profile.first_name.slice(1)} #{up.user.profile.second_name.charAt(0).toUpperCase()}.
             .col.s12.m12.l12
               if (up.type === 'fotos')

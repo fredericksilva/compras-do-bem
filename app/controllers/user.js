@@ -18,6 +18,18 @@ const transporter = nodemailer.createTransport({
 
 const User = mongoose.model('User');
 
+/**
+ * Load
+ */
+exports.load = async(function* (req, res, next, id) {
+  try {
+    req.usuario = yield User.load(id);
+    if (!req.usuario) return next(new Error('Usuário não encontrado'));
+  } catch (err) {
+    return next(err);
+  }
+  next();
+});
 
 exports.index = async(function* (req, res) {
   const users = yield User.list();
@@ -236,6 +248,17 @@ exports.makeAdmin = (req, res, next) => {
 exports.getAccount = (req, res) => {
   res.render('account/profile', {
     title: 'Manutenção de Perfil'
+  });
+};
+
+/**
+ * GET /user/:id
+ * User page.
+ */
+exports.show = (req, res) => {
+  res.render('user/show', {
+    title: 'User show',
+    usuario: req.usuario
   });
 };
 

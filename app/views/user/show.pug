@@ -1,0 +1,206 @@
+extends ../layouts/default
+
+block styles
+
+block content
+  section.btnDecoracao.perfil.dadosPerfil
+    .container
+      .row
+        .col.s12.m8.l3
+          img(src='img/exemplo2.jpg')
+          ul.collection
+            li.collection-item
+              i.small.pink-text.lighten-2.material-icons.left mode_edit
+              | Restaurante
+            li.collection-item
+              i.small.pink-text.lighten-2.material-icons.left mode_edit
+              | Compras
+            li.collection-item
+              i.small.pink-text.lighten-2.material-icons.left mode_edit
+              | Vida Noturna
+            li.collection-item
+              i.small.pink-text.lighten-2.material-icons.left mode_edit
+              | Vida Ativa
+            li.collection-item
+              i.small.pink-text.lighten-2.material-icons.left mode_edit
+              | Beleza e Spas
+            li.collection-item
+              i.small.pink-text.lighten-2.material-icons.left directions_car
+              | Veículos
+            li.collection-item
+              i.small.pink-text.lighten-2.material-icons.left directions_car
+              | Serviços Residências
+        .col.s12.m9.l9.dadosPerfil.nomePerfil
+          h2 #{usuario.profile.first_name.charAt(0).toUpperCase()}#{usuario.profile.first_name.slice(1)} #{usuario.profile.second_name.charAt(0).toUpperCase()}.
+          span
+            | Praça Cardeal Câmara vista do Bonde nos
+            | Arcos da Lapa  
+            i.small.pink-text.lighten-2.material-icons  mode_edit
+        .col.s12.m9.l9.dadosPerfil.iconePerfil
+          a.btn-flat.disabled
+            i.material-icons.tiny.left.pink-text.lighten-2 group_add
+            | Adicionar aos amigos
+          a.btn-flat.disabled
+            i.material-icons.tiny.left.pink-text.lighten-2 touch_app
+            | Elogios
+          a.btn-flat.disabled
+            i.material-icons.tiny.left.pink-text.lighten-2 mode_comment
+            |     Enviar uma mensagem
+          a.btn-flat.disabled
+            i.material-icons.tiny.left.pink-text.lighten-2 person
+            |  Seguir
+          a.btn-flat.disabled
+            i.material-icons.tiny.left.pink-text.lighten-2 insert_comment
+            |  Avaliações Similares
+          h2 Avaliações de Fernanda
+          .row
+            .col.s10.m10.l10
+              hr
+              // inicio loop
+              .resultados
+                .col.s2
+                  img.responsive-img(src='img/exemplo.jpg', alt='')
+                  // notice the "circle" class
+                .col.s5
+                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
+                  .avaliacaoBusca
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons star_rate
+                    | 																(30)
+                  .preco $$$ . Árabe, Lanchonetes
+                .col.s5
+                  strong Catete
+                  br
+                  | 									Largo do Machado, 29
+                  br
+                  | 									Rio de Janeiro - RJ 23510-600
+                  br
+                  | 									(21) 2557-2377
+              // fim loop
+              // inicio loop
+              .resultados
+                .col.s2
+                  img.responsive-img(src='img/exemplo.jpg', alt='')
+                  // notice the "circle" class
+                .col.s5
+                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
+                  .avaliacaoBusca
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons star_rate
+                    | 																(30)
+                  .preco $$$ . Árabe, Lanchonetes
+                .col.s5
+                  strong Catete
+                  br
+                  | 									Largo do Machado, 29
+                  br
+                  | 									Rio de Janeiro - RJ 23510-600
+                  br
+                  | 									(21) 2557-2377
+              // fim loop
+              // inicio loop
+              .resultados
+                .col.s2
+                  img.responsive-img(src='img/exemplo.jpg', alt='')
+                  // notice the "circle" class
+                .col.s5
+                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
+                  .avaliacaoBusca
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons star_rate
+                    | 																(30)
+                  .preco $$$ . Árabe, Lanchonetes
+                .col.s5
+                  strong Catete
+                  br
+                  | 									Largo do Machado, 29
+                  br
+                  | 									Rio de Janeiro - RJ 23510-600
+                  br
+                  | 									(21) 2557-2377
+              // fim loop
+              // inicio loop
+              .resultados
+                .col.s2
+                  img.responsive-img(src='img/exemplo.jpg', alt='')
+                  // notice the "circle" class
+                .col.s5
+                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
+                  .avaliacaoBusca
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons star_rate
+                    | 																(30)
+                  .preco $$$ . Árabe, Lanchonetes
+                .col.s5
+                  strong Catete
+                  br
+                  | 									Largo do Machado, 29
+                  br
+                  | 									Rio de Janeiro - RJ 23510-600
+                  br
+                  | 									(21) 2557-2377
+              // fim loop
+              // inicio loop
+              .resultados
+                .col.s2
+                  img.responsive-img(src='img/exemplo.jpg', alt='')
+                  // notice the "circle" class
+                .col.s5
+                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
+                  .avaliacaoBusca
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons star_rate
+                    | 																(30)
+                  .preco $$$ . Árabe, Lanchonetes
+                .col.s5
+                  strong Catete
+                  br
+                  | 									Largo do Machado, 29
+                  br
+                  | 									Rio de Janeiro - RJ 23510-600
+                  br
+                  | 									(21) 2557-2377
+              // fim loop
+              // inicio loop
+              .resultados
+                .col.s2
+                  img.responsive-img(src='img/exemplo.jpg', alt='')
+                  // notice the "circle" class
+                .col.s5
+                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
+                  .avaliacaoBusca
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons.yellow-text.text-darken-1 star_rate
+                    i.material-icons star_rate
+                    | 																(30)
+                  .preco $$$ . Árabe, Lanchonetes
+                .col.s5
+                  strong Catete
+                  br
+                  | 									Largo do Machado, 29
+                  br
+                  | 									Rio de Janeiro - RJ 23510-600
+                  br
+                  | 									(21) 2557-2377
+              // fim loop
+            .col.s2.m2.l2
+              | www
+
+block scripts

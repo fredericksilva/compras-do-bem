@@ -36,8 +36,9 @@ header.pai
       ul#categoria.dropForm.dropdown-content
         li
         each categoria in categorias
-          li(data-destino='cat', data-valor=categoria.title, data-id=categoria._id)
-            a= categoria.title
+          if (!categoria.selo)
+            li(data-destino='cat', data-valor=categoria.title, data-id=categoria._id)
+              a= categoria.title
     section.logo
       .container
         .row

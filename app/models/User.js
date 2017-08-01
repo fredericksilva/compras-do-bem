@@ -68,6 +68,18 @@ userSchema.methods.gravatar = function gravatar(size) {
 userSchema.statics = {
 
   /**
+   * Find article by id
+   *
+   * @param {ObjectId} id
+   * @api private
+   */
+
+  load(id) {
+    return this.findOne({ _id: id })
+      .exec();
+  },
+
+  /**
    * List articles
    *
    * @param {Object} options

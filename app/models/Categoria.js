@@ -65,8 +65,8 @@ categoriaSchema.statics = {
    * @api private
    */
 
-  list() {
-    const criteria = {};
+  list(options) {
+    const criteria = options || {};
     return this.find(criteria)
       .populate('mae')
       .sort({ createdAt: -1 })
