@@ -1,0 +1,248 @@
+extends ../layouts/dashboard
+
+block styles
+
+
+block content
+
+  #servico_delete.modal.modal-fixed-footer
+    .modal-content
+      form#delete-servico(action='/servico/_id', method='GET')
+        input(type='hidden', name='_csrf', value=_csrf)
+        h4#servico_title_del Servico: X
+        h6 Tem certeza que deseja deletar o serviço?
+        .row
+          .col.s12.m12.l12
+            button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Servico
+    .modal-footer
+      button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
+  .row
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-social-group-add
+            |  Cadastrados esse mês
+          h4#servic_novo.card-stats-number
+          p.card-stats-compare
+            i#servic_novo_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-social-group-add
+            |  Serviços cadastrados
+          h4#servic_total.card-stats-number
+          p.card-stats-compare
+            i#servic_total_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-editor-attach-money
+            | Serviços com proprietário
+          h4#servc_prop.card-stats-number 
+          p.card-stats-compare
+            i#servc_prop_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-editor-attach-money
+            | Reinvindicações
+          h4#reinv_mes.card-stats-number 
+          p.card-stats-compare
+            i#reinv_mes_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+  .row
+    .col.s12.m12.l12
+      section#servicos.cadastro
+        .row
+          .col.s6.m6.l6
+            h2 Serviços
+          .col.s12.m12.l12
+            | Procurar:
+            .input-field.inline
+              input#servico_busca(type='text')
+              label(for='servico_busca')
+          .col.s12.m12.l12
+            table#servico_table.highlight.bordered(style='width: 100%;')
+              thead
+                tr
+                  th Nome
+                  th Email
+                  th Telefone
+                  th Site
+                  th Proprietario
+                  th Acao
+              tbody
+
+block scripts
+  script(type='text/javascript').
+    
+    $(document).ready(function() {
+
+      var servico_table = $('#servico_table').DataTable({
+        ajax: {
+          url: '/servicos',
+          type: 'GET'
+        },
+        columns: [
+          { 
+            data: 'title',
+            render: function (data, type, full, meta) {
+              return '<a href="/servico/' + full.urlized + '" target="_blank">' + data +'</a>'
+            },
+            sortable: true
+          },
+          { data: 'email' },
+          { data: 'telefone' },
+          { data: 'site' },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              if (full.proprietario) {
+                return full.proprietario.profile.first_name + ' ' + full.proprietario.profile.second_name
+              } else {
+                return 'Não Reinvindicado'
+              }
+            }
+          },
+          { 
+            data: '_id',
+            render: function (data, type, full, meta) {
+              return '<div class="acao"><a href="#delete_servico/' + meta.row + '" class="btn-floating btn-table red"><i class="material-icons">remove</i></a><a class="btn-floating btn-table yellow black-text categ_edit" href="/servico/' + full.urlized + '/edit"><i class="material-icons">mode_edit</i></a></div>'
+            },
+            sortable: false
+          }
+        ],
+        searching: true, 
+        lengthMenu: [5], 
+        pageLength: 5
+      });
+
+      setTimeout(function() {
+        var hoje = new Date();
+        var semana = new Date(hoje);
+        semana.setDate(semana.getDate() - 7);
+        var mes = new Date(hoje);
+        mes.setDate(mes.getDate() - 31);
+        var outro_mes = new Date(mes);
+        outro_mes.setDate(outro_mes.getDate() - 31);
+        var novos = _.filter(servico_table.data(), function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() > mes.getTime()
+        })
+        var novos_ant =  _.filter(servico_table.data(), function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() > outro_mes.getTime() && dat.getTime() < mes.getTime()
+        })
+        var servic_ant =  _.filter(servico_table.data(), function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() < mes.getTime()
+        })
+        var prop =  _.filter(servico_table.data(), function(u) {
+          return u.proAuth === true
+        })
+        var prop_ant =  _.filter(prop, function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() < mes.getTime()
+        })
+        var dif = novos.length - novos_ant.length;
+        var dif_total = servico_table.data().length - servic_ant.length;
+        var dif_prop = prop.length - prop_ant.length;
+        var perc = (dif * 100) / novos_ant.length;
+        var perc_prop = (dif_prop * 100) / prop.length;
+        var perc_total = (dif_total * 100) / servico_table.data().length;
+        if (perc > 0) {
+          $('#servic_novo_perc').addClass('mdi-hardware-keyboard-arrow-up')
+        } else {
+          $('#servic_novo_perc').addClass('mdi-hardware-keyboard-arrow-down')
+        }
+        if (perc_total > 0) {
+          $('#servic_total_perc').addClass('mdi-hardware-keyboard-arrow-up')
+        } else {
+          $('#servic_total_perc').addClass('mdi-hardware-keyboard-arrow-down')
+        }
+        if (perc_prop > 0) {
+          $('#servc_prop_perc').addClass('mdi-hardware-keyboard-arrow-up')
+        } else {
+          $('#servc_prop_perc').addClass('mdi-hardware-keyboard-arrow-down')
+        }
+        $('#servic_novo').text(novos.length);
+        $('#servc_prop').text(prop.length);
+        $('#servic_total').text(servico_table.data().length);
+        $('#servic_total_perc').text(perc_total+'%');
+        $('#servic_novo_perc').text(perc+'%');
+        $('#servc_prop_perc').text(perc_prop+'%');
+      }, 500)
+
+      $('.dataTables_length').parent().parent().css('display', 'none');
+
+      $('#servico_busca').on('keyup', function() {
+        servico_table.search( this.value ).draw();
+      });
+
+      $(window).on('hashchange', function() {
+        var hash = location.hash;
+        if (hash !== '') {
+          if (hash.split('edit/').length > 1) {
+            var index = hash.split('edit/')[1]
+            var item = categ_table.data()[index]
+            $('#categ_title').text('Categoria: ' + item.title)
+            $('#categ_nome_edit').val(item.title)
+            if (item.mae) {
+              $('#mae_edit').parent().find('input').val(item.mae.title)
+            }
+            $('#selo_edit').attr('checked', item.selo)
+            $('#categ_desc_edit').val(item.body)
+            $('#edit-categ').attr('action', '/categoria/' + item._id + '/edit', item.body)
+            $('#categ_edit').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete/').length > 1) {
+            var index = hash.split('delete/')[1]
+            var item = categ_table.data()[index]
+            $('#categ_title_del').text('Categoria: ' + item.title)
+            $('#delete-categ').attr('action', '/categoria/' + item._id + '/delete')
+            $('#categ_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_user/').length > 1) {
+            var index = hash.split('delete_user/')[1]
+            var item = user_table.data()[index]
+            $('#user_title_del').text('User: ' + item.profile.first_name + ' ' + item.profile.second_name)
+            $('#delete-user').attr('action', '/user/' + item._id + '/delete')
+            $('#user_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_servico/').length > 1) {
+            var index = hash.split('delete_servico/')[1]
+            var item = servico_table.data()[index]
+            $('#servico_title_del').text('User: ' + item.title)
+            $('#delete-servico').attr('action', '/servico/' + item._id + '/delete')
+            $('#servico_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_update/').length > 1) {
+            var index = hash.split('delete_update/')[1]
+            var item = update_table.data()[index]
+            $('#update_title_del').text('Update: ' + item._id)
+            $('#delete-update').attr('action', '/update/' + item._id + '/delete')
+            $('#update_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('delete_avaliacao/').length > 1) {
+            var index = hash.split('delete_avaliacao/')[1]
+            var item = avaliacao_table.data()[index]
+            $('#avaliacao_title_del').text('Avaliacao: ' + item._id)
+            $('#delete-avaliacao').attr('action', '/avaliacao/' + item._id + '/delete')
+            $('#avaliacao_delete').modal('open');
+            location.hash = ''
+          } else {
+            location.hash = ''
+          }
+        } else {
+          console.log('vazio')
+        }
+      })
+    })

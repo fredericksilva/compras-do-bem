@@ -1,0 +1,214 @@
+extends ../layouts/dashboard
+
+block styles
+
+
+block content
+
+  .row
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-social-group-add
+            |  Usuários
+          h4#users_total.card-stats-number
+          p.card-stats-compare
+            i#users_total_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-editor-attach-money
+            | Serviços
+          h4#serv_total.card-stats-number 
+          p.card-stats-compare
+            i#serv_total_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-editor-attach-money
+            | Avaliações
+          h4#aval_total.card-stats-number 
+          p.card-stats-compare
+            i#aval_total_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+    .col.s12.m6.l3
+      .card
+        .card-content.black-text
+          p
+            i.mdi-editor-attach-money
+            | Updates
+          h4#updates_total.card-stats-number 
+          p.card-stats-compare
+            i#updates_total_perc
+            span.deep-orange-text.text-lighten-2  mês passado
+  .row
+    .col.s12.m6.l6
+      h4 Serviços mais avaliados
+      table#serv_mais_table.highlight.bordered(style='width: 100%;')
+        thead
+          tr
+            th Serviço
+            th Avaliações
+        tbody
+    .col.s12.m6.l6
+      h4 Usuário com mais avaliações
+      table#user_mais_table.highlight.bordered(style='width: 100%;')
+        thead
+          tr
+            th Usuário
+            th Avaliações
+        tbody
+
+block scripts
+  script(type='text/javascript').
+    
+    $(document).ready(function() {
+      var users = [];
+      var servicos = [];
+      var avaliacoes = [];
+      var updates = [];
+      var hoje = new Date();
+      var semana = new Date(hoje);
+      semana.setDate(semana.getDate() - 7);
+      var mes = new Date(hoje);
+      mes.setDate(mes.getDate() - 31);
+      var outra_sem = new Date(semana);
+      outra_sem.setDate(outra_sem.getDate() - 7);
+      var outro_mes = new Date(mes);
+      outro_mes.setDate(outro_mes.getDate() - 31);
+      $.get('/users', function(data) {
+        console.log(data.data)
+        users = data.data
+        var users_ant =  _.filter(users, function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() < mes.getTime()
+        })
+        var dif_total = users.length - users_ant.length;
+        var perc_total = (dif_total * 100) / users.length;
+        if (perc_total > 0) {
+          $('#users_total_perc').addClass('mdi-hardware-keyboard-arrow-up');
+        } else {
+          $('#users_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
+        }
+        $('#users_total').text(users.length);
+        $('#users_total_perc').text(perc_total+'%');
+      })
+      $.get('/servicos', function(data) {
+        console.log(data.data)
+        servicos = data.data
+        var serv_ant =  _.filter(servicos, function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() < mes.getTime()
+        })
+        var dif_total = servicos.length - serv_ant.length;
+        var perc_total = (dif_total * 100) / servicos.length;
+        if (perc_total > 0) {
+          $('#serv_total_perc').addClass('mdi-hardware-keyboard-arrow-up');
+        } else {
+          $('#serv_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
+        }
+        $('#serv_total').text(servicos.length);
+        $('#serv_total_perc').text(perc_total+'%');
+      })
+      $.get('/avaliacoes', function(data) {
+        console.log(data.data)
+        avaliacoes = data.data
+        var aval_ant =  _.filter(avaliacoes, function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() < mes.getTime()
+        })
+        var dif_total = avaliacoes.length - aval_ant.length;
+        var perc_total = (dif_total * 100) / avaliacoes.length;
+        if (perc_total > 0) {
+          $('#aval_total_perc').addClass('mdi-hardware-keyboard-arrow-up');
+        } else {
+          $('#aval_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
+        }
+        $('#aval_total').text(avaliacoes.length);
+        $('#aval_total_perc').text(perc_total+'%');
+        servicosAval();
+        usuariosAval();
+      })
+      $.get('/updates', function(data) {
+        console.log(data.data)
+        updates = data.data
+        var updates_ant =  _.filter(updates, function(u) {
+          var dat = new Date(u.createdAt)
+          return dat.getTime() < mes.getTime()
+        })
+        var dif_total = updates.length - updates_ant.length;
+        var perc_total = (dif_total * 100) / updates.length;
+        if (perc_total > 0) {
+          $('#updates_total_perc').addClass('mdi-hardware-keyboard-arrow-up');
+        } else {
+          $('#updates_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
+        }
+        $('#updates_total').text(updates.length);
+        $('#updates_total_perc').text(perc_total+'%');
+      })
+
+      function servicosAval() {
+        var serv = [];
+        for(var i = 0; i < avaliacoes.length; i++) {
+          var existe = _.find(serv, function(s) {
+            return s.servico === avaliacoes[i].servico._id
+          });
+          if (existe === undefined) {
+            var obj = {
+              servico: avaliacoes[i].servico._id,
+              index: serv.length,
+              avals: 1
+            }
+            serv.push(obj);
+          } else {
+            serv[existe.index].avals +=1;
+          }
+        }
+        serv = _.sortBy(serv, 'avals');
+        console.log(servicos)
+        setTimeout(function() {
+          for (var o = 0; o < serv.length; o++) {
+            if (o === 10) { break; }
+            var servico = _.find(servicos, function(s) {
+              return s._id === serv[o].servico
+            });
+            $('#serv_mais_table tbody').prepend('<tr><td><a href="/servico/' + servico.urlized + '" target="_blank">' + servico.title +'</a></td><td>' + serv[o].avals + '</td></tr>')
+          }
+        }, 500)
+      }
+
+      function usuariosAval() {
+        var uses = [];
+        for(var i = 0; i < avaliacoes.length; i++) {
+          var existe = _.find(uses, function(s) {
+            return s.user === avaliacoes[i].user._id
+          });
+          if (existe === undefined) {
+            var obj = {
+              user: avaliacoes[i].user._id,
+              index: uses.length,
+              avals: 1
+            }
+            uses.push(obj);
+          } else {
+            uses[existe.index].avals +=1;
+          }
+        }
+        uses = _.sortBy(uses, 'avals');
+        setTimeout(function() {
+          for (var o = 0; o < uses.length; o++) {
+            if (o === 10) { break; }
+            var user = _.find(users, function(s) {
+              return s._id === uses[o].user
+            });
+            $('#user_mais_table tbody').prepend('<tr><td><a href="/user/' + user._id + '" target="_blank">' + user.profile.first_name.charAt(0).toUpperCase() + user.profile.first_name.slice(1) + ' ' + user.profile.second_name.charAt(0).toUpperCase()+ '.</a></td><td>' + uses[o].avals + '</td></tr>')
+          }
+        }, 500)
+      }
+
+    })

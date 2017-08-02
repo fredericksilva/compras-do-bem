@@ -25,7 +25,7 @@ exports.delete = function (req, res) {
     if (err) {
       console.log(err);
     }
-    respondOrRedirect({ res }, '/dashboard', {});
+    respondOrRedirect({ res }, '/dash/updates', {});
   });
 };
 

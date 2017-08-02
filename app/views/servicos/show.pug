@@ -397,7 +397,7 @@ block content
               each selo, index in servico.categorias
                 if (selo.selo)
                   .col.s4.m1.l1.selo-box
-                    if (user.admin)
+                    if (user && user.admin)
                       a.btn-floating.red(href='/servico/' + servico.urlized + '/delete/categoria/' + index, style='position: absolute; top: -10px; right: -10px;')
                         i.material-icons remove
                     .col.s12.m12.l12.img-box

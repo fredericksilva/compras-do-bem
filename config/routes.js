@@ -60,8 +60,12 @@ module.exports = (app, passportConfig, passport) => {
   /**
    * Dashboard routes.
    */
+  app.get('/dash', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.index);
   app.get('/dash/users', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.users);
   app.get('/dash/categorias', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.categorias);
+  app.get('/dash/servicos', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.servicos);
+  app.get('/dash/avaliacoes', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.avaliacoes);
+  app.get('/dash/updates', passportConfig.isAuthenticated, passportConfig.isAdmin, dashController.updates);
 
   /**
    * Updates routes.
@@ -104,7 +108,7 @@ module.exports = (app, passportConfig, passport) => {
   /**
    * User routes.
    */
-  app.param('id', userController.load);
+  app.param('user_id', userController.load);
   app.get('/login', userController.getLogin);
   app.post('/login', userController.postLogin);
   app.get('/logout', userController.logout);
@@ -115,15 +119,15 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/signup', userController.getSignup);
   app.post('/signup', userController.postSignup);
   app.get('/verificacao/:verifToken', userController.verifyAccount);
-  app.get('/user/:id', userController.show);
+  app.get('/user/:user_id', userController.show);
   app.post('/contact', contactController.postContact);
   app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
   app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
   app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
   app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
-  app.get('/user/:id/makeadmin', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.makeAdmin);
-  app.get('/user/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.delete);
+  app.get('/user/:user_id/makeadmin', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.makeAdmin);
+  app.get('/user/:user_id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.delete);
 
   /**
    * OAuth authentication routes. (Sign in)

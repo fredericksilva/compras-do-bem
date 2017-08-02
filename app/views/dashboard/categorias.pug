@@ -33,6 +33,7 @@ block content
               each categoria in categorias
                 option(value=categoria._id)= categoria.title
       .modal-footer
+        a.modal-action.modal-close.waves-effect.waves-green.btn.blue.left Cancelar
         button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Criar Nova
 
   #categ_edit.modal.modal-fixed-footer
@@ -63,6 +64,7 @@ block content
               each categoria in categorias
                 option(value=categoria._id, id=categoria._id)= categoria.title
       .modal-footer
+        a.modal-action.modal-close.waves-effect.waves-green.btn.blue.left Cancelar
         button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Editar Categoria
 
   #categ_delete.modal.modal-fixed-footer
@@ -75,7 +77,7 @@ block content
             .col.s12.m12.l12
               button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Deletar Categoria
       .modal-footer
-        button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+        button.modal-action.modal-close.waves-effect.waves-green.btn.blue.left Cancelar
 
   .row
     .col.s12.m12.l12
@@ -83,7 +85,7 @@ block content
         .row
           .col.s12.m12.l12
             h2 Categorias
-              a.btn-floating.btn-small.waves-effect.waves-light.pink#categ_modal-btn(href='#', style='margin-left: 20px;')
+              a.btn-floating.btn-small.waves-effect.waves-light.pink#categ_modal-btn(href='#', style='margin-left: 20px; line-height: 28px;')
                 i.material-icons add
 
 
@@ -100,6 +102,10 @@ block content
 
 block scripts
   script(type='text/javascript').
+    function uploadIcon (id) {
+      var c = document.getElementsByClassName('form-icone');
+      c[id].submit();
+    }
     
     $(document).ready(function() {
 
@@ -113,9 +119,9 @@ block scripts
             data: 'img',
             render: function (data, type, full, meta) {
               if (data) {
-                return '<img src="' + data + '" class="circle responsive-image" style="width: 30px;">'
+                return '<img src="' + data + '" class="circle responsive-image" style="width: 30px;"><form id="' + full._id + '-form" action="/categoria/' + full._id + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0;position: absolute;height: 15px;width: 15px;min-width: 0;top: -10px;"><i class="material-icons left white-text" style="margin: 0;line-height: 14px;font-size: 10px;margin-left: 2px;">add_a_photo</i><input id="image-' + full._id + '" type="file" name="photos" onchange="uploadIcon(' + meta.row + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
               } else {
-                return '<form id="' + full.urlized + '-form" action="/categoria/' + full.urlized + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0 17px;"><i class="material-icons left white-text" style="margin: 0;">add_a_photo</i><input id="image-' + full.urlized + '" type="file" name="photos" onchange="uploadIcon(' + meta.row + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
+                return '<form id="' + full._id + '-form" action="/categoria/' + full._id + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0 17px;"><i class="material-icons left white-text" style="margin: 0;">add_a_photo</i><input id="image-' + full._id + '" type="file" name="photos" onchange="uploadIcon(' + meta.row + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
               }
             },
             sortable: false
@@ -147,6 +153,12 @@ block scripts
       });
 
       $('.dataTables_length').parent().parent().css('display', 'none');
+
+      $('#categ_modal-btn').on('click', function(e) {
+        e.preventDefault();
+
+        $('#categ_modal').modal('open');
+      });
 
       $(window).on('hashchange', function() {
         var hash = location.hash;

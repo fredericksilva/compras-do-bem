@@ -188,18 +188,19 @@ block content
             br
             .row
               each cat in categorias
-                .col.s6.m4.l4(class=cat._id)
-                  - var val = false
-                  - if (!servico.isNew && categ.indexOf(cat.title) !== -1) { val = 'checked' }
-                  input(type='checkbox', class='filled-in', id=cat._id, name=cat._id, checked=val)
-                  label(for=cat._id)= cat.title
+                if (!cat.selo)
+                  .col.s6.m4.l4(class=cat._id)
+                    - var val = false
+                    - if (!servico.isNew && categ.indexOf(cat.title) !== -1) { val = 'checked' }
+                    input(type='checkbox', class='filled-in', id=cat._id, name=cat._id, checked=val)
+                    label(for=cat._id)= cat.title
             br
-            label tags
-            .row
-              .col.s12.m12.l12
-                input(type='hidden', value='', name='tags', id='tags')
-                //- p.caption Tags
-                .input-field.col.s12.chips
+            //- label tags
+            //- .row
+            //-   .col.s12.m12.l12
+            //-     input(type='hidden', value='', name='tags', id='tags')
+            //-     //- p.caption Tags
+            //-     .input-field.col.s12.chips
             //- br
             //- input#escreverComentario(type='checkbox')
             //- label(for='escreverComentario') ESCREVA UM COMENTÁRIO PARA ESTE NEGÓCIO

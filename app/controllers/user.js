@@ -17,6 +17,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const User = mongoose.model('User');
+const Avaliacao = mongoose.model('Avaliacao');
 
 /**
  * Load
@@ -203,17 +204,17 @@ exports.verifyAccount = (req, res, next) => {
  * Delete
  */
 exports.delete = function (req, res) {
-  if (req.user._id === req.params.id) {
+  if (req.user._id === req.params.user_id) {
     req.flash('errors', { msg: 'Você não pode deletar a própria conta.' });
-    return res.redirect('/dashboard');
+    return res.redirect('/dash/users');
   } else {
     User.remove({
-      _id: req.params.id
+      _id: req.params.user_id
     }, (err) => {
       if (err) {
         console.log(err);
       }
-      respondOrRedirect({ res }, '/dashboard', {});
+      respondOrRedirect({ res }, '/dash/users', {});
     });
   }
 };
@@ -223,7 +224,7 @@ exports.delete = function (req, res) {
  * Make user admin.
  */
 exports.makeAdmin = (req, res, next) => {
-  User.findOne({ _id: req.params.id }, (err, user) => {
+  User.findOne({ _id: req.params.user_id }, (err, user) => {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', { msg: 'Esse usuário não existe.' });
@@ -252,13 +253,18 @@ exports.getAccount = (req, res) => {
 };
 
 /**
- * GET /user/:id
+ * GET /user/:user_id
  * User page.
  */
 exports.show = (req, res) => {
-  res.render('user/show', {
-    title: 'User show',
-    usuario: req.usuario
+  Avaliacao.list({ user: req.params.user_id }).then((avaliacoes) => {
+    res.render('user/show', {
+      title: 'User show',
+      usuario: req.usuario,
+      avaliacoes
+    });
+  }).catch((err) => {
+    console.log(err);
   });
 };
 

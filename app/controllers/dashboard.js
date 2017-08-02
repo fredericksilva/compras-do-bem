@@ -16,6 +16,16 @@
 // const scrape = require('html-metadata');
 
 /**
+ * GET /dash
+ * Dasboard.
+ */
+exports.index = (req, res) => {
+  res.render('dashboard/index', {
+    title: 'Dashboard'
+  });
+};
+
+/**
  * GET /dash/users
  * Dasboard users.
  */
@@ -27,10 +37,40 @@ exports.users = (req, res) => {
 
 /**
  * GET /dash/categorias
- * Dasboard users.
+ * Dasboard categorias.
  */
 exports.categorias = (req, res) => {
   res.render('dashboard/categorias', {
     title: 'Categorias'
+  });
+};
+
+/**
+ * GET /dash/servicos
+ * Dasboard serviços.
+ */
+exports.servicos = (req, res) => {
+  res.render('dashboard/servicos', {
+    title: 'Serviços'
+  });
+};
+
+/**
+ * GET /dash/avaliacoes
+ * Dasboard avaliações.
+ */
+exports.avaliacoes = (req, res) => {
+  res.render('dashboard/avaliacoes', {
+    title: 'Avaliações'
+  });
+};
+
+/**
+ * GET /dash/updates
+ * Dasboard updates.
+ */
+exports.updates = (req, res) => {
+  res.render('dashboard/updates', {
+    title: 'Updates'
   });
 };

@@ -1,206 +1,394 @@
 extends ../layouts/default
 
 block styles
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css')
+  style(type='text/css').
+    .fotoProduto .material-placeholder {
+      height: 400px;
+    }
+    .fotoProduto img {
+      height: 100%;
+      width: auto;
+    }
+    .fotoProduto a {
+      color: white;
+      font-weight: 900;
+      font-size: 15px;
+      text-shadow: 2px 2px 2px black;
+    }
+    .fotoProduto .left-align a {
+      margin-left: 10px;
+    }
+    .fotoProduto .right-align a {
+      margin-right: 10px;
+    }
+
+    .fotoProduto .carousel.carousel-slider.center {
+      height: 400px !important;
+    }
+
+    .fotoProduto span {
+      background-color: transparent !important;
+    }
+
+    .dadosComercio .collection {
+      z-index: -1;
+    }
+
+    .carousel-item.active.aberto {
+      z-index: 1 !important;
+    }
+    .image_place img {
+      width: 100% !important;
+      height: auto;
+      border: 5px solid white;
+    }
+    .carroca img {
+      width: calc(50% - 10px) !important;
+      height: auto;
+      margin: 5px;
+      border: 5px solid white;
+    }
+    .carousel .indicators .indicator-item {
+      margin: 40px 4px !important;
+    }
+    .upload-image {
+      top: -32px;
+      width: 100%;
+      margin: 0;
+    }
+    .upload-image .btn{
+      width: 100%;
+      padding: 0 30px;
+      margin-left: 0 !important;
+      border-top: 1px solid gainsboro;
+      border-radius: 0 0 5px 5px;
+    }
+    .upload-image span{
+      font-size: 17px !important;
+      margin-top: 0px !important;
+      color: #3fa084 !important;
+      font-weight: 900 !important;
+    }
+    .upload-image i.material-icons {
+      font-size: 40px !important;
+      float: left !important;
+      color: #3fa084 !important;
+    }
+    .character-counter {
+      margin: 0 !important;
+    }
+    img.avatar {
+      height: 100%;
+      width: auto;
+    }
+    .avatar-wrapper {
+      position: relative !important;
+      height: 180px;
+      overflow: hidden;
+      padding: 0 !important;
+      margin-top: 20px;
+      border: 0.5rem solid white;
+    }
+    .avatar-wrapper .file-field.input-field {
+      position: absolute;
+      bottom: 13px;
+      left: 13px;
+    }
+    .avatar-wrapper .btn {
+      margin-left: 0 !important;
+      height: 36px !important;
+      padding: 0 12px;
+      position: relative;
+      line-height: 2.5rem !important;
+    }
+    .avatar-wrapper .material-icons {
+      font-size: 1rem;
+    }
+    .avatar-wrapper input#image-avatar {
+      width: 100%;
+      height: 36px;
+    }
+    .avatar-wrapper #avatar-backdrop {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: 9999999;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      display: none;
+    }
+    .avatar-wrapper.edit #avatar-backdrop {
+      display: inherit;
+    }
+    .avatar-wrapper.edit img.avatar {
+      z-index: 99999999999999999999999999999999999999999;
+      position: relative;
+    }
+    .avatar-wrapper.has-avatar .btn {
+      opacity: 0;
+    }
+    .avatar-wrapper.has-avatar:hover .btn {
+      opacity: 1;
+    }
+    .img-edit {
+      position: absolute;
+      left: 200px;
+      height: 150px;
+      width: 100%;
+      border-radius: 10px;
+      z-index: 99999999999999999999999;
+      top: 35px;
+      padding: 20px;
+      background-color: rgb(236, 236, 236);
+      display: none;
+    }
+    .img-edit.edit {
+      display: block;
+    }
+    .img-edit h5 {
+      text-align: center;
+      color: black;
+    }
+    .img-edit button.enviar {
+      float: right;
+    }
+
+    .btnDecoracao {
+      min-height: 50px !important;
+    }
+    .btnDecoracao .file-field {
+      margin: 0;
+    }
+    .btnDecoracao .btn.btnacoes {
+      margin-left: 0 !important;
+      height: 36px;
+      padding: 0 1rem;
+      position: relative;
+      line-height: 2.4rem;
+      width: 100%;
+    }
+    .btnDecoracao .btn.btnacoes i {
+      width: 20px !important;
+      font-size: 1.5rem !important;
+    }
+
+    #selos-negocio .row {
+      margin-bottom: 1.5rem !important;
+    }
+
+    #selos-negocio .col {
+      padding: .5rem 1.2rem !important;
+    }
+
+    #modal-selos {
+      max-height: 100%;
+    }
+    #modal-selos .modal-content {
+      padding: 0;
+    }
+    #modal-selos .container {
+      padding: 0 50px;
+    }
+    #modal-selos p {
+      margin: 0;;
+    }
+    #modal-selos .selo-box {
+      padding: .5rem;
+      margin: 0 .25rem;
+      background: rgba(175, 215, 202, 0.28);
+      position: relative;
+    }
+    #modal-selos .selo-box .img-box {
+      padding: 0rem 1.5rem;
+    }
+    #modal-selos .selo-box p {
+      text-align: center;
+    }
+    #modal-selos .selo-box p a {
+      font-size: 10px;
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      letter-spacing: 2px;
+      line-height: 11px;
+      margin-left: 3px;
+      margin-top: 6px;
+    }
+    #modal-selos .carousel {
+      overflow-y: scroll;
+    }
+    #modal-selos .carousel .carousel-item {
+      width: 100% !important;
+    }
+    #modal-selos .subtipo.chose .collapsible-header {
+      background: #3fa084;
+      color: white;
+    }
+    .tabs .indicator {
+      background: #c83579 !important;
+    }
+    .tabs .tab a {
+      color: #c83579 !important;
+    }
+    .tabs .tab a:hover, .tabs .tab a.active {
+      color: #c83579 !important;
+    }
+
+    #mapa {
+      width: 100%;
+      height: 250px;
+    }
 
 block content
-  section.btnDecoracao.perfil.dadosPerfil
+  section.reinvindicacao
     .container
       .row
-        .col.s12.m8.l3
-          img(src='img/exemplo2.jpg')
-          ul.collection
-            li.collection-item
-              i.small.pink-text.lighten-2.material-icons.left mode_edit
-              | Restaurante
-            li.collection-item
-              i.small.pink-text.lighten-2.material-icons.left mode_edit
-              | Compras
-            li.collection-item
-              i.small.pink-text.lighten-2.material-icons.left mode_edit
-              | Vida Noturna
-            li.collection-item
-              i.small.pink-text.lighten-2.material-icons.left mode_edit
-              | Vida Ativa
-            li.collection-item
-              i.small.pink-text.lighten-2.material-icons.left mode_edit
-              | Beleza e Spas
-            li.collection-item
-              i.small.pink-text.lighten-2.material-icons.left directions_car
-              | Veículos
-            li.collection-item
-              i.small.pink-text.lighten-2.material-icons.left directions_car
-              | Serviços Residências
-        .col.s12.m9.l9.dadosPerfil.nomePerfil
-          h2 #{usuario.profile.first_name.charAt(0).toUpperCase()}#{usuario.profile.first_name.slice(1)} #{usuario.profile.second_name.charAt(0).toUpperCase()}.
-          span
-            | Praça Cardeal Câmara vista do Bonde nos
-            | Arcos da Lapa  
-            i.small.pink-text.lighten-2.material-icons  mode_edit
-        .col.s12.m9.l9.dadosPerfil.iconePerfil
-          a.btn-flat.disabled
-            i.material-icons.tiny.left.pink-text.lighten-2 group_add
-            | Adicionar aos amigos
-          a.btn-flat.disabled
-            i.material-icons.tiny.left.pink-text.lighten-2 touch_app
-            | Elogios
-          a.btn-flat.disabled
-            i.material-icons.tiny.left.pink-text.lighten-2 mode_comment
-            |     Enviar uma mensagem
-          a.btn-flat.disabled
-            i.material-icons.tiny.left.pink-text.lighten-2 person
-            |  Seguir
-          a.btn-flat.disabled
-            i.material-icons.tiny.left.pink-text.lighten-2 insert_comment
-            |  Avaliações Similares
-          h2 Avaliações de Fernanda
+        //- .col.s12.breadcrumb
+        //-   a(href='#!')
+        //-     i.pink-text.material-icons home
+        //-   a(href='#!')=servico.title
+        //-   i.material-icons navigate_next
+        //-   a(href='#!') Fotos e vídeos
+        .col.s12.m9.l9
+          .row(style='position: relative;')
+            .img-edit.z-depth-4
+              h5 Arraste a imagem para melhorar o enquadramento.
+              .row
+                .col.s6.m6.l6
+                  button#avatar-enviar.btn.enviar Enviar
+                .col.s6.m6.l6
+                  button#avatar-cancel.btn.cancelar Cancelar
+            - var hasAvatar = '';
+            - if (usuario.profile.picture) { hasAvatar = 'has-avatar' }
+            .col.s8.m3.l3.offset-s2.avatar-wrapper(style='position: relative;', class=hasAvatar)
+              #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none; height: 160px;')
+                if (usuario.profile.picture)
+                  img#avatar.avatar(src=usuario.profile.picture)
+                else
+                  img#avatar.avatar(src='/img/avatar-default.png')
+              #avatar-backdrop
+            .col.s9.m9.l9
+              .row
+                .col.s12.m12.l12
+                  h1.subtitles(style='margin-bottom: 0;') #{usuario.profile.first_name.charAt(0).toUpperCase()}#{usuario.profile.first_name.slice(1)} #{usuario.profile.second_name.charAt(0).toUpperCase()}.
+                .col.s12.m12.l12
+                  h5 Rio de Janeiro - RJ
+            
+        .col.s12.m3.l3
           .row
-            .col.s10.m10.l10
-              hr
-              // inicio loop
-              .resultados
-                .col.s2
-                  img.responsive-img(src='img/exemplo.jpg', alt='')
-                  // notice the "circle" class
-                .col.s5
-                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                  .avaliacaoBusca
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons star_rate
-                    | 																(30)
-                  .preco $$$ . Árabe, Lanchonetes
-                .col.s5
-                  strong Catete
-                  br
-                  | 									Largo do Machado, 29
-                  br
-                  | 									Rio de Janeiro - RJ 23510-600
-                  br
-                  | 									(21) 2557-2377
-              // fim loop
-              // inicio loop
-              .resultados
-                .col.s2
-                  img.responsive-img(src='img/exemplo.jpg', alt='')
-                  // notice the "circle" class
-                .col.s5
-                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                  .avaliacaoBusca
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons star_rate
-                    | 																(30)
-                  .preco $$$ . Árabe, Lanchonetes
-                .col.s5
-                  strong Catete
-                  br
-                  | 									Largo do Machado, 29
-                  br
-                  | 									Rio de Janeiro - RJ 23510-600
-                  br
-                  | 									(21) 2557-2377
-              // fim loop
-              // inicio loop
-              .resultados
-                .col.s2
-                  img.responsive-img(src='img/exemplo.jpg', alt='')
-                  // notice the "circle" class
-                .col.s5
-                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                  .avaliacaoBusca
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons star_rate
-                    | 																(30)
-                  .preco $$$ . Árabe, Lanchonetes
-                .col.s5
-                  strong Catete
-                  br
-                  | 									Largo do Machado, 29
-                  br
-                  | 									Rio de Janeiro - RJ 23510-600
-                  br
-                  | 									(21) 2557-2377
-              // fim loop
-              // inicio loop
-              .resultados
-                .col.s2
-                  img.responsive-img(src='img/exemplo.jpg', alt='')
-                  // notice the "circle" class
-                .col.s5
-                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                  .avaliacaoBusca
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons star_rate
-                    | 																(30)
-                  .preco $$$ . Árabe, Lanchonetes
-                .col.s5
-                  strong Catete
-                  br
-                  | 									Largo do Machado, 29
-                  br
-                  | 									Rio de Janeiro - RJ 23510-600
-                  br
-                  | 									(21) 2557-2377
-              // fim loop
-              // inicio loop
-              .resultados
-                .col.s2
-                  img.responsive-img(src='img/exemplo.jpg', alt='')
-                  // notice the "circle" class
-                .col.s5
-                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                  .avaliacaoBusca
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons star_rate
-                    | 																(30)
-                  .preco $$$ . Árabe, Lanchonetes
-                .col.s5
-                  strong Catete
-                  br
-                  | 									Largo do Machado, 29
-                  br
-                  | 									Rio de Janeiro - RJ 23510-600
-                  br
-                  | 									(21) 2557-2377
-              // fim loop
-              // inicio loop
-              .resultados
-                .col.s2
-                  img.responsive-img(src='img/exemplo.jpg', alt='')
-                  // notice the "circle" class
-                .col.s5
-                  h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                  .avaliacaoBusca
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons.yellow-text.text-darken-1 star_rate
-                    i.material-icons star_rate
-                    | 																(30)
-                  .preco $$$ . Árabe, Lanchonetes
-                .col.s5
-                  strong Catete
-                  br
-                  | 									Largo do Machado, 29
-                  br
-                  | 									Rio de Janeiro - RJ 23510-600
-                  br
-                  | 									(21) 2557-2377
-              // fim loop
-            .col.s2.m2.l2
-              | www
+            .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
+              a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
+                i.material-icons.white-text star_rate
+                | Seguir
+            .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
+              a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
+                i.material-icons.white-text star_rate
+                | Enviar mensagem
 
+  .linhapontilhada
+  section.comercio
+    .container
+      .row
+        .col.s12.m8.l8
+          h5(style='text-align: center;') Avaliações
+          .divider
+          each ava in avaliacoes
+            // loop resultado
+            .resultados
+              .col.s4.m4.l4
+                if (ava.user.profile.picture)
+                  img.responsive-img(src=ava.user.profile.picture, alt='')
+                else
+                  img.responsive-img(src='/img/avatar-default.png', alt='')
+                // notice the "circle" class
+                span
+                  a(href='#') #{ava.user.profile.first_name.charAt(0).toUpperCase()}#{ava.user.profile.first_name.slice(1)} #{ava.user.profile.second_name.charAt(0).toUpperCase()}.
+              .col.s8.m8.l8
+                .row
+                  .col.s12.m12.l12!= ava.body
+                .row
+                  .col.s12.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
+                    | Impacto Social
+                    .jq-ry-container(style='padding: 0px 2px; width: 150px;', readonly='readonly')
+                      .jq-ry-group-wrapper
+                        .jq-ry-normal-group.jq-ry-group
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                        .jq-ry-rated-group.jq-ry-group(style='width: ' + (ava.soc * 100) / 5 + '%;')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#c83579', style='margin-left: 0px;')
+                            path(d='M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z')
+                    
+                  .col.s12.m6.l6(style='margin-top:10px;text-align: center;font-size:11px;')
+                    | Impacto Ambiental
+                    .jq-ry-container(style='padding: 0px 2px; width: 150px;', readonly='readonly')
+                      .jq-ry-group-wrapper
+                        .jq-ry-normal-group.jq-ry-group
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='gray', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                        .jq-ry-rated-group.jq-ry-group(style='width: ' + (ava.amb * 100) / 5 + '%;')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+                          svg(xmlns='http://www.w3.org/2000/svg', width='30px', height='30px', viewbox='0 0 28 28', fill='#7fbd61', style='margin-left: 0px;')
+                            path(d='M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z')
+
+
+            // fim loop resultado
+            if (avaliacoes.lenght > 10)
+              section.resultadoBusca
+                .container
+                  .row
+                    .col.s12.m8.l8.ol
+                      .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
+                        span.palavraUsada
+                          i.material-icons keyboard_arrow_down
+                          |   Mostrar
+                        |  atividades: Rio de Janeiro
+                    .col.s12.m4.l4.ol
+        .col.s12.m4.l4.dadosComercio
+          h2 CATEGORIAS
+          ul.collection
+            each categoria in categorias
+              li.collection-item
+                if (categoria.img)
+                  img.small.left(src=categoria.img, style='width: 25px; margin-right: 20px;')
+                else
+                  i.small.pink-text.lighten-2.material-icons.left mode_edit
+                | #{categoria.title}
 block scripts
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js')
+  script(src='/js/lib/load-image.min.js')

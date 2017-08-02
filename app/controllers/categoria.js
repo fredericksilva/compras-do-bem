@@ -57,14 +57,14 @@ exports.create = async(function* (req, res) {
   try {
     yield categoria.save();
     console.log('save');
-    respondOrRedirect({ req, res }, '/dashboard', categoria, {
+    respondOrRedirect({ req, res }, '/dash/categorias', categoria, {
       type: 'success',
       text: 'Successfully created categoria!'
     });
   } catch (err) {
     console.log(err);
-    respond(res, 'pages/dashboard', {
-      title: 'Dashboard',
+    respond(res, 'dashboard/categorias', {
+      title: 'Categorias',
       errors: [err.toString()],
       categoria
     }, 422);
@@ -99,7 +99,7 @@ exports.update = async(function* (req, res) {
     categoria.save(function(err) {
       if (err) return console.log(err);
 
-      respondOrRedirect({ req, res }, '/dashboard', categoria, {
+      respondOrRedirect({ req, res }, '/dash/categorias', categoria, {
         type: 'success',
         title: 'Categoria atualizada!'
       });
@@ -111,7 +111,7 @@ exports.update = async(function* (req, res) {
  * Upload icone
  */
 exports.upload = async(function* (req, res) {
-  Categoria.findOne({ urlized: req.params.id }, function (err, categoria) {
+  Categoria.findOne({ _id: req.params.id }, function (err, categoria) {
     if (err) return res.send(err);
     if (req.files.length > 0) {
       categoria.img = req.files[0].location;
@@ -120,7 +120,7 @@ exports.upload = async(function* (req, res) {
     categoria.save(function(err) {
       if (err) return console.log(err);
 
-      respondOrRedirect({ req, res }, '/dashboard', categoria, {
+      respondOrRedirect({ req, res }, '/dash/categorias', categoria, {
         type: 'success',
         title: 'Icone uploadeado!'
       });
