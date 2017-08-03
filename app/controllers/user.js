@@ -7,6 +7,7 @@ const passport = require('passport');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
 const { wrap: async } = require('co');
+const _ = require('underscore');
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -18,6 +19,7 @@ const transporter = nodemailer.createTransport({
 
 const User = mongoose.model('User');
 const Avaliacao = mongoose.model('Avaliacao');
+const Update = mongoose.model('Update');
 
 /**
  * Load
@@ -258,10 +260,38 @@ exports.getAccount = (req, res) => {
  */
 exports.show = (req, res) => {
   Avaliacao.list({ user: req.params.user_id }).then((avaliacoes) => {
-    res.render('user/show', {
-      title: 'User show',
-      usuario: req.usuario,
-      avaliacoes
+    Update.list({ user: req.params.user_id }).then((updates) => {
+      const fotosUp = _.filter(updates, f => f.type === 'fotos');
+      const pontos = _.filter(updates, p => p.type === 'ponto');
+      const servicos = _.filter(updates, s => s.type === 'servico');
+      const clipping = _.filter(updates, c => c.type === 'clipping');
+      const fotos = [];
+      for (let i = 0; i < fotosUp.length; i++) {
+        for (let o = 0; o < fotosUp[i].fotos.length; o++) {
+          fotos.push(fotosUp[i].fotos[o]);
+        }
+      }
+      for (let i = 0; i < avaliacoes.length; i++) {
+        for (let o = 0; o < avaliacoes[i].fotos.length; o++) {
+          fotos.push(avaliacoes[i].fotos[o]);
+        }
+      }
+      for (let i = 0; i < servicos.length; i++) {
+        for (let o = 0; o < servicos[i].fotos.length; o++) {
+          fotos.push(servicos[i].fotos[o]);
+        }
+      }
+      res.render('user/show', {
+        title: 'User show',
+        usuario: req.usuario,
+        fotos,
+        pontos,
+        servicos,
+        clipping,
+        avaliacoes
+      });
+    }).catch((err) => {
+      console.log(err);
     });
   }).catch((err) => {
     console.log(err);

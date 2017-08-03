@@ -118,7 +118,7 @@ label, input {
 			.naoachou a{ color: #c53779; }
 	.resultados h2{ font-size: 1.0em; margin: 0; font-weight: bold;}
 		.resultados{ padding: 10px 0; margin: 20px 0}
-		.resultados img.profile{ width: 50%; margin: 0 25%;}
+		.resultados img.profile{ }
 		.avaliacaoBusca  i{ float: left; font-size: 1.4em ; width: 20px !important; margin-bottom: 10px;}
 		.preco i{ font-size: 0.4em !important}
 		.preco{ font-weight: bold; clear: both;}

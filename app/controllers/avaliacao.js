@@ -12,9 +12,9 @@ const assign = Object.assign;
 /**
  * Load
  */
-exports.load = async(function* (req, res, next, urlized) {
+exports.load = async(function* (req, res, next, aval_id) {
   try {
-    req.avaliacao = yield Avaliacao.load(urlized);
+    req.avaliacao = yield Avaliacao.load(aval_id);
     if (!req.avaliacao) return next(new Error('avaliacao não encontrado'));
   } catch (err) {
     return next(err);
@@ -60,17 +60,16 @@ exports.ajax = async(function* (req, res) {
  */
 exports.update = async(function* (req, res) {
   const avaliacao = req.avaliacao;
-  assign(avaliacao, only(req.body, 'title tags site body telefone whatsapp email'));
+  console.log('aval update');
+  assign(avaliacao, only(req.body, 'body soc amb'));
   try {
     yield avaliacao.save();
-    respondOrRedirect({ res }, `/avaliacao/${avaliacao.urlized}`, avaliacao);
+    respondOrRedirect({ req, res }, `/servico/${avaliacao.servico.urlized}`, avaliacao, {
+      type: 'success',
+      text: 'Avaliação editada!'
+    });
   } catch (err) {
     console.log('err: ', err);
-    respond(res, 'avaliacoes/edit', {
-      title: `Edit ${avaliacao.title}`,
-      errors: [err.toString()],
-      avaliacao
-    }, 422);
   }
 });
 

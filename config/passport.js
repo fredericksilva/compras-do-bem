@@ -266,3 +266,15 @@ exports.isAdmin = (req, res, next) => {
     req.flash('errors', { msg: 'Você não tem permissão para realizar essa operação.' });
   }
 };
+
+/**
+ * Author Authorization middleware.
+ */
+exports.isAuthor = (req, res, next) => {
+  console.log(req.user._id === req.avaliacao.user._id);
+  if (req.avaliacao && JSON.stringify(req.user._id) === JSON.stringify(req.avaliacao.user._id)) {
+    next();
+  } else {
+    req.flash('errors', { msg: 'Você não tem permissão para realizar essa operação.' });
+  }
+};

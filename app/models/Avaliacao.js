@@ -34,8 +34,8 @@ avaliacaoSchema.statics = {
    * @api private
    */
 
-  load(urlized) {
-    return this.findOne({ urlized })
+  load(_id) {
+    return this.findOne({ _id })
       .populate('user', 'profile')
       .populate('servico', 'urlized title')
       .exec();
@@ -53,7 +53,7 @@ avaliacaoSchema.statics = {
     return this.find(criteria)
       .sort({ createdAt: -1 })
       .populate('user', 'profile')
-      .populate('servico', 'urlized title')
+      .populate('servico', 'urlized title avatar')
       .exec();
   }
 };

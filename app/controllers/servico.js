@@ -260,7 +260,8 @@ exports.removeclip = async(function* (req, res) {
     req.flash('success', { msg: 'Clipping removido' });
     res.redirect(`/servico/${servico.urlized}`);
   } catch (err) {
-    req.flash('error', { msg: err });
+    console.log(err);
+    req.flash('error', { msg: err.ValidationError });
     res.redirect(`/servico/${servico.urlized}`);
   }
 });
@@ -270,13 +271,15 @@ exports.removeclip = async(function* (req, res) {
  */
 exports.removecat = async(function* (req, res) {
   const servico = req.servico;
+  console.log(servico);
   servico.categorias.splice(req.params.index, 1);
   try {
     yield servico.save();
     req.flash('success', { msg: 'Categoria removida' });
     res.redirect(`/servico/${servico.urlized}`);
   } catch (err) {
-    req.flash('error', { msg: err });
+    console.log(err);
+    req.flash('error', { msg: err.ValidationError });
     res.redirect(`/servico/${servico.urlized}`);
   }
 });
@@ -332,13 +335,15 @@ exports.scrape = async(function* (req, res, next) {
 /**
  * Create clipping
  */
-exports.selo = async(function* (req, res) {
+exports.clipping = async(function* (req, res) {
   const servico = req.servico;
   let clip = {
+    type: 'clip',
     title: 'Título',
     desc: 'Descrição',
     site: '',
     img: '',
+    user: req.user._id,
     data: Date.now(),
     selos: [],
     link: ''
@@ -373,6 +378,56 @@ exports.selo = async(function* (req, res) {
     clip.site = req.selo.general.sitename || clip.site;
     clip.img = req.selo.general.image || clip.img;
     clip.data = req.selo.general.published_time || clip.data;
+  }
+  servico.clipping.push(clip);
+  try {
+    yield servico.save();
+    const up = new Update();
+    up.type = 'clipping';
+    up.body = clip.desc;
+    up.user = req.user._id;
+    up.servico = servico._id;
+    if (clip.img !== '') {
+      up.fotos.push(clip.img);
+    }
+    up.clip = clip;
+    up.save();
+    req.flash('success', { msg: 'Selo adicionado' });
+    res.redirect(`/servico/${servico.urlized}`);
+  } catch (err) {
+    console.log('err: ', err);
+    req.flash('error', { msg: err });
+    res.redirect(`/servico/${servico.urlized}`);
+  }
+});
+
+/**
+ * Create clipping
+ */
+exports.selo = async(function* (req, res) {
+  const servico = req.servico;
+  let clip = {
+    type: 'aval',
+    title: 'Título',
+    desc: req.body.body,
+    site: '',
+    img: '',
+    user: req.user._id,
+    data: Date.now(),
+    selos: [],
+    link: ''
+  };
+  for (var key in req.body) {
+    if (req.body[key] === 'true') {
+      clip.selos.push();
+      const has = _.find(servico.categorias, function(cat) {
+        return cat._id.toString() === key;
+      });
+      if (has === undefined) {
+        servico.categorias.push(key);
+      }
+      clip.selos.push(key);
+    }
   }
   servico.clipping.push(clip);
   try {
@@ -435,14 +490,14 @@ exports.avaliar = async(function* (req, res, next) {
  * Show
  */
 exports.show = function (req, res) {
-  console.log(req.servico.clipping);
   Categoria.list().then((categorias) => {
     Avaliacao.list({ servico: req.servico._id }).then((avaliacoes) => {
       let amb = 0.0;
       let soc = 0.0;
+      let aval = null;
       const endereco = JSON.stringify(req.servico.endereco);
       const pontos = JSON.stringify(req.servico.pontos);
-      for (var i = 0; i < avaliacoes.length; i++) {
+      for (let i = 0; i < avaliacoes.length; i++) {
         amb += avaliacoes[i].amb;
         soc += avaliacoes[i].soc;
       }
@@ -450,6 +505,9 @@ exports.show = function (req, res) {
       soc /= avaliacoes.length;
       soc = parseFloat(soc).toFixed(1);
       amb = parseFloat(amb).toFixed(1);
+      if (req.user) {
+        aval = _.find(avaliacoes, a => JSON.stringify(a.user._id) === JSON.stringify(req.user._id));
+      }
       res.render('servicos/show', {
         title: req.servico.title,
         servico: req.servico,
@@ -459,6 +517,7 @@ exports.show = function (req, res) {
         pontos,
         categorias,
         avaliacoes,
+        aval,
         device: req.device.type === 'phone' || req.device.type === 'tablet'
       });
     }).catch((err) => {

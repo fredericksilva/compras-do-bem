@@ -76,7 +76,9 @@ module.exports = (app, passportConfig, passport) => {
   /**
    * Avaliacao routes.
    */
+  app.param('aval_id', avaliacaoController.load);
   app.get('/avaliacao/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, avaliacaoController.delete);
+  app.post('/avaliacao/:aval_id/edit', passportConfig.isAuthenticated, passportConfig.isAuthor, avaliacaoController.update);
 
   /**
    * Servico routes.
@@ -93,7 +95,8 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/servico/:urlized/avatar/upload', passportConfig.isAuthenticated, upload.array('photos', 1), servicoController.avatar);
   app.post('/servico/:urlized/avaliar', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.avaliar);
   app.post('/servico/:urlized/ponto', passportConfig.isAuthenticated, servicoController.ponto);
-  app.post('/servico/:urlized/selo', passportConfig.isAuthenticated, servicoController.scrape, servicoController.selo);
+  app.post('/servico/:urlized/selo', passportConfig.isAuthenticated, servicoController.selo);
+  app.post('/servico/:urlized/clipping', passportConfig.isAuthenticated, servicoController.scrape, servicoController.clipping);
   app.get('/servico/:urlized/delete/clipping/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removeclip);
   app.get('/servico/:urlized/delete/categoria/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removecat);
 

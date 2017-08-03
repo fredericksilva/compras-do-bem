@@ -22,7 +22,7 @@
               else if (up.type === 'avaliacao')
                 span.cardAcao  Fez uma avaliação
               else if (up.type === 'clipping')
-                span.cardAcao  Adicionou uma notícia
+                span.cardAcao  Adicionou um impacto
               else if (up.type === 'servico')
                 span.cardAcao  Cadastrou um serviço
               else if (up.type === 'ponto')
@@ -37,7 +37,7 @@
       p.cardCidade.pink-text.text-lighten-2(style='margin: 0;')
         a(href='/servico/' + up.servico.urlized)= up.servico.title
     .card-content(style='padding: 0 10px 10px 10px;')
-      if (up.type === 'clipping')
+      if (up.type === 'clipping' && up.clip.type === 'clip')
         strong= up.clip.title
       if (up.type === 'ponto')
         strong #{up.clip.title}
@@ -52,7 +52,7 @@
             p= b
           else
             br
-      if (up.type === 'clipping')
+      if (up.type === 'clipping' && up.clip.type === 'clip')
         a(href=up.clip.link, target='_blank') Ler notícia
       if (up.fotos.length > 1 || up.avaliacao && up.avaliacao.fotos.length > 1)
         .row(style='margin-bottom: 0; ')
@@ -64,6 +64,13 @@
             .col.s12.m12.l12
               a(href='/servico/' +  up.servico.urlized + '/fotos')
                 small(style='margin-bottom: 0; text-align: center;') +#{up.fotos.length - 3 || up.avaliacao && up.avaliacao.fotos.length - 3} fotos
+    if (up.type === 'clipping')
+      if (up.clip.selos.length > 0)
+        .card-action
+          .row(style='margin-bottom: 0;')
+            each selo in up.clip.selos
+              .col.s3.m3.l3
+                img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
     if (up.type === 'avaliacao')
       .card-action(style='padding-top: 0;')
         .row(style='margin-bottom: 0;')

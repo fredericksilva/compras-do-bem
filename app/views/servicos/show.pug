@@ -308,7 +308,10 @@ block content
             .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
               a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
                 i.material-icons.white-text star_rate
-                | Escrever uma Avaliação
+                if (aval)
+                  | Editar Avaliação
+                else
+                  | Escrever Avaliação
               if (avaliacoes.length > 1)
                 strong #{avaliacoes.length} avaliações 
               else if (avaliacoes.length === 1)
@@ -325,50 +328,71 @@ block content
               strong(style='font-size:20px; color: #7fbd61 !important;') #{amb | 0}
 
   #modal-avaliar.modal.bottom-sheet(style='max-height: 100%;')
-    form#avaliar-form(method='POST', action='/servico/' + servico.urlized + '/avaliar', enctype='multipart/form-data')
+    - var act = '/servico/' + servico.urlized + '/avaliar'
+    - var aval_amb = 3
+    - var aval_soc = 3
+    - var soc_string = 'avaliar_heart'
+    - var amb_string = 'avaliar_leaf'
+    - var aval_body = ''
+    - var input_style = 'display: block;'
+    - var enct = 'multipart/form-data'
+    if (aval)
+      - act = '/avaliacao/' + aval._id + '/edit'
+      - aval_amb = aval.amb
+      - aval_soc = aval.soc
+      - aval_body = aval.body
+      - input_style = 'display: none;'
+      - soc_string = 'soc'
+      - amb_string = 'amb'
+      - enct = false
+    form#avaliar-form(method='POST', action=act, enctype=enct)
       input#urlized(type='hidden', name='urlized', value=servico.urlized)
+      input(type='hidden', name='_csrf', value=_csrf)
       .modal-content
         .container
-          h4 Escrever uma avaliação
+          if (aval)
+            h4 Editar avaliação
+          else
+            h4 Escrever uma avaliação
           .row
             .col.s12.m6.l6
               .row
                 .col.s12.m12.l12
                   h5 Impacto Social 
-                    strong#nota_soc(style='font-size: 40px; margin-left: 10px; color: #c83579 !important;') 3
+                    strong#nota_soc(style='font-size: 40px; margin-left: 10px; color: #c83579 !important;')= aval_soc
                   p(style='margin-top:0; margin-bottom: 20px;') De uma graduação para o impacto social desse negócio
                 .col.s12.m12.l12
-                  input#avaliar-heart-input(type='hidden', name='avaliar_heart', value='3')
+                  input#avaliar-heart-input(type='hidden', name=soc_string, value=aval_soc)
                   #avaliar-heart
               .row
                 .col.s12.m12.l12
                   h5 Impacto Ambiental 
-                    strong#nota_amb(style='font-size: 40px; margin-left: 10px; color: #7fbd61 !important;') 3
+                    strong#nota_amb(style='font-size: 40px; margin-left: 10px; color: #7fbd61 !important;')= aval_amb
                   p(style='margin-top:0; margin-bottom: 20px;') De uma graduação para o impacto ambiental desse negócio
                 .col.s12.m12.l12
-                  input#avaliar-leaf-input(type='hidden', name='avaliar_leaf', value='3')
+                  input#avaliar-leaf-input(type='hidden', name=amb_string, value=aval_amb)
                   #avaliar-leaf
-              .row
-                .col.s12.m12.l12
-                  #carroca-avaliar.carroca
-
-              .file-field.input-field.upload-image
-                .btn.pink.lighten-2(style='margin-left: 0 !important; background-color: rgb(232, 232, 232) !important;')
-                  span
-                    i.material-icons.white-text camera
-                    | Inserir Fotos
-                  if (device)
-                    input#image-input(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
-                  else
-                    input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
-                .file-path-wrapper(style='display: none;')
-                  input.file-path.validate(type='text', placeholder='Upload one or more files')
+              if (aval)
+                .row
+                  .col.s12.m12.l12
+                    #carroca-avaliar.carroca
+                .file-field.input-field.upload-image(style=input_style)
+                  .btn.pink.lighten-2(style='margin-left: 0 !important; background-color: rgb(232, 232, 232) !important;')
+                    span
+                      i.material-icons.white-text camera
+                      | Inserir Fotos
+                    if (device)
+                      input#image-input(type='file', multiple='multiple', name='photos', style='width: 100%; height: 50px;', accept='image/*', capture='camera')
+                    else
+                      input#image-input(type='file', multiple='', name='photos', style='width: 100%; height: 50px;')
+                  .file-path-wrapper(style='display: none;')
+                    input.file-path.validate(type='text', placeholder='Upload one or more files')
             .col.s12.m6.l6
               .row
                 .col.s12.m12.l12
                   h5 Descreva sua experiência
                   .file-field.input-field
-                    textarea#descreva.materialize-textarea(placeholder='DESCRIÇÃO', name='body', required)
+                    textarea#descreva.materialize-textarea(placeholder='DESCRIÇÃO', name='body', required)= aval_body
                     label(for='descreva')
       .modal-footer
         .container
@@ -382,17 +406,19 @@ block content
       .modal-content
         ul#tabs-selos.tabs
           li.active.tab.col.s3
-            a.active(href='#todos-selos-tab') Selos
+            a.active(href='#todos-selos-tab') Impactos
           li.tab.col.s3
-            a(href='#novo-selo-tab') Novo Selo
+            a(href='#novo-selo-tab') Acrescentar Impacto
+          li.tab.col.s3
+            a(href='#novo-clipping-tab') Acrescentar Notícia
         .tabs-content.carousel
           #todos-selos-tab.col.s12.carousel-item
             .row
               .col.s12.m12.l12
-                h5 Selos
-                p.desc Selos são...
-                small
-                  a(href='#') Selos existentes
+                h5 Impactos
+                //- p.desc Impactos são...
+                //- small
+                //-   a(href='#') Tipos de impacto
             .row
               each selo, index in servico.categorias
                 if (selo.selo)
@@ -406,39 +432,36 @@ block content
                       p #{selo.title}
                         a.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.body, href='') ?
             .row
-              each clip, index in servico.clipping
-                .col.s12.m3.l3
-                  a(href=clip.link, target='_blank')
-                    .card
-                      .card-image
-                        img(src=clip.img)
-                        if (user.admin)
-                          a.btn-floating.halfway-fab.red(href='/servico/' + servico.urlized + '/delete/clipping/' + index)
-                            i.material-icons remove
-                      .card-stacked
-                        .card-content(style='')
-                          span.card-title= clip.title
-                          | #{clip.desc}
-                        if (clip.selos.length > 0)
-                          .card-action
-                            .row(style='margin-bottom: 0;')
-                              each selo in clip.selos
-                                .col.s3.m3.l3
-                                  img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
+              .col.s12.m3.l3
+                each clip, index in servico.clipping
+                  if (index % 4 === 0)
+                    include ../partials/clipping
+              .col.s12.m3.l3
+                each clip, index in servico.clipping
+                  if (index % 4 === 1)
+                    include ../partials/clipping
+              .col.s12.m3.l3
+                each clip, index in servico.clipping
+                  if (index % 4 === 2)
+                    include ../partials/clipping
+              .col.s12.m3.l3
+                each clip, index in servico.clipping
+                  if (index % 4 === 3)
+                    include ../partials/clipping
 
           #novo-selo-tab.col.s12.carousel-item
             form(action='/servico/' + servico.urlized + '/selo', method='POST')
               input(type='hidden', name='_csrf', value=_csrf)
               .row
                 .col.s12.m12.l12
-                  h5 Infrome o link de uma matéria sobre 
+                  h5 Faça uma avaliação do impacto de 
                     strong #{servico.title}
-                  input#link-materia.validate(type='text', placeholder='Link matéria', name='link', required)
-                  label(for='link-materia')
+                  textarea#aval-impact.materialize-textarea.validate(type='text', placeholder='Avaliação impacto', name='body', required)
+                  label(for='aval-impact')
               .row
                 .col.s12.m12.l12 
-                  h5 Selos
-                  p Escolha os selos referentes a essa matéria.
+                  h5 Impactos
+                  p Escolha os impactos referentes a essa avaliação.
                   ul.collapsible(data-collapsible='expandable')
                     each tipo in categorias
                       if (tipo.selo && !tipo.mae)
@@ -462,19 +485,59 @@ block content
                                       span #{subtipo.body}
                                   
               .modal-footer
-                button.btn(type='submit') button
+                button.btn(type='submit') Enviar
+
+          #novo-clipping-tab.col.s12.carousel-item
+            form(action='/servico/' + servico.urlized + '/clipping', method='POST')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .row
+                .col.s12.m12.l12
+                  h5 Infrome o link de uma matéria sobre 
+                    strong #{servico.title}
+                  input#link-materia.validate(type='text', placeholder='Link matéria', name='link', required)
+                  label(for='link-materia')
+              .row
+                .col.s12.m12.l12 
+                  h5 Impactos
+                  p Escolha os impactos referentes a essa matéria.
+                  ul.collapsible(data-collapsible='expandable')
+                    each tipo in categorias
+                      if (tipo.selo && !tipo.mae)
+                        li
+                          .collapsible-header
+                            i.material-icons
+                              img.circle.responsive-img(src=tipo.img, style='padding-top: 5px;')
+                            | #{tipo.title}
+                          .collapsible-body
+                            span #{tipo.body}
+                            ul.collapsible(data-collapsible='expandable')
+                              each subtipo in categorias
+                                if (subtipo.mae && subtipo.mae._id.toString() === tipo._id.toString())
+                                  li.subtipo(data-id=subtipo._id)
+                                    input(type='hidden', name=subtipo._id, value='false')
+                                    .collapsible-header
+                                      i.material-icons
+                                        img.circle.responsive-img(src=subtipo.img, style='padding-top: 5px;')
+                                      | #{subtipo.title}
+                                    .collapsible-body
+                                      span #{subtipo.body}
+                                  
+              .modal-footer
+                button.btn(type='submit') Enviar
     .container#selos-negocio
+      .row(style='margin-bottom: 0 !important;')
+        .col.s12.m12.l12
+          h5(style='margin: 0 !important;') Impactos
+            button#novo-selo.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-left: 5px;height: 20px;line-height: 20px;width: 20px;')
+              i.material-icons.left(style='line-height: 21px; font-size: 15px;') add
       .row
         each selo in servico.categorias
           if (selo.selo)
             .col.s4.m1.l1
               a.selo(href='')
                 img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
-        .col.s4.m1.l1
-          button#novo-selo.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Adicionar novo selo', style='margin-bottom: 5px;')
-            i.material-icons.left add
 
-  .linhapontilhada
+  .linhapontilhada(style='margin-top: -20px;')
   section.btnDecoracao
     .container
       .row
@@ -797,6 +860,7 @@ block scripts
     })();
   script(type='text/javascript').
     $(document).ready(function() {
+      $('#descreva').trigger('autoresize');
       var car = $('.carousel.carousel-slider').carousel({fullWidth: true});
       var soc_med = '#{soc | 0}';
       var amb_med = '#{amb | 0}';
@@ -820,7 +884,7 @@ block scripts
       $('#avaliar-heart').rateYo({
         ratedFill: '#c83579',
         starWidth: '40px',
-        rating: 3,
+        rating: '#{aval_soc}',
         fullStar: true,
         starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z"></path></svg>',
         onSet: function(rating) {
@@ -831,7 +895,7 @@ block scripts
       $('#avaliar-leaf').rateYo({
         ratedFill: '#7fbd61',
         starWidth: '40px',
-        rating: 3,
+        rating: '#{aval_amb}',
         fullStar: true,
         starSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z"></path></svg>',
         onSet: function(rating) {
@@ -857,19 +921,22 @@ block scripts
       };
 
       var carrosel_aval = document.getElementById('carroca-avaliar');
-      document.getElementById('image-input').onchange = function (e) {
-        carrosel_aval.innerHTML = ""
-        for (var i in e.target.files) {
-          loadImage(
-            e.target.files[i],
-            function (img) {
-              img.className = 'z-depth-1';
-              carrosel_aval.appendChild(img);
-            },
-            {maxWidth: 600} // Options
-          );
-        }
-      };
+      var aval_fotos = document.getElementById('image-input');
+      if (aval_fotos) {
+        aval_fotos.onchange = function (e) {
+          carrosel_aval.innerHTML = ""
+          for (var i in e.target.files) {
+            loadImage(
+              e.target.files[i],
+              function (img) {
+                img.className = 'z-depth-1';
+                carrosel_aval.appendChild(img);
+              },
+              {maxWidth: 600} // Options
+            );
+          }
+        };
+      }
 
       var avatar = document.getElementById('avatar-wrapper');
       var oldAvatar = avatar.innerHTML;

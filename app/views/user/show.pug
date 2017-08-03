@@ -244,6 +244,26 @@ block styles
       height: 250px;
     }
 
+    /* User */
+    ul#user_info li:hover {
+      background-color: rgba(200, 53, 121, 0.1);
+    }
+    ul#user_info li {
+      cursor: pointer;
+    }
+    ul#user_info li.active {
+      background-color: #c83579;
+      color: white;
+    }
+    ul#user_info li.active i.pink-text.lighten-2 {
+      color: white !important;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
 block content
   section.reinvindicacao
     .container
@@ -294,16 +314,24 @@ block content
   section.comercio
     .container
       .row
-        .col.s12.m4.l4.dadosComercio
-          ul.collection
-            each categoria in categorias
-              li.collection-item
-                if (categoria.img)
-                  img.small.left(src=categoria.img, style='width: 25px; margin-right: 20px;')
-                else
-                  i.small.pink-text.lighten-2.material-icons.left mode_edit
-                | #{categoria.title}
-        .col.s12.m8.l8
+        .col.s12.m4.l4
+          ul#user_info.collection
+            li.collection-item.active(data-action='#avaliacoes')
+              i.small.pink-text.lighten-2.left #{avaliacoes.length}
+              | Avaliações
+            li.collection-item(data-action='#fotos')
+              i.small.pink-text.lighten-2.left #{fotos.length}
+              | Fotos
+            li.collection-item(data-action='#servicos')
+              i.small.pink-text.lighten-2.left #{servicos.length}
+              | Serviços cadastrados
+            li.collection-item(data-action='#pontos')
+              i.small.pink-text.lighten-2.left #{pontos.length}
+              | Pontos de venda cadastrados
+            li.collection-item(data-action='#impacto')
+              i.small.pink-text.lighten-2.left #{clipping.length}
+              | Avaliação impacto
+        #avaliacoes.page.active.col.s12.m8.l8
           h5(style='text-align: center;') Avaliações
           .divider
           each ava in avaliacoes
@@ -323,6 +351,62 @@ block content
                           |   Mostrar
                         |  atividades: Rio de Janeiro
                     .col.s12.m4.l4.ol
+        #fotos.page.col.s12.m8.l8
+          .row
+            .col.s6.m4.l4
+              each foto, index in fotos
+                if (index % 3 === 0)
+                  .col.s12.m12.l12(style='margin-top: 20px;')
+                    img.responsive-img.materialboxed.z-depth-1(src=foto)
+            .col.s6.m4.l4
+              each foto, index in fotos
+                if (index % 3 === 1)
+                  .col.s12.m12.l12(style='margin-top: 20px;')
+                    img.responsive-img.materialboxed.z-depth-1(src=foto)
+            .col.s6.m4.l4
+              each foto, index in fotos
+                if (index % 3 === 2)
+                  .col.s12.m12.l12(style='margin-top: 20px;')
+                    img.responsive-img.materialboxed.z-depth-1(src=foto)
+        #servicos.page.col.s12.m8.l8
+          .row
+            .col.s6.m6.l6
+              each up, index in servicos
+                if (index % 2 === 0)
+                  include ../partials/update
+            .col.s6.m6.l6
+              each up, index in servicos
+                if (index % 2 === 1)
+                  include ../partials/update
+        #pontos.page.col.s12.m8.l8
+          .row
+            .col.s6.m6.l6
+              each up, index in pontos
+                if (index % 2 === 0)
+                  include ../partials/update
+            .col.s6.m6.l6
+              each up, index in pontos
+                if (index % 2 === 1)
+                  include ../partials/update
+        #impacto.page.col.s12.m8.l8
+          .row
+            .col.s6.m6.l6
+              each up, index in clipping
+                if (index % 2 === 0)
+                  include ../partials/update
+            .col.s6.m6.l6
+              each up, index in clipping
+                if (index % 2 === 1)
+                  include ../partials/update
 block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js')
   script(src='/js/lib/load-image.min.js')
+  script(type='text/javascript').
+    $('ul#user_info li').on('click', function(e) {
+      const id = e.target.dataset.action;
+      console.log(id);
+      $('.page').removeClass('active');
+      $('ul#user_info li').removeClass('active');
+      $(this).addClass('active');
+      $(id).addClass('active');
+    })

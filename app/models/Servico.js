@@ -96,12 +96,14 @@ const servicoSchema = new mongoose.Schema({
     cep: { type: String, default: '', trim: true }
   }],
   clipping: [{
+    type: { type: String },
     title: { type: String },
     desc: { type: String },
     img: { type: String },
     site: { type: String },
     data: { type: Date },
     selos: [{ type: mongoose.Schema.ObjectId, ref: 'Categoria' }],
+    user: { type: mongoose.Schema.ObjectId, ref: 'User' },
     link: { type: String }
   }]
 }, { timestamps: true });
@@ -153,6 +155,7 @@ servicoSchema.statics = {
       .populate('proprietario', 'profile email')
       .populate('categorias')
       .populate('clipping.selos')
+      .populate('clipping.user', 'profile')
       .exec();
   },
 
@@ -171,6 +174,7 @@ servicoSchema.statics = {
       .populate('proprietario', 'profile email')
       .populate('categorias')
       .populate('clipping.selos')
+      .populate('clipping.user', 'profile')
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(limit * page)

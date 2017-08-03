@@ -1,0 +1,31 @@
+a(href=clip.link, target='_blank')
+  .card
+    .card-content(style='position: relative; padding-bottom: 0;')
+      if (user.admin)
+        a.btn-floating.halfway-fab.red(href='/servico/' + servico.urlized + '/delete/clipping/' + index, style='top: -8px; right: -8px;')
+          i.material-icons remove
+      .row(style='margin-bottom: 0px;')
+        .col.s3.m3.l3
+          if (clip.user.profile.picture)
+            img.circle.responsive-img(src=clip.user.profile.picture)
+          else
+            img.circle.responsive-img(src='/img/avatar-default.png')
+        .col.s9.m9.l9(style='line-height: 0rem;')
+          .row
+            .col.s12.m12.l12
+              a.card-title.cardNome(href='/user/' + clip.user._id)
+                | #{clip.user.profile.first_name.charAt(0).toUpperCase()}#{clip.user.profile.first_name.slice(1)} #{clip.user.profile.second_name.charAt(0).toUpperCase()}.
+    if (clip.img !== '')
+      .card-image
+        img(src=clip.img)
+    .card-stacked
+      .card-content(style='')
+        if (clip.type === 'clip')
+          span.card-title= clip.title
+        | #{clip.desc}
+      if (clip.selos.length > 0)
+        .card-action
+          .row(style='margin-bottom: 0;')
+            each selo in clip.selos
+              .col.s3.m3.l3
+                img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
