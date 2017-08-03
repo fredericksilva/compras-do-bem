@@ -107,6 +107,7 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/categoria/:id/edit', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.update);
   app.get('/categoria/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.delete);
   app.post('/categoria/:id/upload', passportConfig.isAuthenticated, passportConfig.isAdmin, upload.array('photos', 1), categoriaController.upload);
+  app.get('/selo/:id', passportConfig.isAuthenticated, categoriaController.selo);
 
   /**
    * User routes.

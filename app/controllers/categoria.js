@@ -31,6 +31,18 @@ exports.index = async(function* (req, res) {
 });
 
 /**
+ * Selo
+ */
+exports.selo = async(function* (req, res) {
+  try {
+    const categ = yield Categoria.findOne({ _id: req.params.id });
+    res.json({ data: categ });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
  * New categoria
  */
 exports.new = function (req, res){

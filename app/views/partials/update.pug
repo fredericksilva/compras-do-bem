@@ -69,8 +69,15 @@
         .card-action
           .row(style='margin-bottom: 0;')
             each selo in up.clip.selos
-              .col.s3.m3.l3
-                img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
+              .col.s3.m3.l3(id=selo)
+                script(type='text/javascript').
+                  $(document).ready(function() {
+                    $.getJSON('/selo/#{selo}', function(data) {
+                      $('##{selo}').append('<img class="circle responsive-img tooltipped" data-position="bottom" data-delay="50" data-tooltip="' + data.data.title + '" src="' + data.data.img + '">')
+                      $('.tooltipped').tooltip({delay: 50});
+                    })
+                  })
+                //- img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
     if (up.type === 'avaliacao')
       .card-action(style='padding-top: 0;')
         .row(style='margin-bottom: 0;')

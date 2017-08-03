@@ -28,7 +28,7 @@ block content
             textarea#categ_desc.materialize-textarea(type='text', name='body')
           .col.s12.m12.l12
             label(for='mae') Categoria Mãe
-            select#mae(name='mae')
+            select#mae(name='mae', style='display: block;')
               option.corinput(value='') SELECIONAR...
               each categoria in categorias
                 option(value=categoria._id)= categoria.title
