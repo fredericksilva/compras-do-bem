@@ -45,7 +45,16 @@ const upload = multer({
  */
 
 module.exports = (app, passportConfig, passport) => {
+  /**
+   * Json routes.
+   */
+  app.get('/json/selo/:id', categoriaController.selo);
+
+  /**
+   * locals routes.
+   */
   app.use(categoriaController.load);
+
   /**
    * Pages routes.
    */
@@ -99,6 +108,7 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/servico/:urlized/clipping', passportConfig.isAuthenticated, servicoController.scrape, servicoController.clipping);
   app.get('/servico/:urlized/delete/clipping/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removeclip);
   app.get('/servico/:urlized/delete/categoria/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removecat);
+  app.post('/servicos/busca', servicoController.busca);
 
     /**
    * Categoria routes.
@@ -107,7 +117,6 @@ module.exports = (app, passportConfig, passport) => {
   app.post('/categoria/:id/edit', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.update);
   app.get('/categoria/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, categoriaController.delete);
   app.post('/categoria/:id/upload', passportConfig.isAuthenticated, passportConfig.isAdmin, upload.array('photos', 1), categoriaController.upload);
-  app.get('/selo/:id', passportConfig.isAuthenticated, categoriaController.selo);
 
   /**
    * User routes.

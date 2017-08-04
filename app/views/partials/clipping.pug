@@ -1,7 +1,7 @@
 a(href=clip.link, target='_blank')
   .card
     .card-content(style='position: relative; padding-bottom: 0;')
-      if (user.admin)
+      if (user && user.admin)
         a.btn-floating.halfway-fab.red(href='/servico/' + servico.urlized + '/delete/clipping/' + index, style='top: -8px; right: -8px;')
           i.material-icons remove
       .row(style='margin-bottom: 0px;')

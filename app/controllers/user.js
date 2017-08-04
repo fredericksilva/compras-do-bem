@@ -72,7 +72,7 @@ exports.postLogin = (req, res, next) => {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', info);
-      return res.redirect('/signup');
+      return res.redirect('/login');
     }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
@@ -259,8 +259,10 @@ exports.getAccount = (req, res) => {
  * User page.
  */
 exports.show = (req, res) => {
+  console.log(req.params.user_id);
   Avaliacao.list({ user: req.params.user_id }).then((avaliacoes) => {
-    Update.list({ user: req.params.user_id }).then((updates) => {
+    Update.list({ criteria: { user: req.params.user_id } }).then((updates) => {
+      console.log(updates);
       const fotosUp = _.filter(updates, f => f.type === 'fotos');
       const pontos = _.filter(updates, p => p.type === 'ponto');
       const servicos = _.filter(updates, s => s.type === 'servico');

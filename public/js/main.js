@@ -14,7 +14,7 @@ function getLocation() {
   }
 
   function errorFunction() {
-    alert("Não pudemos obter sua localização para mostrar os serviços personalizados de sua área.");
+    console.log("Não pudemos obter sua localização para mostrar os serviços personalizados de sua área.");
   }
 
   function initialize() {
@@ -43,17 +43,42 @@ function getLocation() {
             }
           }
           //city data
+          $('#cid_destino').attr('data-valor', city.long_name + ' - ' + city.short_name);
+          $('#cid_destino').attr('data-id', city.long_name + ' - ' + city.short_name);
+          $('#cid_destino a').text('data-id', city.long_name + ' - ' + city.short_name);
+          dropClick($('#cid_destino'));
+        } else {
+          $('#cid_destino').attr('data-valor', city.long_name + ' - ' + city.short_name);
+          $('#cid_destino').attr('data-id', city.long_name + ' - ' + city.short_name);
           localStorage.cidade = city.long_name
           localStorage.cid = city.short_name
-        } else {
-          alert("Nenhum serviço encontrado");
+          dropClick($('#cid_destino'));
+          console.log("Nenhum serviço encontrado");
         }
       } else {
-        alert("Não pudemos obter sua localização devido à: " + status);
+        console.log("Não pudemos obter sua localização devido à: " + status);
       }
     });
   }
 
+}
+
+function dropClick(esse) {
+  if (esse.data('valor') === 'Minha Localização') {
+    getLocation()
+  } else {
+    var valor =esse.data('valor');
+    var id =esse.data('id');
+    var destino =esse.data('destino');
+
+    //troca o valor do campo na busca
+    $("."+destino).text(valor);
+    var  enviando = "."+destino+"_Enviar";
+    //alert(enviando);
+    $(enviando).val(id);
+
+    $("."+destino).val(id);
+  }
 }
 
 $(document).ready(function() {
@@ -66,21 +91,7 @@ $(document).ready(function() {
   })
 
   $(".dropForm li").on('click', function(){
-    if ($(this).data('valor') === 'Minha Localização') {
-      getLocation()
-    } else {
-      var valor =$(this).data('valor');
-      var id =$(this).data('id');
-      var destino =$(this).data('destino');
-
-      //troca o valor do campo na busca
-      $("."+destino).text(valor);
-      var  enviando = "."+destino+"_Enviar";
-      //alert(enviando);
-      $(enviando).val(id);
-
-      $("."+destino).val(id);
-    }
+    dropClick($(this));
 
   });
 

@@ -87,7 +87,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(device.capture());
 app.use(expressValidator());
-app.use(session({
+const sessionHandler = session({
   resave: true,
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
@@ -96,12 +96,20 @@ app.use(session({
     autoReconnect: true,
     clear_interval: 3600
   })
-}));
+});
+app.use((req, res, next) => {
+  // if path does not start with /json/, then invoke session middleware
+  if (req.url.indexOf('/json/') !== 0) {
+    return sessionHandler(req, res, next);
+  } else {
+    next();
+  }
+});
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/servico' || req.path.split('upload').length > 1 || req.path.split('avaliar').length > 1) {
+  if (req.path === '/servico' || req.path.split('upload').length > 1 || req.path.split('avaliar').length > 1 || req.path.split('json').length > 1) {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -120,7 +128,9 @@ app.use((req, res, next) => {
       req.path !== '/signup' &&
       !req.path.match(/^\/auth/) &&
       !req.path.match(/\./)) {
-    req.session.returnTo = req.path;
+    if (req.path.split('json').length < 1) {
+      req.session.returnTo = req.path;
+    }
   } else if (req.user &&
       req.path === '/account') {
     req.session.returnTo = req.path;

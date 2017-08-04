@@ -56,6 +56,41 @@ exports.index = async(function* (req, res) {
 });
 
 /**
+ * Busca
+ */
+exports.busca = async(function* (req, res) {
+  const page = (req.query.page > 0 ? req.query.page : 1) - 1;
+  const limit = 30;
+  const c = req.body.cidade.split(' - ');
+  let criteria = {};
+  if (req.body.cidade !== '') {
+    criteria['endereco.cidade'] = c[0];
+  }
+  if (req.body.categoria !== '') {
+    criteria['categorias'] = req.body.categoria
+  }
+  if (req.body.text !== '') {
+    criteria['$text'] = { $search: req.body.text }
+  }
+  const options = {
+    criteria,
+    limit,
+    page
+  };
+  console.log(req.body);
+
+  const servicos = yield Servico.list(options);
+  const count = yield Servico.count();
+  console.log(servicos);
+  respond(res, 'servicos/index', {
+    title: 'servicos',
+    servicos,
+    page: page + 1,
+    pages: Math.ceil(count / limit)
+  });
+});
+
+/**
  * List Ajax
  */
 exports.ajax = async(function* (req, res) {
@@ -139,7 +174,6 @@ exports.edit = function (req, res) {
     for (var i = 0; i < req.servico.categorias.length; i++) {
       categ.push(req.servico.categorias[i].title);
     }
-    console.log('req.servico: ', req.servico);
     res.render('servicos/edit', {
       title: req.servico.title,
       servico: req.servico,

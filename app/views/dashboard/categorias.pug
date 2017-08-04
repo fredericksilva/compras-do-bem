@@ -31,7 +31,13 @@ block content
             select#mae(name='mae', style='display: block;')
               option.corinput(value='') SELECIONAR...
               each categoria in categorias
-                option(value=categoria._id)= categoria.title
+                if (!categoria.mae)
+                  - var disp = 'block'
+                  - var cla = 'categ'
+                  if (categoria.selo)
+                    - disp = 'none'
+                    - cla = 'selo'
+                  option.nova(value=categoria._id, style='display:' + disp + ';', class=cla)= categoria.title
       .modal-footer
         a.modal-action.modal-close.waves-effect.waves-green.btn.blue.left Cancelar
         button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Criar Nova
@@ -59,10 +65,16 @@ block content
             textarea#categ_desc_edit.materialize-textarea(type='text', name='body')
           .col.s12.m12.l12
             label(for='mae_edit') Categoria Mãe
-            select#mae_edit(name='mae_edit')
+            select#mae_edit(name='mae_edit', style='display: block;')
               option.corinput(value='') SELECIONAR...
               each categoria in categorias
-                option(value=categoria._id, id=categoria._id)= categoria.title
+                if (!categoria.mae)
+                  - var disp = 'block'
+                  - var cla = 'categ'
+                  if (categoria.selo)
+                    - disp = 'none'
+                    - cla = 'selo'
+                  option.edit(value=categoria._id, style='display:' + disp + ';', class=cla)= categoria.title
       .modal-footer
         a.modal-action.modal-close.waves-effect.waves-green.btn.blue.left Cancelar
         button.modal-action.modal-close.waves-effect.waves-green.btn.pink(type='submit') Editar Categoria
@@ -159,6 +171,26 @@ block scripts
 
         $('#categ_modal').modal('open');
       });
+
+      $('#selo').on('change', function(e) {
+        if (e.currentTarget.checked) {
+          $('option.nova.categ').css('display', 'none');
+          $('option.nova.selo').css('display', 'block');
+        } else {
+          $('option.nova.categ').css('display', 'block');
+          $('option.nova.selo').css('display', 'none');
+        }
+      })
+
+      $('#selo_edit').on('change', function(e) {
+        if (e.currentTarget.checked) {
+          $('option.edit.categ').css('display', 'none');
+          $('option.edit.selo').css('display', 'block');
+        } else {
+          $('option.edit.categ').css('display', 'block');
+          $('option.edit.selo').css('display', 'none');
+        }
+      })
 
       $(window).on('hashchange', function() {
         var hash = location.hash;

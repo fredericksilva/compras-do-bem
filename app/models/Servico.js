@@ -18,8 +18,8 @@ const servicoSchema = new mongoose.Schema({
   site: { type: String, default: '', trim: true },
   categorias: [{ type: mongoose.Schema.ObjectId, ref: 'Categoria' }],
   avaliacoes: [{ type: mongoose.Schema.ObjectId, ref: 'Avaliacao' }],
-  soc_med: {type: Number, default: 0, min: 0, max: 5 },
-  amb_med: {type: Number, default: 0, min: 0, max: 5 },
+  soc_med: { type: Number, default: 0, min: 0, max: 5 },
+  amb_med: { type: Number, default: 0, min: 0, max: 5 },
   fotos: [String],
   proprietario: { type: mongoose.Schema.ObjectId, ref: 'User' },
   proAuth: { type: Boolean, default: false },
@@ -107,6 +107,8 @@ const servicoSchema = new mongoose.Schema({
     link: { type: String }
   }]
 }, { timestamps: true });
+
+servicoSchema.index({ '$**': 'text' });
 
 /**
  * Validations

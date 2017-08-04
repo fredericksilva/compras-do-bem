@@ -48,7 +48,7 @@ updateSchema.statics = {
    */
 
   list(options) {
-    const criteria = {};
+    const criteria = options.criteria || {};
     return this.find(criteria)
       .sort({ createdAt: -1 })
       .populate('user', 'profile')

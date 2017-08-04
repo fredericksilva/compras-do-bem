@@ -72,9 +72,11 @@
               .col.s3.m3.l3(id=selo)
                 script(type='text/javascript').
                   $(document).ready(function() {
-                    $.getJSON('/selo/#{selo}', function(data) {
+                    $.getJSON('/json/selo/#{selo}', function(data) {
                       $('##{selo}').append('<img class="circle responsive-img tooltipped" data-position="bottom" data-delay="50" data-tooltip="' + data.data.title + '" src="' + data.data.img + '">')
                       $('.tooltipped').tooltip({delay: 50});
+                    }).fail(function(err) {
+                      console.log(err);
                     })
                   })
                 //- img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
