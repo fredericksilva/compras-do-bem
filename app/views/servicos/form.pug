@@ -314,10 +314,10 @@ block scripts
         var estado = '#{servico.endereco.estado}';
 
         $.each(data, function (key, val) {
-          if (estado === val.nome) {
-            options += '<option value="' + val.nome + '" selected>' + val.nome + '</option>';
+          if (estado === val.sigla) {
+            options += '<option value="' + val.sigla + '" selected>' + val.nome + '</option>';
           } else {
-            options += '<option value="' + val.nome + '">' + val.nome + '</option>';
+            options += '<option value="' + val.sigla + '">' + val.nome + '</option>';
           }
         });
         $("#estados").html(options);

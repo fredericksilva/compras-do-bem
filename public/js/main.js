@@ -45,11 +45,12 @@ function getLocation() {
           //city data
           $('#cid_destino').attr('data-valor', city.long_name + ' - ' + city.short_name);
           $('#cid_destino').attr('data-id', city.long_name + ' - ' + city.short_name);
-          $('#cid_destino a').text('data-id', city.long_name + ' - ' + city.short_name);
+          $('#cid_destino a').text(city.long_name + ' - ' + city.short_name);
           dropClick($('#cid_destino'));
         } else {
           $('#cid_destino').attr('data-valor', city.long_name + ' - ' + city.short_name);
           $('#cid_destino').attr('data-id', city.long_name + ' - ' + city.short_name);
+          $('#cid_destino a').text(city.long_name + ' - ' + city.short_name);
           localStorage.cidade = city.long_name
           localStorage.cid = city.short_name
           dropClick($('#cid_destino'));
@@ -83,16 +84,16 @@ function dropClick(esse) {
 
 $(document).ready(function() {
 
-  // Alert box close
-  $(document).on('click', '#alert-close', function() {
-    $('#alert').fadeOut('slow', function() {
-
-    })
-  })
+  if (localStorage.cidade) {
+    $('#cid_destino').attr('data-valor', localStorage.cidade  + ' - ' + localStorage.cid);
+    $('#cid_destino').attr('data-id', localStorage.cidade  + ' - ' + localStorage.cid);
+    $('#cid_destino a').text(localStorage.cidade  + ' - ' + localStorage.cid);
+    dropClick($('#cid_destino'));
+  }
 
   $(".dropForm li").on('click', function(){
+    console.log($(this))
     dropClick($(this));
-
   });
 
 });

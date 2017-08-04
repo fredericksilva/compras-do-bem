@@ -59,25 +59,28 @@ exports.index = async(function* (req, res) {
  * Busca
  */
 exports.busca = async(function* (req, res) {
+  console.log(req.body);
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const limit = 30;
-  const c = req.body.cidade.split(' - ');
   let criteria = {};
-  if (req.body.cidade !== '') {
+  if (req.body.cidade && req.body.cidade !== '') {
+    const c = req.body.cidade.split(' - ');
     criteria['endereco.cidade'] = c[0];
   }
-  if (req.body.categoria !== '') {
-    criteria['categorias'] = req.body.categoria
+  if (req.body.categoria && req.body.categoria !== '') {
+    const cats = req.body.categoria.split(',');
+    criteria.categorias = { $in: cats };
+    const catCriteria = yield Categoria.list({ _id: { $in: cats } });
+    res.locals.cat_criteria = catCriteria;
   }
-  if (req.body.text !== '') {
-    criteria['$text'] = { $search: req.body.text }
+  if (req.body.text && req.body.text !== '') {
+    criteria.$text = { $search: req.body.text };
   }
   const options = {
     criteria,
     limit,
     page
   };
-  console.log(req.body);
 
   const servicos = yield Servico.list(options);
   const count = yield Servico.count();
@@ -85,6 +88,7 @@ exports.busca = async(function* (req, res) {
   respond(res, 'servicos/index', {
     title: 'servicos',
     servicos,
+    criteria,
     page: page + 1,
     pages: Math.ceil(count / limit)
   });

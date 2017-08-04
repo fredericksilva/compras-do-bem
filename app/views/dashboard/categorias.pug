@@ -106,8 +106,9 @@ block content
               thead
                 tr
                   th Icone
-                  th Selo
                   th Nome
+                  th Mãe
+                  th Selo
                   th Descricao
                   th Acao
               tbody
@@ -138,6 +139,18 @@ block scripts
             },
             sortable: false
           },
+          { data: 'title' },
+          { 
+            data: 'mae',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return data.title
+              } else {
+                return 'Não'
+              }
+            },
+            sortable: true
+          },
           { 
             data: 'selo',
             render: function (data, type, full, meta) {
@@ -149,7 +162,6 @@ block scripts
             },
             sortable: true
           },
-          { data: 'title' },
           { data: 'body' },
           { 
             data: '_id',

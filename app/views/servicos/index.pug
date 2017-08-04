@@ -3,53 +3,56 @@ extends ../layouts/default
 block styles
 
 block content
-  section.categoriasinterna
+  //- section
+  //-   .container
+  //-     if (criteria['endereco.cidade'])
+  //-       h4= criteria['endereco.cidade']
+  //-     if (criteria.categorias)
+  //-       each c in cat_criteria
+  //-         p= c.title
+  //-     if (criteria.$text)
+  //-       p= criteria.$text.$search
+  section.categoriasinterna(style='margin-top: 0;')
     .container
       .row
-        .col.s12.m2.l2.ol
-          p
-            a(href='') Alongamento de Cabelo
-          p
-            a(href='') Barbeiros
-          p
-            a(href='') Beleza dos Olhos
-        .col.s12.m2.l2.ol
-          p
-            a(href='') Alongamento de Cabelo
-          p
-            a(href='') Barbeiros
-          p
-            a(href='') Beleza dos Olhos
-        .col.s12.m2.l2.ol
-          p
-            a(href='') Alongamento de Cabelo
-          p
-            a(href='') Barbeiros
-          p
-            a(href='') Beleza dos Olhos
-        .col.s12.m2.l2.ol
-          p
-            a(href='') Alongamento de Cabelo
-          p
-            a(href='') Barbeiros
-          p
-            a(href='') Beleza dos Olhos
-        .col.s12.m2.l2.ol
-          p
-            a(href='') Alongamento de Cabelo
-          p
-            a(href='') Barbeiros
-          p
-            a(href='') Beleza dos Olhos
-        .col.s12.m2.l2.ol
-          p
-            a(href='') Alongamento de Cabelo
-          p
-            a(href='') Barbeiros
-          p
-            a(href='') Beleza dos Olhos
         .vermais3.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
-          span.palavraUsada  Mais categorias
+          span.palavraUsada  Categorias
+        each cat in categorias
+          if (!cat.mae && !cat.selo || criteria.categorias && cat.mae && cat.mae._id === criteria.categorias.$in[0])
+            .col.s12.m2.l2.ol
+              form(method='post', action='/servicos/busca')
+                input(type='hidden', name='_csrf', value=_csrf)
+                if (criteria.$text)
+                  input(type='hidden', name='text', value=criteria.$text.$search)
+                if (criteria['endereco.cidade'])
+                  input(type='hidden', name='cidade', value=criteria['endereco.cidade'])
+                input(type='hidden', name='categoria', value=(cat._id))
+                - var cla = ''
+                if (criteria.categorias && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$in[0]))
+                  - cla ='publicarNegocio'
+                .boxCifrao.widthtotal(class=cla)
+                  button(style='background: none; border: none;')
+                    | #{cat.title}
+      .row
+        .vermais3.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
+          span.palavraUsada  Impacto
+        each cat in categorias
+          if (cat.selo && cat.mae)
+            .col.s12.m2.l2.ol
+              form(method='post', action='/servicos/busca')
+                input(type='hidden', name='_csrf', value=_csrf)
+                if (criteria.$text)
+                  input(type='hidden', name='text', value=criteria.$text.$search)
+                if (criteria['endereco.cidade'])
+                  input(type='hidden', name='cidade', value=criteria['endereco.cidade'])
+                input(type='hidden', name='categoria', value=(cat._id))
+                - var cla = ''
+                if (criteria.categorias && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$in[0]))
+                  - cla ='publicarNegocio'
+                .boxCifrao.widthtotal(class=cla)
+                  button(style='background: none; border: none;')
+                    | #{cat.title}
+      .row
         .col.s12.m2.l2.ol
           .boxCifrao
             | $
@@ -79,130 +82,48 @@ block content
     .container
       .row
         .col.s12.m8.l8.ol
+          if (criteria.$text)
+            h4 Busca: #{criteria.$text.$search}
           .row
-            // loop resultado
-            .resultados
-              .col.s2
-                img.responsive-img(src='img/exemplo.jpg', alt='')
-                // notice the "circle" class
-              .col.s5
-                h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                .avaliacaoBusca
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons star_rate
-                  | 							(30)
-                .preco $$$ . Árabe, Lanchonetes
-              .col.s5
-                strong Catete
-                br
-                | 	Largo do Machado, 29
-                br
-                | 	Rio de Janeiro - RJ 23510-600
-                br
-                | 	(21) 2557-2377
-            // fim loop resultado
-            // loop resultado
-            .resultados
-              .col.s2
-                img.responsive-img(src='img/exemplo.jpg', alt='')
-                // notice the "circle" class
-              .col.s5
-                h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                .avaliacaoBusca
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons star_rate
-                  | 								(30)
-                .preco $$$ . Árabe, Lanchonetes
-              .col.s5
-                strong Catete
-                br
-                | 	Largo do Machado, 29
-                br
-                | 	Rio de Janeiro - RJ 23510-600
-                br
-                | 	(21) 2557-2377
-            // fim loop resultado
-            // loop resultado
-            .resultados
-              .col.s2
-                img.responsive-img(src='img/exemplo.jpg', alt='')
-                // notice the "circle" class
-              .col.s5
-                h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                .avaliacaoBusca
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons star_rate
-                  | 									(30)
-                .preco $$$ . Árabe, Lanchonetes
-              .col.s5
-                strong Catete
-                br
-                | 		Largo do Machado, 29
-                br
-                | 		Rio de Janeiro - RJ 23510-600
-                br
-                | 		(21) 2557-2377
-            // fim loop resultado
-            // loop resultado
-            .resultados
-              .col.s2
-                img.responsive-img(src='img/exemplo.jpg', alt='')
-                // notice the "circle" class
-              .col.s5
-                h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                .avaliacaoBusca
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons star_rate
-                  | 										(30)
-                .preco $$$ . Árabe, Lanchonetes
-              .col.s5
-                strong Catete
-                br
-                | 			Largo do Machado, 29
-                br
-                | 			Rio de Janeiro - RJ 23510-600
-                br
-                | 			(21) 2557-2377
-            // fim loop resultado
-            // loop resultado
-            .resultados
-              .col.s2
-                img.responsive-img(src='img/exemplo.jpg', alt='')
-                // notice the "circle" class
-              .col.s5
-                h2 1 .  ROTISSERIA SÍRIO LIBANEZA
-                .avaliacaoBusca
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons.yellow-text.text-darken-1 star_rate
-                  i.material-icons star_rate
-                  | 											(30)
-                .preco
-                  | $$$ 
-                  i.material-icons brightness_1
-                  |  Árabe, Lanchonetes
-              .col.s5
-                strong Catete
-                br
-                | 				Largo do Machado, 29
-                br
-                | 				Rio de Janeiro - RJ 23510-600
-                br
-                | 				(21) 2557-2377
-            // fim loop resultado
+            each serv in servicos
+              // loop resultado
+              .resultados
+                .col.s2
+                  a(href='/servico/' + serv.urlized)
+                    if (serv.avatar.img)
+                      img.responsive-img(src=serv.avatar.img)
+                    else
+                      img.responsive-img(src='/img/avatar-default.png')
+                  // notice the "circle" class
+                .col.s5
+                  h2
+                    a(href='/servico/' + serv.urlized)= serv.title
+                  | #{serv.body}
+                  .preco
+                    each cat, index in serv.categorias
+                      if (!cat.selo)
+                        if (serv.categorias.length - 1 === index)
+                          | #{cat.title}
+                        else
+                          | #{cat.title},
+                  .row(style='margin-bottom: 0; margin-top: 10px;')
+                    each selo, index in serv.categorias
+                      if (selo.selo)
+                        .col.s4.m2.l2(style='padding: 0 .5rem;')
+                          a.selo(href='')
+                            img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
+                .col.s5
+                  strong #{serv.endereco.cidade} - #{serv.endereco.estado}
+                  if (serv.endereco.existe)
+                    br
+                    | 	#{serv.endereco.rua}, #{serv.endereco.numero}
+                  if (serv.telefone)
+                    br
+                    | 	#{serv.telefone}
+                  if (serv.site)
+                    br
+                    a(href=serv.site, target='_blank') #{serv.site}
+              // fim loop resultado
           .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
             span.palavraUsada
               i.material-icons keyboard_arrow_down
