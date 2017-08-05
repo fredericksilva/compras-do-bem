@@ -63,6 +63,18 @@ block content
             th Usuário
             th Avaliações
         tbody
+  .row
+    .col.s12.m12.l12
+      h4 Reivindicações abertas
+      table#serv_prop_table.highlight.bordered(style='width: 100%;')
+        thead
+          tr
+            th Serviço
+            th Usuário
+            th Telefone
+            th Confirmar
+            th Negar
+        tbody
 
 block scripts
   script(type='text/javascript').
@@ -96,7 +108,7 @@ block scripts
           $('#users_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
         }
         $('#users_total').text(users.length);
-        $('#users_total_perc').text(perc_total+'%');
+        $('#users_total_perc').text(parseInt(perc_total)+'%');
       })
       $.get('/servicos', function(data) {
         console.log(data.data)
@@ -113,7 +125,8 @@ block scripts
           $('#serv_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
         }
         $('#serv_total').text(servicos.length);
-        $('#serv_total_perc').text(perc_total+'%');
+        $('#serv_total_perc').text(parseInt(perc_total)+'%');
+        servicosReinv();
       })
       $.get('/avaliacoes', function(data) {
         console.log(data.data)
@@ -130,7 +143,7 @@ block scripts
           $('#aval_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
         }
         $('#aval_total').text(avaliacoes.length);
-        $('#aval_total_perc').text(perc_total+'%');
+        $('#aval_total_perc').text(parseInt(perc_total)+'%');
         servicosAval();
         usuariosAval();
       })
@@ -149,7 +162,7 @@ block scripts
           $('#updates_total_perc').addClass('mdi-hardware-keyboard-arrow-down');
         }
         $('#updates_total').text(updates.length);
-        $('#updates_total_perc').text(perc_total+'%');
+        $('#updates_total_perc').text(parseInt(perc_total)+'%');
       })
 
       function servicosAval() {
@@ -207,6 +220,20 @@ block scripts
               return s._id === uses[o].user
             });
             $('#user_mais_table tbody').prepend('<tr><td><a href="/user/' + user._id + '" target="_blank">' + user.profile.first_name.charAt(0).toUpperCase() + user.profile.first_name.slice(1) + ' ' + user.profile.second_name.charAt(0).toUpperCase()+ '.</a></td><td>' + uses[o].avals + '</td></tr>')
+          }
+        }, 500)
+      }
+
+      function servicosReinv() {
+        var reinv = _.filter(servicos, function(s) {
+          return s.proprietario && !s.proAuth
+        });
+        setTimeout(function() {
+          for (var o = 0; o < reinv.length; o++) {
+            var user = _.find(users, function(s) {
+              return s._id === reinv[o].proprietario._id
+            });
+            $('#serv_prop_table tbody').prepend('<tr><td><a href="/servico/' + reinv[o]._id + '" target="_blank">' + reinv[o].title + '</a></td><td><a href="/user/' + user._id + '" target="_blank">' + user.profile.first_name.charAt(0).toUpperCase() + user.profile.first_name.slice(1) + ' ' + user.profile.second_name.charAt(0).toUpperCase()+ '.</a></td><td>' + user.telefone + '</td><td><a class="btn" href="/servico/' + reinv[o].urlized + '/reinvidicacao/negar">Negar</a></td><td><a class="btn" href="/servico/' + reinv[o].urlized + '/reinvidicacao/autorizar">Autorizar</a></td></tr>')
           }
         }, 500)
       }

@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema({
   admin: { type: Boolean, default: false },
   active: { type: Boolean, default: false },
   telefone: { type: String },
+  seguindo: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
+  favoritos: [{ type: mongoose.Schema.ObjectId, ref: 'Servico' }],
 
   profile: {
     first_name: String,
@@ -79,6 +81,8 @@ userSchema.statics = {
 
   load(id) {
     return this.findOne({ _id: id })
+      .populate('favoritos')
+      .populate('seguindo')
       .exec();
   },
 
@@ -93,6 +97,8 @@ userSchema.statics = {
     const criteria = {};
     return this.find(criteria)
       .sort({ createdAt: -1 })
+      .populate('favoritos')
+      .populate('seguindo')
       .exec();
   }
 };

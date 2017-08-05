@@ -135,8 +135,8 @@ block scripts
         }
         $('#novos_avals').text(novos.length);
         $('#avals_total').text(avaliacao_table.data().length);
-        $('#avals_total_perc').text(perc_total+'%');
-        $('#novos_avals_perc').text(perc+'%');
+        $('#avals_total_perc').text(parseInt(perc_total)+'%');
+        $('#novos_avals_perc').text(parseInt(perc)+'%');
       }, 500)
 
       $('.dataTables_length').parent().parent().css('display', 'none');

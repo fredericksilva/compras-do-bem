@@ -12,6 +12,7 @@ const Servico = mongoose.model('Servico');
 const Categoria = mongoose.model('Categoria');
 const Avaliacao = mongoose.model('Avaliacao');
 const Update = mongoose.model('Update');
+const User = mongoose.model('User');
 const assign = Object.assign;
 const scrape = require('html-metadata');
 
@@ -533,6 +534,7 @@ exports.show = function (req, res) {
       let amb = 0.0;
       let soc = 0.0;
       let aval = null;
+      let favorito = null;
       const endereco = JSON.stringify(req.servico.endereco);
       const pontos = JSON.stringify(req.servico.pontos);
       for (let i = 0; i < avaliacoes.length; i++) {
@@ -545,6 +547,7 @@ exports.show = function (req, res) {
       amb = parseFloat(amb).toFixed(1);
       if (req.user) {
         aval = _.find(avaliacoes, a => JSON.stringify(a.user._id) === JSON.stringify(req.user._id));
+        favorito = _.find(req.user.favoritos, a => JSON.stringify(a) === JSON.stringify(req.servico._id));
       }
       res.render('servicos/show', {
         title: req.servico.title,
@@ -556,6 +559,7 @@ exports.show = function (req, res) {
         categorias,
         avaliacoes,
         aval,
+        favorito,
         device: req.device.type === 'phone' || req.device.type === 'tablet'
       });
     }).catch((err) => {
@@ -596,6 +600,111 @@ exports.showStatic = function (req, res) {
     servico
   });
 };
+
+/**
+ * Reivindicar Servico
+ */
+exports.reivindicar = async(function* (req, res) {
+  if (req.servico.proprietario) {
+    req.flash('error', { msg: 'Esse serviço já foi reivindicado.' });
+    res.redirect(`/servico/${req.servico.urlized}`);
+  }
+  const user = req.user;
+  const serv = req.servico;
+  user.telefone = req.body.telefone;
+  try {
+    yield user.save();
+    serv.proprietario = req.user._id;
+    try {
+      yield serv.save();
+      req.flash('success', { msg: 'Aguarde. Entraremos em contato.' });
+      res.redirect(`/servico/${req.servico.urlized}`);
+    } catch (err) {
+      console.log(err);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Negar reinvidicação Servico
+ */
+exports.reinvNegar = async(function* (req, res) {
+  const serv = req.servico;
+  serv.proprietario = undefined;
+  try {
+    yield serv.save();
+    req.flash('success', { msg: 'Reivindicação negada.' });
+    res.redirect('/dash');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Autorizar reinvidicação Servico
+ */
+exports.reinvAuth = async(function* (req, res) {
+  const serv = req.servico;
+  serv.proAuth = true;
+  try {
+    yield serv.save();
+    req.flash('success', { msg: 'Reivindicação autorizada.' });
+    res.redirect('/dash');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Desassociar Proprietario do Servico
+ */
+exports.desassociar = async(function* (req, res) {
+  const serv = req.servico;
+  serv.proprietario = undefined;
+  serv.proAuth = false;
+  try {
+    yield serv.save();
+    req.flash('success', { msg: 'Serviço desassociado.' });
+    res.redirect('/dash/servicos');
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Favoritar Servico
+ */
+exports.favoritar = async(function* (req, res) {
+  const serv = req.servico;
+  const user = req.user;
+  user.favoritos.push(serv._id);
+  try {
+    yield user.save();
+    req.flash('success', { msg: 'Adicionado aos favoritos.' });
+    res.redirect(`/servico/${serv.urlized}`);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Favoritar Servico
+ */
+exports.desfavoritar = async(function* (req, res) {
+  const serv = req.servico;
+  const user = req.user;
+  user.favoritos.pull(serv._id);
+  try {
+    yield user.save();
+    req.flash('success', { msg: 'Removido dos favoritos.' });
+    res.redirect(`/servico/${serv.urlized}`);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 /**
  * Delete Admin
  */

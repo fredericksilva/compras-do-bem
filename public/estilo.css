@@ -80,11 +80,11 @@ label{ text-transform: uppercase}
 .breadcrumb i{font-size: 12px !important; margin-right: 5px; float: none !important; }
 .breadcrumb a{color: #949897}
 .ends img{  clear: both; display: block; }
-.reinvindicacao h2 { margin: 25px 0; font-size: 1.5em }
-.reinvindicacao strong{color: #f06292;}
-.reinvindicacao span{ display: block;  margin-top: 25px}
-.reinvindicacao i{ font-size: 0.8em; margin-right: 5px ; display: inline-block;color: #f06292;   }
-.reinvindicar{color: #f06292; font-weight: bold;}
+.reivindicacao h2 { margin: 25px 0; font-size: 1.5em }
+.reivindicacao strong{color: #f06292;}
+.reivindicacao span{ display: block;  margin-top: 25px}
+.reivindicacao i{ font-size: 0.8em; margin-right: 5px ; display: inline-block;color: #f06292;   }
+.reivindicar{color: #f06292; font-weight: bold;}
 .bordaInferior{ border-bottom: 1px dotted #898f8c; margin-bottom: 20px }
 .corinput{color: #949897 !important;}
 .logobranco {	margin-left: -65px;	float: left;	margin-top: -4px;}
@@ -126,9 +126,9 @@ label, input {
 .sobremapa i{ line-height: 30px; font-size: 14px}
 		.palavraUsada { padding-left: 11px}
 		.linhapontilhada{ border-bottom: 1px dotted #ccc; height: 1px; margin-top: -30px}
-.btnreinvindicar{ cursor: pointer;   padding: 7px 14px;    color: #fff !important;
+.btnreivindicar{ cursor: pointer;   padding: 7px 14px;    color: #fff !important;
     margin-top: 13px;    display: block;}
-.btnreinvindicar i{margin: 5px; width: 12px; }
+.btnreivindicar i{margin: 5px; width: 12px; }
 .btnacoes{ margin-left: 0 !important; text-transform: none !important;}
 .btnacoes i{ width: 20px; font-size: 12px}
 .tt{ line-height: 30px; margin-top: 10px; display: block;}

@@ -70,7 +70,7 @@ block content
                   input(type='hidden', name='cidade', value=criteria['endereco.cidade'])
                 if (criteria.categorias && criteria.categorias.$all.length === 1)
                   input(type='hidden', name='categoria', value=(criteria.categorias.$all[0] + ',' + cat._id))
-                else if (criteria.categorias && criteria.categorias.$all.length > 1 && !cat_criteria[1].selo)
+                else if (criteria.categorias && criteria.categorias.$all.length > 1 && cat_criteria[1] && !cat_criteria[1].selo)
                   input(type='hidden', name='categoria', value=(criteria.categorias.$all[0] + ',' + criteria.categorias.$all[1] + ',' + cat._id))
                 else
                   input(type='hidden', name='categoria', value=(cat._id))

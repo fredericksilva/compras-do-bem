@@ -187,9 +187,9 @@ block scripts
         $('#novos_users').text(novos.length);
         $('#users_total').text(user_table.data().length);
         $('#users_inact').text(users_inact.length);
-        $('#users_total_perc').text(perc_total+'%');
-        $('#novos_users_perc').text(perc+'%');
-        $('#users_inact_perc').text(perc_inact+'%');
+        $('#users_total_perc').text(parseInt(perc_total)+'%');
+        $('#novos_users_perc').text(parseInt(perc)+'%');
+        $('#users_inact_perc').text(parseInt(perc_inact)+'%');
       }, 500)
 
       $('.dataTables_length').parent().parent().css('display', 'none');

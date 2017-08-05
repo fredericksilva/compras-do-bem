@@ -264,6 +264,7 @@ exports.isAdmin = (req, res, next) => {
     next();
   } else {
     req.flash('errors', { msg: 'Você não tem permissão para realizar essa operação.' });
+    res.redirect(req.session.returnTo ? req.session.returnTo : '/');
   }
 };
 
@@ -271,10 +272,29 @@ exports.isAdmin = (req, res, next) => {
  * Author Authorization middleware.
  */
 exports.isAuthor = (req, res, next) => {
-  console.log(req.user._id === req.avaliacao.user._id);
   if (req.avaliacao && JSON.stringify(req.user._id) === JSON.stringify(req.avaliacao.user._id)) {
     next();
   } else {
     req.flash('errors', { msg: 'Você não tem permissão para realizar essa operação.' });
+    res.redirect(`/servico/${req.avaliacao.servico.urlized}`);
+  }
+};
+
+/**
+ * Prop Authorization middleware.
+ */
+exports.isProp = (req, res, next) => {
+  if (req.servico && !req.servico.proAuth) {
+    next();
+  } else if (req.user.admin) {
+    next();
+  } else if (req.servico
+    && req.servico.proAuth
+    && req.servico.proprietario._id
+    && JSON.stringify(req.user._id) === JSON.stringify(req.servico.proprietario._id)) {
+    next();
+  } else {
+    req.flash('errors', { msg: 'Você não tem permissão para realizar essa operação.' });
+    res.redirect(`/servico/${req.servico.urlized}`);
   }
 };

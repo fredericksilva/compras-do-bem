@@ -128,7 +128,7 @@ app.use((req, res, next) => {
       req.path !== '/signup' &&
       !req.path.match(/^\/auth/) &&
       !req.path.match(/\./)) {
-    if (req.path.split('json').length < 1) {
+    if (req.path.split('json').length < 2) {
       req.session.returnTo = req.path;
     }
   } else if (req.user &&

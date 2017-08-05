@@ -1,0 +1,25 @@
+#modal-login.modal.bottom-sheet(style='max-height: 100%;')
+  form(id='signup-form', method='POST', action='/login')
+    .modal-content
+      .container
+        .row
+          .col.s12.m6.l6
+            a.btn.waves-effect.waves-light(href='/auth/facebook', style='background: #3b5998; margin-top: 20px;')
+              i.fa.fa-facebook.left
+              | Logue-se com Facebook
+            br
+            br
+            input(type='hidden', name='_csrf', value=_csrf)
+            label(for='email', data-error='wrong', data-success='right') Email
+            input#email.validate(placeholder='E-mail', type='email', name='email', required)
+            label(for='password') Senha
+            input#confirm_password.validate(placeholder='Senha', type='password', name='password', required)
+            .row
+              .col.s12.m12.l12
+                a(href='/forgot') Esqueceu a senha?
+              .col.s12.m12.l12
+                a(href='/signup') Cadastre-se
+    .modal-footer
+      .container
+        button.pink.lighten-2.waves-effect.waves-light.btn.left(type='submit') Login
+        a.btmodal-action.modal-close.waves-effect.waves-green.btn Cancelar

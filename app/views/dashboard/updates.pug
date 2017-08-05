@@ -138,8 +138,8 @@ block scripts
         }
         $('#novos_updates').text(novos.length);
         $('#updates_total').text(update_table.data().length);
-        $('#updates_total_perc').text(perc_total+'%');
-        $('#novos_updates_perc').text(perc+'%');
+        $('#updates_total_perc').text(parseInt(perc_total)+'%');
+        $('#novos_updates_perc').text(parseInt(perc)+'%');
       }, 500)
 
       $('.dataTables_length').parent().parent().css('display', 'none');

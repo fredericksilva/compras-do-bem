@@ -245,7 +245,7 @@ block styles
     }
 
 block content
-  section.reinvindicacao
+  section.reivindicacao
     .container
       .row
         //- .col.s12.breadcrumb
@@ -271,51 +271,66 @@ block content
                   img#avatar.avatar(src=servico.avatar.img, style='margin-left: ' + servico.avatar.offset + ';')
                 else
                   img#avatar.avatar(src='/img/avatar-default.png')
-              #avatar-backdrop
-              form#avatar-form(action='/servico/' + servico.urlized + '/avatar/upload', method='POST', enctype='multipart/form-data')
-                input#avatar-offset(type='hidden',value='0px', name='offset')
-                .file-field.input-field
-                  .btn.pink.lighten-2(style='')
-                    i.material-icons.left.white-text add_a_photo
-                    if (device)
-                      input#image-avatar(type='file', name='photos', style='', accept='image/*', capture='camera')
-                    else
-                      input#image-avatar(type='file', name='photos', style='')
-                  .file-path-wrapper(style='display: none;')
-                    input.file-path.validate(type='text', placeholder='Upload one or more files')
+              if (user)
+                #avatar-backdrop
+                form#avatar-form(action='/servico/' + servico.urlized + '/avatar/upload', method='POST', enctype='multipart/form-data')
+                  input#avatar-offset(type='hidden',value='0px', name='offset')
+                  .file-field.input-field
+                    .btn.pink.lighten-2(style='')
+                      i.material-icons.left.white-text add_a_photo
+                      if (device)
+                        input#image-avatar(type='file', name='photos', style='', accept='image/*', capture='camera')
+                      else
+                        input#image-avatar(type='file', name='photos', style='')
+                    .file-path-wrapper(style='display: none;')
+                      input.file-path.validate(type='text', placeholder='Upload one or more files')
             .col.s9.m9.l9
               .row
                 .col.s12.m12.l12
                   h1.subtitles(style='margin-bottom: 0;')=servico.title
-                  span.reinvindicando(style='margin-top: 0;')
-                    i.material-icons.tiny help
-                    | Não reivindicada
+                  if (!servico.proprietario && !servico.proAuth)
+                    span.reivindicando(style='margin-top: 0;')
+                      i.material-icons.tiny help
+                      | Não reivindicada
+                  else if (servico.proprietario && !servico.proAuth)
+                    span.reivindicando.pink-text.text-lighten-2(style='margin-top: 0;')
+                      i.material-icons.tiny help
+                      | Reivindicação em processamento
+                  else
+                    span.reivindicando.pink-text.text-lighten-2(style='margin-top: 0;')
+                      i.material-icons.tiny help
+                      | Reivindicada
                 .col.s12.m12.l12
                   each categoria, index in servico.categorias
                     if (!categoria.selo)
                       - var coma = ','
                       - if (servico.categorias.length === index + 1) { coma = '' }
                       - if (categoria !== 'endereco.existe')
-                        a(href='#') #{categoria.title}
-                        | #{coma}
-                .col.s12.m12.l12
-                  a(href='/servico/'+servico.urlized+'/edit')
-                    i.material-icons edit
-                    | Editar informações
+                        form(method='POST', action='/servicos/busca')
+                          input(type='hidden', name='_csrf', value=_csrf)
+                          input(type='hidden', value=categoria._id, name='categoria')
+                          button(style='background: none; border: none; float: left; padding: 0;')
+                            a() #{categoria.title}
+                            | #{coma}
+                if (!servico.proAuth || servico.proAuth && user && user.admin || servico.proAuth && user && JSON.stringify(user._id) === JSON.stringify(servico.proprietario._id))
+                  .col.s12.m12.l12
+                    a(href='/servico/'+servico.urlized+'/edit')
+                      i.material-icons edit
+                      | Editar informações
             
         .col.s12.m3.l3
           .row
             .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
               if (user)
-                a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
-                  i.material-icons.white-text star_rate
+                a#avaliar.pink.lighten-2.btnreivindicar(style='margin-bottom:10px;')
+                  i.material-icons.white-text rate_review
                   if (aval)
                     | Editar Avaliação
                   else
                     | Escrever Avaliação
               else
-                a#login.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
-                  i.material-icons.white-text star_rate
+                a.login.pink.lighten-2.btnreivindicar(style='margin-bottom:10px;')
+                  i.material-icons.white-text rate_review
                   | Escrever Avaliação
               if (avaliacoes.length > 1)
                 strong #{avaliacoes.length} avaliações 
@@ -412,10 +427,11 @@ block content
         ul#tabs-selos.tabs
           li.active.tab.col.s3
             a.active(href='#todos-selos-tab') Impactos
-          li.tab.col.s3
-            a(href='#novo-selo-tab') Acrescentar Impacto
-          li.tab.col.s3
-            a(href='#novo-clipping-tab') Acrescentar Notícia
+          if (user)
+            li.tab.col.s3
+              a(href='#novo-selo-tab') Acrescentar Impacto
+            li.tab.col.s3
+              a(href='#novo-clipping-tab') Acrescentar Notícia
         .tabs-content.carousel
           #todos-selos-tab.col.s12.carousel-item
             .row
@@ -453,88 +469,92 @@ block content
                 each clip, index in servico.clipping
                   if (index % 4 === 3)
                     include ../partials/clipping
+          if (user)
+            #novo-selo-tab.col.s12.carousel-item
+              form(action='/servico/' + servico.urlized + '/selo', method='POST')
+                input(type='hidden', name='_csrf', value=_csrf)
+                .row
+                  .col.s12.m12.l12
+                    h5 Faça uma avaliação do impacto de 
+                      strong #{servico.title}
+                    textarea#aval-impact.materialize-textarea.validate(type='text', placeholder='Avaliação impacto', name='body', required)
+                    label(for='aval-impact')
+                .row
+                  .col.s12.m12.l12 
+                    h5 Impactos
+                    p Escolha os impactos referentes a essa avaliação.
+                    ul.collapsible(data-collapsible='expandable')
+                      each tipo in categorias
+                        if (tipo.selo && !tipo.mae)
+                          li
+                            .collapsible-header
+                              i.material-icons
+                                img.circle.responsive-img(src=tipo.img, style='padding-top: 5px;')
+                              | #{tipo.title}
+                            .collapsible-body
+                              span #{tipo.body}
+                              ul.collapsible(data-collapsible='expandable')
+                                each subtipo in categorias
+                                  if (subtipo.mae && subtipo.mae._id.toString() === tipo._id.toString())
+                                    li.subtipo(data-id=subtipo._id)
+                                      input(type='hidden', name=subtipo._id, value='false')
+                                      .collapsible-header
+                                        i.material-icons
+                                          img.circle.responsive-img(src=subtipo.img, style='padding-top: 5px;')
+                                        | #{subtipo.title}
+                                      .collapsible-body
+                                        span #{subtipo.body}
+                                    
+                .modal-footer
+                  button.btn(type='submit') Enviar
 
-          #novo-selo-tab.col.s12.carousel-item
-            form(action='/servico/' + servico.urlized + '/selo', method='POST')
-              input(type='hidden', name='_csrf', value=_csrf)
-              .row
-                .col.s12.m12.l12
-                  h5 Faça uma avaliação do impacto de 
-                    strong #{servico.title}
-                  textarea#aval-impact.materialize-textarea.validate(type='text', placeholder='Avaliação impacto', name='body', required)
-                  label(for='aval-impact')
-              .row
-                .col.s12.m12.l12 
-                  h5 Impactos
-                  p Escolha os impactos referentes a essa avaliação.
-                  ul.collapsible(data-collapsible='expandable')
-                    each tipo in categorias
-                      if (tipo.selo && !tipo.mae)
-                        li
-                          .collapsible-header
-                            i.material-icons
-                              img.circle.responsive-img(src=tipo.img, style='padding-top: 5px;')
-                            | #{tipo.title}
-                          .collapsible-body
-                            span #{tipo.body}
-                            ul.collapsible(data-collapsible='expandable')
-                              each subtipo in categorias
-                                if (subtipo.mae && subtipo.mae._id.toString() === tipo._id.toString())
-                                  li.subtipo(data-id=subtipo._id)
-                                    input(type='hidden', name=subtipo._id, value='false')
-                                    .collapsible-header
-                                      i.material-icons
-                                        img.circle.responsive-img(src=subtipo.img, style='padding-top: 5px;')
-                                      | #{subtipo.title}
-                                    .collapsible-body
-                                      span #{subtipo.body}
-                                  
-              .modal-footer
-                button.btn(type='submit') Enviar
-
-          #novo-clipping-tab.col.s12.carousel-item
-            form(action='/servico/' + servico.urlized + '/clipping', method='POST')
-              input(type='hidden', name='_csrf', value=_csrf)
-              .row
-                .col.s12.m12.l12
-                  h5 Infrome o link de uma matéria sobre 
-                    strong #{servico.title}
-                  input#link-materia.validate(type='text', placeholder='Link matéria', name='link', required)
-                  label(for='link-materia')
-              .row
-                .col.s12.m12.l12 
-                  h5 Impactos
-                  p Escolha os impactos referentes a essa matéria.
-                  ul.collapsible(data-collapsible='expandable')
-                    each tipo in categorias
-                      if (tipo.selo && !tipo.mae)
-                        li
-                          .collapsible-header
-                            i.material-icons
-                              img.circle.responsive-img(src=tipo.img, style='padding-top: 5px;')
-                            | #{tipo.title}
-                          .collapsible-body
-                            span #{tipo.body}
-                            ul.collapsible(data-collapsible='expandable')
-                              each subtipo in categorias
-                                if (subtipo.mae && subtipo.mae._id.toString() === tipo._id.toString())
-                                  li.subtipo(data-id=subtipo._id)
-                                    input(type='hidden', name=subtipo._id, value='false')
-                                    .collapsible-header
-                                      i.material-icons
-                                        img.circle.responsive-img(src=subtipo.img, style='padding-top: 5px;')
-                                      | #{subtipo.title}
-                                    .collapsible-body
-                                      span #{subtipo.body}
-                                  
-              .modal-footer
-                button.btn(type='submit') Enviar
+            #novo-clipping-tab.col.s12.carousel-item
+              form(action='/servico/' + servico.urlized + '/clipping', method='POST')
+                input(type='hidden', name='_csrf', value=_csrf)
+                .row
+                  .col.s12.m12.l12
+                    h5 Infrome o link de uma matéria sobre 
+                      strong #{servico.title}
+                    input#link-materia.validate(type='text', placeholder='Link matéria', name='link', required)
+                    label(for='link-materia')
+                .row
+                  .col.s12.m12.l12 
+                    h5 Impactos
+                    p Escolha os impactos referentes a essa matéria.
+                    ul.collapsible(data-collapsible='expandable')
+                      each tipo in categorias
+                        if (tipo.selo && !tipo.mae)
+                          li
+                            .collapsible-header
+                              i.material-icons
+                                img.circle.responsive-img(src=tipo.img, style='padding-top: 5px;')
+                              | #{tipo.title}
+                            .collapsible-body
+                              span #{tipo.body}
+                              ul.collapsible(data-collapsible='expandable')
+                                each subtipo in categorias
+                                  if (subtipo.mae && subtipo.mae._id.toString() === tipo._id.toString())
+                                    li.subtipo(data-id=subtipo._id)
+                                      input(type='hidden', name=subtipo._id, value='false')
+                                      .collapsible-header
+                                        i.material-icons
+                                          img.circle.responsive-img(src=subtipo.img, style='padding-top: 5px;')
+                                        | #{subtipo.title}
+                                      .collapsible-body
+                                        span #{subtipo.body}
+                                    
+                .modal-footer
+                  button.btn(type='submit') Enviar
     .container#selos-negocio
       .row(style='margin-bottom: 0 !important;')
         .col.s12.m12.l12
           h5(style='margin: 0 !important;') Impactos
-            button#novo-selo.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-left: 5px;height: 20px;line-height: 20px;width: 20px;')
-              i.material-icons.left(style='line-height: 21px; font-size: 15px;') add
+            if (user)
+              button#novo-selo.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-left: 5px;height: 20px;line-height: 20px;width: 20px;')
+                i.material-icons.left(style='line-height: 21px; font-size: 15px;') add
+            else
+              button.login.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-left: 5px;height: 20px;line-height: 20px;width: 20px;')
+                i.material-icons.left(style='line-height: 21px; font-size: 15px;') add
       .row
         each selo in servico.categorias
           if (selo.selo)
@@ -549,17 +569,25 @@ block content
         .col.s12.m8.l8
           .row
             .col.s12.m4.l4
-              form#foto-form(action='/servico/' + servico.urlized + '/upload', method='POST', enctype='multipart/form-data')
+              if (user)
+                form#foto-form(action='/servico/' + servico.urlized + '/upload', method='POST', enctype='multipart/form-data')
+                  .file-field.input-field
+                    .btn.btnacoes.pink.lighten-2(style='')
+                      i.material-icons.left.white-text add_a_photo
+                      | Adicionar Fotos
+                      if (device)
+                        input#image(type='file', multiple='multiple', name='photos', style='width: 100%; height: 36px;', accept='image/*', capture='camera')
+                      else
+                        input#image(type='file', multiple='', name='photos', style='width: 100%; height: 36px;')
+                    .file-path-wrapper(style='display: none;')
+                      input.file-path.validate(type='text', placeholder='Upload one or more files')
+              else
                 .file-field.input-field
-                  .btn.btnacoes.pink.lighten-2(style='')
+                  .login.btn.btnacoes.pink.lighten-2(style='')
                     i.material-icons.left.white-text add_a_photo
                     | Adicionar Fotos
-                    if (device)
-                      input#image(type='file', multiple='multiple', name='photos', style='width: 100%; height: 36px;', accept='image/*', capture='camera')
-                    else
-                      input#image(type='file', multiple='', name='photos', style='width: 100%; height: 36px;')
-                  .file-path-wrapper(style='display: none;')
-                    input.file-path.validate(type='text', placeholder='Upload one or more files')
+                    input#image(type='file', multiple='', name='photos', style='width: 100%; height: 36px;')
+
               //- a.btn.btnacoes.pink.lighten-2(href='#modal-foto')
               //-   i.material-icons.left add_a_photo
               //-   | Adicionar Foto
@@ -568,13 +596,33 @@ block content
                 i.material-icons.left redo
                 | Compartilhar
             .col.s12.m4.l4
-              a.btn.btnacoes.pink.lighten-2(href='#')
-                i.material-icons.left star_rate
-                | Favoritos
+              if (user)
+                if (favorito)
+                  a.btn.btnacoes.pink.lighten-2(href='/servico/' + servico.urlized + '/desfavoritar')
+                    i.material-icons.left.yellow-text star_rate
+                    | Favorito
+                else
+                  a.btn.btnacoes.pink.lighten-2(href='/servico/' + servico.urlized + '/favorito')
+                    i.material-icons.left star_rate
+                    | Favoritos
+              else
+                a.login.btn.btnacoes.pink.lighten-2(href='#')
+                  i.material-icons.left star_rate
+                  | Favoritos
         .col.s12.m4.l4.left-align
-          a.tt.pink-text.lighten-2.left-align(href='#')
-            i.small.material-icons.left check_circle
-            | Reivindicar esta empresa
+          if (!servico.proAuth)
+            if (user)
+              a#reivindicar.tt.pink-text.lighten-2.left-align(href='#')
+                i.small.material-icons.left check_circle
+                | Reivindicar esta empresa
+            else
+              a.login.tt.pink-text.lighten-2.left-align(href='#')
+                i.small.material-icons.left check_circle
+                | Reivindicar esta empresa
+          else
+            a.tt.pink-text.lighten-2.left-align
+              i.small.material-icons.left check_circle
+              | Empresa reivindicada
 
   #modal-foto.modal.bottom-sheet(style='max-height: 100%;')
     .modal-content
@@ -587,6 +635,21 @@ block content
       .container
         a#foto-enviar.btmodal-action.waves-effect.waves-green.btn.left Enviar
         a.btmodal-action.modal-close.waves-effect.waves-green.btn.right Cancelar
+  if (user)
+    #modal-reivindicar.modal.bottom-sheet(style='max-height: 100%;')
+      form(method='POST', action='/servico/'+servico.urlized+'/reivindicar')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .modal-content
+          .container
+            h4 No informe um telefone para entrarmos em contato com você.
+            .row
+              .col.s12.m12.l12
+                label(for='telefone') TELEFONE
+                input#telefone.validate(placeholder='TELEFONE DE CONTATO', type='text', name='telefone', value=user.telefone, autofocus, required)
+        .modal-footer
+          .container
+            button.btmodal-action.waves-effect.waves-green.btn.left.pink.lighten-2 Enviar
+            a.btmodal-action.modal-close.waves-effect.waves-green.btn.right Cancelar
 
   section.comercio
     .container
@@ -642,7 +705,7 @@ block content
               - if(servico.endereco.existe)
                 | #{servico.endereco.rua}, #{servico.endereco.numero} #{servico.endereco.complemento}
                 br
-              | #{servico.endereco.estado}, #{servico.endereco.cidade}
+              | #{servico.endereco.cidade}, #{servico.endereco.estado}
           - if (servico.site)
             span
               strong.pink-text.lighten-2 Site: 
@@ -732,12 +795,13 @@ block content
                   | #{servico.horarios.dom.hora_abre}:#{servico.horarios.dom.min_abre < 10 ? servico.horarios.dom.min_abre + '0' : servico.horarios.dom.min_abre} às #{servico.horarios.dom.hora_fecha}:#{servico.horarios.dom.min_fecha < 10 ? servico.horarios.dom.min_fecha + '0' : servico.horarios.dom.min_fecha}
                 - else
                   strong(class='red-text') fechado
-          span
-            a(href='/servico/'+servico.urlized+'/edit')
-              i.material-icons edit
-              | Editar informações
+          if (user)
+            span
+              a(href='/servico/'+servico.urlized+'/edit')
+                i.material-icons edit
+                | Editar informações
           hr
-          h2 CATEGORIAS DE IMPACTO
+          h2 IMPACTOS
           ul.collection
             each categoria in servico.categorias
               if (categoria.selo)
@@ -748,9 +812,15 @@ block content
                     i.small.pink-text.lighten-2.material-icons.left mode_edit
                   | #{categoria.title}
           h2 PONTOS DE VENDA
-          a#novo-ponto(href='#')
-            i.material-icons add
-            | Adicionar ponto
+          if (!servico.proAuth || servico.proAuth && user && user.admin || servico.proAuth && user && JSON.stringify(user._id) === JSON.stringify(servico.proprietario._id))
+            if (user)
+              a#novo-ponto(href='#')
+                i.material-icons add
+                | Adicionar ponto
+            else
+              a.login(href='#')
+                i.material-icons add
+                | Adicionar ponto
           #modal-pontos.modal.bottom-sheet(style='max-height: 100%;')
             form(action='/servico/' + servico.urlized + '/ponto', method='POST')
               input(type='hidden', name='_csrf', value=_csrf)
@@ -801,6 +871,8 @@ block content
               |  Ampliar mapa
             #mapa
             //- iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3674.9935306419634!2d-43.22667758967284!3d-22.913609461656378!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x57e29a9a877d57e7!2sInstituto+Senai+de+Tecnologia+Ambiental!5e0!3m2!1spt-BR!2sbr!4v1497834740127', width='100%', height='305', frameborder='0', style='border:0', allowfullscreen='')
+  if (!user)
+    include ../partials/login-modal
 
 block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js')
@@ -945,21 +1017,23 @@ block scripts
 
       var avatar = document.getElementById('avatar-wrapper');
       var oldAvatar = avatar.innerHTML;
-      document.getElementById('image-avatar').onchange = function (e) {
-        avatar.innerHTML = ""
-        for (var i in e.target.files) {
-          loadImage(
-            e.target.files[i],
-            function (img) {
-              img.className = 'z-depth-1 avatar';
-              img.id = 'avatar';
-              avatar.appendChild(img);
-              editarAvatar();
-            },
-            {maxWidth: 600} // Options
-          );
-        }
-      };
+      if (document.getElementById('image-avatar')) {
+        document.getElementById('image-avatar').onchange = function (e) {
+          avatar.innerHTML = ""
+          for (var i in e.target.files) {
+            loadImage(
+              e.target.files[i],
+              function (img) {
+                img.className = 'z-depth-1 avatar';
+                img.id = 'avatar';
+                avatar.appendChild(img);
+                editarAvatar();
+              },
+              {maxWidth: 600} // Options
+            );
+          }
+        };
+      }
 
       function editarAvatar () {
         $('.avatar-wrapper').addClass('edit');
@@ -1030,6 +1104,16 @@ block scripts
       $('#avaliar').on('click', function(e) {
         e.preventDefault();
         $('#modal-avaliar').modal('open');
+      });
+
+      $('#reivindicar').on('click', function(e) {
+        e.preventDefault();
+        $('#modal-reivindicar').modal('open');
+      });
+
+      $('.login').on('click', function(e) {
+        e.preventDefault();
+        $('#modal-login').modal('open');
       });
 
       $('.selo').on('click', function(e) {

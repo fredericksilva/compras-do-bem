@@ -95,7 +95,7 @@ module.exports = (app, passportConfig, passport) => {
   app.param('urlized', servicoController.load);
   app.get('/servico/novo', passportConfig.isAuthenticated, servicoController.new);
   app.get('/servico/:urlized', servicoController.show);
-  app.get('/servico/:urlized/edit', passportConfig.isAuthenticated, servicoController.edit);
+  app.get('/servico/:urlized/edit', passportConfig.isAuthenticated, passportConfig.isProp, servicoController.edit);
   app.get('/servico/:urlized/fotos', servicoController.fotos);
   app.get('/servico/:id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.delete);
   app.post('/servico', passportConfig.isAuthenticated, upload.array('photos', 5), servicoController.create);
@@ -109,6 +109,12 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/servico/:urlized/delete/clipping/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removeclip);
   app.get('/servico/:urlized/delete/categoria/:index', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.removecat);
   app.post('/servicos/busca', servicoController.busca);
+  app.post('/servico/:urlized/reivindicar', passportConfig.isAuthenticated, passportConfig.isProp, servicoController.reivindicar);
+  app.get('/servico/:urlized/reinvidicacao/negar', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.reinvNegar);
+  app.get('/servico/:urlized/reinvidicacao/autorizar', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.reinvAuth);
+  app.get('/servico/:urlized/desassociar', passportConfig.isAuthenticated, passportConfig.isAdmin, servicoController.desassociar);
+  app.get('/servico/:urlized/favorito', passportConfig.isAuthenticated, servicoController.favoritar);
+  app.get('/servico/:urlized/desfavoritar', passportConfig.isAuthenticated, servicoController.desfavoritar);
 
     /**
    * Categoria routes.
@@ -141,6 +147,10 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
   app.get('/user/:user_id/makeadmin', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.makeAdmin);
   app.get('/user/:user_id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.delete);
+  app.get('/user/:user_id/seguir', passportConfig.isAuthenticated, userController.seguir);
+  app.get('/user/:user_id/desseguir', passportConfig.isAuthenticated, userController.desseguir);
+  app.get('/meu-perfil', passportConfig.isAuthenticated, userController.meuPerfil);
+  app.post('/eu/avatar/upload', passportConfig.isAuthenticated, upload.array('avatar', 1), userController.uploadAvatar);
 
   /**
    * OAuth authentication routes. (Sign in)

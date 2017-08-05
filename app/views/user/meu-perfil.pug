@@ -298,32 +298,6 @@ block content
                   h1.subtitles(style='margin-bottom: 0;') #{usuario.profile.first_name.charAt(0).toUpperCase()}#{usuario.profile.first_name.slice(1)} #{usuario.profile.second_name.charAt(0).toUpperCase()}.
                 .col.s12.m12.l12
                   h5 Rio de Janeiro - RJ
-            
-        .col.s12.m3.l3
-          .row
-            .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
-              if (user)
-                if (seguindo)
-                  a#avaliar.pink.lighten-2.btnreivindicar(href='/user/' + usuario._id + '/desseguir', style='margin-bottom:10px;')
-                    i.material-icons.yellow-text star_rate
-                    | Seguir
-                else
-                  a#avaliar.pink.lighten-2.btnreivindicar(href='/user/' + usuario._id + '/seguir', style='margin-bottom:10px;')
-                    i.material-icons.white-text star_rate
-                    | Seguir
-              else
-                a.login.pink.lighten-2.btnreivindicar(style='margin-bottom:10px;')
-                  i.material-icons.white-text star_rate
-                  | Seguir
-            .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
-              if (user)
-                a#avaliar.pink.lighten-2.btnreivindicar(style='margin-bottom:10px;')
-                  i.material-icons.white-text message
-                  | Enviar mensagem
-              else
-                a.login.pink.lighten-2.btnreivindicar(style='margin-bottom:10px;')
-                  i.material-icons.white-text message
-                  | Enviar mensagem
 
   .linhapontilhada
   section.comercio
@@ -331,7 +305,9 @@ block content
       .row
         .col.s12.m4.l4
           ul#user_info.collection
-            li.collection-item.active(data-action='#avaliacoes')
+            li.collection-item.active(data-action='#feed')
+              | Feed
+            li.collection-item(data-action='#avaliacoes')
               i.small.pink-text.lighten-2.left #{avaliacoes.length}
               | Avaliações
             li.collection-item(data-action='#fotos')
@@ -346,7 +322,17 @@ block content
             li.collection-item(data-action='#impacto')
               i.small.pink-text.lighten-2.left #{clipping.length}
               | Avaliação impacto
-        #avaliacoes.page.active.col.s12.m8.l8
+        #feed.page.active.col.s12.m8.l8
+          .row
+            .col.s6.m6.l6
+              each up, index in feed
+                if (index % 2 === 0)
+                  include ../partials/update
+            .col.s6.m6.l6
+              each up, index in feed
+                if (index % 2 === 1)
+                  include ../partials/update
+        #avaliacoes.page.col.s12.m8.l8
           h5(style='text-align: center;') Avaliações
           .divider
           each ava in avaliacoes

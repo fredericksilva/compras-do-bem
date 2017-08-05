@@ -20,6 +20,7 @@ const transporter = nodemailer.createTransport({
 const User = mongoose.model('User');
 const Avaliacao = mongoose.model('Avaliacao');
 const Update = mongoose.model('Update');
+const Servico = mongoose.model('Servico');
 
 /**
  * Load
@@ -37,6 +38,59 @@ exports.load = async(function* (req, res, next, id) {
 exports.index = async(function* (req, res) {
   const users = yield User.list();
   res.json({ data: users });
+});
+
+/**
+ * Seguir User
+ */
+exports.seguir = async(function* (req, res) {
+  const usuario = req.usuario;
+  const user = req.user;
+  user.seguindo.push(usuario._id);
+  try {
+    yield user.save();
+    req.flash('success', { msg: 'Seguindo usuário.' });
+    res.redirect(`/user/${usuario._id}`);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Não Seguir User
+ */
+exports.desseguir = async(function* (req, res) {
+  const usuario = req.usuario;
+  const user = req.user;
+  user.seguindo.pull(usuario._id);
+  try {
+    yield user.save();
+    req.flash('success', { msg: 'Não seguindo mais.' });
+    res.redirect(`/user/${usuario._id}`);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Upload avatar
+ */
+exports.uploadAvatar = async(function* (req, res) {
+  const user = req.user;
+
+  if (req.files.length > 0) {
+    user.profile.picture = req.files[0].location;
+  }
+
+  try {
+    yield user.save();
+    respondOrRedirect({ req, res }, '/account', user, {
+      type: 'success',
+      title: 'Foto de perfil atualizada.'
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 /**
@@ -77,7 +131,7 @@ exports.postLogin = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) { return next(err); }
       req.flash('success', { msg: 'Sucesso! Você está logado.' });
-      res.redirect('/');
+      res.redirect(req.session.returnTo ? req.session.returnTo : '/');
     });
   })(req, res, next);
 };
@@ -268,6 +322,7 @@ exports.show = (req, res) => {
       const servicos = _.filter(updates, s => s.type === 'servico');
       const clipping = _.filter(updates, c => c.type === 'clipping');
       const fotos = [];
+      let seguindo = null;
       for (let i = 0; i < fotosUp.length; i++) {
         for (let o = 0; o < fotosUp[i].fotos.length; o++) {
           fotos.push(fotosUp[i].fotos[o]);
@@ -283,9 +338,13 @@ exports.show = (req, res) => {
           fotos.push(servicos[i].fotos[o]);
         }
       }
+      if (req.user) {
+        seguindo = _.find(req.user.seguindo, a => JSON.stringify(a) === JSON.stringify(req.usuario._id));
+      }
       res.render('user/show', {
         title: 'User show',
         usuario: req.usuario,
+        seguindo,
         fotos,
         pontos,
         servicos,
@@ -301,11 +360,59 @@ exports.show = (req, res) => {
 };
 
 /**
+ * GET /meu-perfil
+ * User page self.
+ */
+exports.meuPerfil = (req, res) => {
+  Avaliacao.list({ user: req.user._id }).then((avaliacoes) => {
+    Update.list({ criteria: { user: req.user._id } }).then((updates) => {
+      const fotosUp = _.filter(updates, f => f.type === 'fotos');
+      const pontos = _.filter(updates, p => p.type === 'ponto');
+      const servicos = _.filter(updates, s => s.type === 'servico');
+      const clipping = _.filter(updates, c => c.type === 'clipping');
+      const fotos = [];
+      for (let i = 0; i < fotosUp.length; i++) {
+        for (let o = 0; o < fotosUp[i].fotos.length; o++) {
+          fotos.push(fotosUp[i].fotos[o]);
+        }
+      }
+      for (let i = 0; i < avaliacoes.length; i++) {
+        for (let o = 0; o < avaliacoes[i].fotos.length; o++) {
+          fotos.push(avaliacoes[i].fotos[o]);
+        }
+      }
+      for (let i = 0; i < servicos.length; i++) {
+        for (let o = 0; o < servicos[i].fotos.length; o++) {
+          fotos.push(servicos[i].fotos[o]);
+        }
+      }
+      Update.list({ criteria: { $or: [{ servico: { $in: req.user.favoritos } }, { user: { $in: req.user.seguindo } }] } }).then((feed) => {
+        res.render('user/meu-perfil', {
+          title: 'Meu Perfil',
+          usuario: req.user,
+          fotos,
+          feed,
+          pontos,
+          servicos,
+          clipping,
+          avaliacoes
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+/**
  * POST /account/profile
  * Update profile information.
  */
 exports.postUpdateProfile = (req, res, next) => {
-  req.assert('email', 'Por favor, forneça um endereço de email válido.').isEmail();
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
   const errors = req.validationErrors();

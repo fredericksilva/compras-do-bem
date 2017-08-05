@@ -28,8 +28,8 @@
               else if (up.type === 'ponto')
                 span.cardAcao  Cadastrou um ponto de venda
     if (up.fotos.length > 0 || up.avaliacao && up.avaliacao.fotos.length > 0)
-      .card-image.waves-effect.waves-block.waves-light(style='max-height: 330px;')
-        img.activator(src=up.fotos[0] || up.avaliacao.fotos[0])
+      a.card-image.waves-effect.waves-block.waves-light(style='max-height: 330px;')
+        img(src=up.fotos[0] || up.avaliacao.fotos[0])
     if (up.type === 'ponto')
       .card-image
         div.mapa_up(id='mapa_' + up.clip.numero + '+' + up.clip.rua.replace(/ /g, '+') + ',+' + up.clip.cidade.replace(/ /g, '+'), data-adress=up.clip.numero + '+' + up.clip.rua.replace(/ /g, '+') + ',+' + up.clip.cidade.replace(/ /g, '+'))
@@ -139,10 +139,10 @@
 
 
 
-    .card-reveal(style='z-index: 999999;')
-      span.card-title
-        | Card Title
-        i.material-icons.right close
-      p
-        | Here is some more information about this product that is only revealed once clicked on.
+    //- .card-reveal(style='z-index: 999999;')
+    //-   span.card-title
+    //-     | Card Title
+    //-     i.material-icons.right close
+    //-   p
+    //-     | Here is some more information about this product that is only revealed once clicked on.
 // fim cards

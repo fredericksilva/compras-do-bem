@@ -17,8 +17,20 @@ block content
     .modal-footer
       button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
 
+  #servico_des.modal.modal-fixed-footer
+    .modal-content
+      form#des-servico(action='/servico/_id', method='GET')
+        input(type='hidden', name='_csrf', value=_csrf)
+        h4#servico_title_des Servico: X
+        h6 Tem certeza que deseja desassociar o proprietário do serviço?
+        .row
+          .col.s12.m12.l12
+            button.modal-action.waves-effect.waves-green.btn.red.left(type='submit', style='margin-left: 5px !important;') Desassociar Proprietario
+    .modal-footer
+      button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
+
   .row
-    .col.s12.m6.l3
+    .col.s12.m4.l4
       .card
         .card-content.black-text
           p
@@ -28,7 +40,7 @@ block content
           p.card-stats-compare
             i#servic_novo_perc
             span.deep-orange-text.text-lighten-2  mês passado
-    .col.s12.m6.l3
+    .col.s12.m4.l4
       .card
         .card-content.black-text
           p
@@ -38,7 +50,7 @@ block content
           p.card-stats-compare
             i#servic_total_perc
             span.deep-orange-text.text-lighten-2  mês passado
-    .col.s12.m6.l3
+    .col.s12.m4.l4
       .card
         .card-content.black-text
           p
@@ -47,16 +59,6 @@ block content
           h4#servc_prop.card-stats-number 
           p.card-stats-compare
             i#servc_prop_perc
-            span.deep-orange-text.text-lighten-2  mês passado
-    .col.s12.m6.l3
-      .card
-        .card-content.black-text
-          p
-            i.mdi-editor-attach-money
-            | Reinvindicações
-          h4#reinv_mes.card-stats-number 
-          p.card-stats-compare
-            i#reinv_mes_perc
             span.deep-orange-text.text-lighten-2  mês passado
   .row
     .col.s12.m12.l12
@@ -106,9 +108,9 @@ block scripts
             data: '_id',
             render: function (data, type, full, meta) {
               if (full.proprietario) {
-                return full.proprietario.profile.first_name + ' ' + full.proprietario.profile.second_name
+                return '<a href="/user/' + full._id + '" target="_blank">' + full.proprietario.profile.first_name + ' ' + full.proprietario.profile.second_name +'</a><a href="#desassociar_servico/' + meta.row + '" class="btn-floating btn-table red" style="float: none; margin-left: 10px;"><i class="material-icons">remove</i>'
               } else {
-                return 'Não Reinvindicado'
+                return 'Não Reivindicado'
               }
             }
           },
@@ -176,9 +178,9 @@ block scripts
         $('#servic_novo').text(novos.length);
         $('#servc_prop').text(prop.length);
         $('#servic_total').text(servico_table.data().length);
-        $('#servic_total_perc').text(perc_total+'%');
-        $('#servic_novo_perc').text(perc+'%');
-        $('#servc_prop_perc').text(perc_prop+'%');
+        $('#servic_total_perc').text(parseInt(perc_total)+'%');
+        $('#servic_novo_perc').text(parseInt(perc)+'%');
+        $('#servc_prop_perc').text(parseInt(perc_prop)+'%');
       }, 500)
 
       $('.dataTables_length').parent().parent().css('display', 'none');
@@ -220,9 +222,16 @@ block scripts
           } else if (hash.split('delete_servico/').length > 1) {
             var index = hash.split('delete_servico/')[1]
             var item = servico_table.data()[index]
-            $('#servico_title_del').text('User: ' + item.title)
+            $('#servico_title_del').text('Serviço: ' + item.title)
             $('#delete-servico').attr('action', '/servico/' + item._id + '/delete')
             $('#servico_delete').modal('open');
+            location.hash = ''
+          } else if (hash.split('desassociar_servico/').length > 1) {
+            var index = hash.split('desassociar_servico/')[1]
+            var item = servico_table.data()[index]
+            $('#servico_title_des').text('Serviço: ' + item.title)
+            $('#des-servico').attr('action', '/servico/' + item.urlized + '/desassociar')
+            $('#servico_des').modal('open');
             location.hash = ''
           } else if (hash.split('delete_update/').length > 1) {
             var index = hash.split('delete_update/')[1]
