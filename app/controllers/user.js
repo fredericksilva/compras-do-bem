@@ -249,7 +249,7 @@ exports.makeAdmin = (req, res, next) => {
  * Profile page.
  */
 exports.getAccount = (req, res) => {
-  res.render('account/profile', {
+  res.render('user/perfil', {
     title: 'Manutenção de Perfil'
   });
 };

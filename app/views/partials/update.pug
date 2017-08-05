@@ -69,11 +69,11 @@
         .card-action
           .row(style='margin-bottom: 0;')
             each selo in up.clip.selos
-              .col.s3.m3.l3(id=selo)
+              .col.s3.m3.l3(id=selo+up._id)
                 script(type='text/javascript').
                   $(document).ready(function() {
                     $.getJSON('/json/selo/#{selo}', function(data) {
-                      $('##{selo}').append('<img class="circle responsive-img tooltipped" data-position="bottom" data-delay="50" data-tooltip="' + data.data.title + '" src="' + data.data.img + '">')
+                      $('##{selo}#{up._id}').append('<img class="circle responsive-img tooltipped" data-position="bottom" data-delay="50" data-tooltip="' + data.data.title + '" src="' + data.data.img + '">')
                       $('.tooltipped').tooltip({delay: 50});
                     }).fail(function(err) {
                       console.log(err);

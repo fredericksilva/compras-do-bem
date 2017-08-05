@@ -158,5 +158,4 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), (req, res) => {
     res.redirect(req.session.returnTo || '/');
   });
-
 };

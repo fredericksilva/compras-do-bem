@@ -14,12 +14,15 @@ const userSchema = new mongoose.Schema({
   tokens: Array,
   admin: { type: Boolean, default: false },
   active: { type: Boolean, default: false },
+  telefone: { type: String },
 
   profile: {
     first_name: String,
     second_name: String,
     gender: String,
     location: String,
+    cidade: String,
+    estado: String,
     website: String,
     picture: String,
     aniversario: Date

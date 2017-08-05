@@ -59,7 +59,6 @@ exports.index = async(function* (req, res) {
  * Busca
  */
 exports.busca = async(function* (req, res) {
-  console.log(req.body);
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const limit = 30;
   let criteria = {};
@@ -68,8 +67,9 @@ exports.busca = async(function* (req, res) {
     criteria['endereco.cidade'] = c[0];
   }
   if (req.body.categoria && req.body.categoria !== '') {
+    console.log(req.body.categoria);
     const cats = req.body.categoria.split(',');
-    criteria.categorias = { $in: cats };
+    criteria.categorias = { $all: cats };
     const catCriteria = yield Categoria.list({ _id: { $in: cats } });
     res.locals.cat_criteria = catCriteria;
   }
@@ -84,7 +84,6 @@ exports.busca = async(function* (req, res) {
 
   const servicos = yield Servico.list(options);
   const count = yield Servico.count();
-  console.log(servicos);
   respond(res, 'servicos/index', {
     title: 'servicos',
     servicos,
@@ -197,12 +196,13 @@ exports.update = async(function* (req, res) {
   const servico = req.servico;
   assign(servico, only(req.body, 'title tags site body telefone whatsapp email'));
   const categorias = [];
+  const selos = _.filter(req.servico.categorias, c => c.selo);
   for (const i in req.body) {
     if (req.body[i] === 'on' && i.split(' ').length === 1 && i.split('_').length === 1 && i.split('.').length === 1) {
       categorias.push(i);
     }
   }
-  servico.categorias = categorias;
+  servico.categorias = _.union(categorias, selos);
   servico.endereco.estado = req.body.estado;
   servico.endereco.cidade = req.body.cidade;
   if (req.body.rua !== '' && req.body.numero !== '' && req.body.complemento !== '') {

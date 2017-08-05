@@ -101,6 +101,7 @@ exports.update = async(function* (req, res) {
     if (err) return res.send(err);
     categoria.title = req.body.title;
     categoria.body = req.body.body;
+    console.log(req.body);
     if (req.body.mae !== '') {
       categoria.mae = req.body.mae;
     }

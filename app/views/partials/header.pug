@@ -11,30 +11,34 @@ header.interno
           .busca
             .row
               .caixaBusca.col.s12
-                form(method='get', action='')
+                form(method='post', action='/servicos/busca')
+                  input(type='hidden', name='_csrf', value=_csrf)
                   .col.l5.m12.s12.buscador
-                    input(placeholder='Pesquisar ...', type='text')
+                    input(placeholder='Pesquisar ...', type='text', name='text')
                   .col.m5.l3.s5.b_cidade.dropdown-button(data-activates='cidade', style='overflow: hidden;')
                     i.material-icons keyboard_arrow_down
-                    span.cid Rio de Janeiro - RJ 
+                    span.cid Todo Brasil
                   .col.m5.l3.s5.b_categoria.dropdown-button(data-activates='categoria', style='overflow: hidden;')
                     i.material-icons room
                     span.cat Todas as categorias 
-                  .col.m2.l1.s2.b_botao
+                  button.col.m2.l1.s2.b_botao(style='background: none; border: none;')
                     i.material-icons.btnBuscar.pink-text.text-lighten-3 search
-                  input.cid_Enviar(type='hidden', value='', name='categoria')
-                  input.cat_Enviar(type='hidden', value='', name='cidade')
+                  input.cid_Enviar(type='hidden', value='', name='cidade')
+                  input.cat_Enviar(type='hidden', value='', name='categoria')
             ul#cidade.dropForm.dropdown-content
               li
-              li(data-destino='cid', data-valor='Rio de Janeiro - RJ', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
-                a Rio de Janeiro - RJ
-              li(data-destino='cid', data-valor='Minha Localização', data-id='<!--caso tenha um id do sistema colcoar aqui -->')
+              li#cid_destino(data-destino='cid', data-valor='Todo Brasil', data-id='')
+                a Todo Brasil
+              li(data-destino='cid', data-valor='Todo Brasil', data-id='')
+                a Todo Brasil
+              li(data-destino='cid', data-valor='Minha Localização', data-id='')
                 a 
                   i.material-icons send
                   | Meu Local
             ul#categoria.dropForm.dropdown-content
               li
               each categoria in categorias
-                li(data-destino='cat', data-valor=categoria.title, data-id=categoria._id)
-                  a= categoria.title
+                if (!categoria.selo && !categoria.mae)
+                  li(data-destino='cat', data-valor=categoria.title, data-id=categoria._id)
+                    a= categoria.title
         include user_menu.pug

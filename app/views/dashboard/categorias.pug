@@ -65,7 +65,7 @@ block content
             textarea#categ_desc_edit.materialize-textarea(type='text', name='body')
           .col.s12.m12.l12
             label(for='mae_edit') Categoria Mãe
-            select#mae_edit(name='mae_edit', style='display: block;')
+            select#mae_edit(name='mae', style='display: block;')
               option.corinput(value='') SELECIONAR...
               each categoria in categorias
                 if (!categoria.mae)

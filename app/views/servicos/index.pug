@@ -12,13 +12,13 @@ block content
   //-         p= c.title
   //-     if (criteria.$text)
   //-       p= criteria.$text.$search
-  section.categoriasinterna(style='margin-top: 0;')
+  section.categoriasinterna(style='margin-top: 0; margin-bottom: 0;')
     .container
       .row
         .vermais3.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
           span.palavraUsada  Categorias
         each cat in categorias
-          if (!cat.mae && !cat.selo || criteria.categorias && cat.mae && cat.mae._id === criteria.categorias.$in[0])
+          if (!cat.mae && !cat.selo || criteria.categorias && cat.mae && cat.mae._id === criteria.categorias.$all[0])
             .col.s12.m2.l2.ol
               form(method='post', action='/servicos/busca')
                 input(type='hidden', name='_csrf', value=_csrf)
@@ -28,11 +28,34 @@ block content
                   input(type='hidden', name='cidade', value=criteria['endereco.cidade'])
                 input(type='hidden', name='categoria', value=(cat._id))
                 - var cla = ''
-                if (criteria.categorias && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$in[0]))
+                if (criteria.categorias && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$all[0]))
                   - cla ='publicarNegocio'
                 .boxCifrao.widthtotal(class=cla)
                   button(style='background: none; border: none;')
                     | #{cat.title}
+      if (criteria.categorias)
+        .row
+          .vermais3.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
+            span.palavraUsada  Sub Categorias
+          each cat in categorias
+            if (cat.mae && JSON.stringify(cat.mae._id) === JSON.stringify(criteria.categorias.$all[0]))
+              .col.s12.m2.l2.ol
+                form(method='post', action='/servicos/busca')
+                  input(type='hidden', name='_csrf', value=_csrf)
+                  if (criteria.$text)
+                    input(type='hidden', name='text', value=criteria.$text.$search)
+                  if (criteria['endereco.cidade'])
+                    input(type='hidden', name='cidade', value=criteria['endereco.cidade'])
+                  if (criteria.categorias)
+                    input(type='hidden', name='categoria', value=(criteria.categorias.$all[0] + ',' + cat._id))
+                  else
+                    input(type='hidden', name='categoria', value=(cat._id))
+                  - var cla = ''
+                  if (criteria.categorias && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$all[1]))
+                    - cla ='publicarNegocio'
+                  .boxCifrao.widthtotal(class=cla)
+                    button(style='background: none; border: none;')
+                      | #{cat.title}
       .row
         .vermais3.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
           span.palavraUsada  Impacto
@@ -45,36 +68,21 @@ block content
                   input(type='hidden', name='text', value=criteria.$text.$search)
                 if (criteria['endereco.cidade'])
                   input(type='hidden', name='cidade', value=criteria['endereco.cidade'])
-                input(type='hidden', name='categoria', value=(cat._id))
+                if (criteria.categorias && criteria.categorias.$all.length === 1)
+                  input(type='hidden', name='categoria', value=(criteria.categorias.$all[0] + ',' + cat._id))
+                else if (criteria.categorias && criteria.categorias.$all.length > 1 && !cat_criteria[1].selo)
+                  input(type='hidden', name='categoria', value=(criteria.categorias.$all[0] + ',' + criteria.categorias.$all[1] + ',' + cat._id))
+                else
+                  input(type='hidden', name='categoria', value=(cat._id))
                 - var cla = ''
-                if (criteria.categorias && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$in[0]))
+                if (criteria.categorias && criteria.categorias.$all.length > 1 && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$all[1]) || criteria.categorias && criteria.categorias.$all.length > 1 && JSON.stringify(cat._id) === JSON.stringify(criteria.categorias.$all[2]))
                   - cla ='publicarNegocio'
                 .boxCifrao.widthtotal(class=cla)
                   button(style='background: none; border: none;')
                     | #{cat.title}
       .row
-        .col.s12.m2.l2.ol
-          .boxCifrao
-            | $
-          .boxCifrao
-            | $$
-          .boxCifrao
-            | $$$
-          .boxCifrao
-            | $$$$
-        .col.s12.m2.l2.ol
-          .boxCifrao.widthtotal
-            i.tiny.material-icons query_builder
-            |  Aberto agora
-        .col.s12.m2.l2.ol
-          .boxCifrao.widthtotal
-            i.tiny.material-icons tune
-            |  Todos os filtros
-        .col.s12.m2.l2.ol
-          .publicarNegocio
-            | Publicar Negócio
         .col.s12.m4.l4.ol.naoachou
-          a(href='#')
+          a(href='/servico/novo')
             | Não achou o que procurava?
             br
             | Publique seu negócio favorito!
@@ -83,7 +91,14 @@ block content
       .row
         .col.s12.m8.l8.ol
           if (criteria.$text)
-            h4 Busca: #{criteria.$text.$search}
+            h4 Busca: 
+              strong '#{criteria.$text.$search}'
+          if (criteria['endereco.cidade'])
+            h5(style='text-align: center;') #{criteria['endereco.cidade']}
+            .divider
+          else
+            h5(style='text-align: center;') Todo Brasil
+            .divider
           .row
             each serv in servicos
               // loop resultado
@@ -105,7 +120,7 @@ block content
                         if (serv.categorias.length - 1 === index)
                           | #{cat.title}
                         else
-                          | #{cat.title},
+                          | #{cat.title}, 
                   .row(style='margin-bottom: 0; margin-top: 10px;')
                     each selo, index in serv.categorias
                       if (selo.selo)
@@ -124,11 +139,11 @@ block content
                     br
                     a(href=serv.site, target='_blank') #{serv.site}
               // fim loop resultado
-          .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
-            span.palavraUsada
-              i.material-icons keyboard_arrow_down
-              |   Mostrar
-            |  atividades: Rio de Janeiro
+          //- .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
+          //-   span.palavraUsada
+          //-     i.material-icons keyboard_arrow_down
+          //-     |   Mostrar
+          //-   |  atividades: Rio de Janeiro
         .col.s12.m4.l4.ol
           .sobremapa
             i.material-icons.tuny keyboard_arrow_left

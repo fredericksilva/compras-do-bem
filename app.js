@@ -99,10 +99,10 @@ const sessionHandler = session({
 });
 app.use((req, res, next) => {
   // if path does not start with /json/, then invoke session middleware
-  if (req.url.indexOf('/json/') !== 0) {
-    return sessionHandler(req, res, next);
-  } else {
+  if (req.url.indexOf('/json/') === 0) {
     next();
+  } else {
+    return sessionHandler(req, res, next);
   }
 });
 app.use(passport.initialize());

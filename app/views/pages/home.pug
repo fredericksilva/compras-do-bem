@@ -11,18 +11,23 @@ block styles
 block content
   section.categorias
     .container
-      h1 Rio de Janeiro - RJ
+      h1 Categorias
       .row
         .exibe
           each categoria in categorias
-            if (!categoria.selo)
-              .s12.m3.l3.col.boxCategoria.center-align
-                if (categoria.img)
-                  .col.s12.m12.l12
-                    img(src=categoria.img, style='width: 50px; margin: auto; margin-top: 30px;')
-                else
-                  i.material-icons.pink-text.text-lighten-2 restaurant_menu
-                | #{categoria.title.toUpperCase()}
+            if (!categoria.selo && !categoria.mae)
+
+              form(method='post', action='/servicos/busca')
+                input(type='hidden', name='_csrf', value=_csrf)
+                input(type='hidden', name='categoria', value=(categoria._id))
+                .s12.m3.l3.col.boxCategoria.center-align
+                  button(style='background: none; border: none;')
+                    if (categoria.img)
+                      .col.s12.m12.l12
+                        img(src=categoria.img, style='width: 50px; margin: auto; margin-top: 30px;')
+                    else
+                      i.material-icons.pink-text.text-lighten-2 restaurant_menu
+                    | #{categoria.title.toUpperCase()}
           //- .s12.m3.l3.col.boxCategoria.center-align.vermais(data-destino='nExibe')
           //-   i.material-icons.pink-text.text-lighten-2 more_horiz
           //-   | MAIS CATEGORIAS

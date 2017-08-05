@@ -69,7 +69,7 @@ categoriaSchema.statics = {
     const criteria = options || {};
     return this.find(criteria)
       .populate('mae')
-      .sort({ createdAt: -1 })
+      .sort({ selo: -1 })
       .exec();
   }
 };
