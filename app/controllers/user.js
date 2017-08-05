@@ -88,7 +88,7 @@ exports.postLogin = (req, res, next) => {
  */
 exports.logout = (req, res) => {
   req.logout();
-  res.redirect('/');
+  res.redirect(req.session.returnTo || '/');
 };
 
 /**
@@ -315,12 +315,13 @@ exports.postUpdateProfile = (req, res, next) => {
     return res.redirect('/account');
   }
 
-  User.findById(req.user.id, (err, user) => {
+  User.findById(req.user._id, (err, user) => {
     if (err) { return next(err); }
-    user.email = req.body.email || '';
-    user.profile.name = req.body.name || '';
+    user.profile.first_name = req.body.first_name || '';
+    user.profile.second_name = req.body.second_name || '';
     user.profile.gender = req.body.gender || '';
-    user.profile.location = req.body.location || '';
+    user.profile.estado = req.body.estado || '';
+    user.profile.cidade = req.body.cidade || '';
     user.profile.website = req.body.website || '';
     user.save((err) => {
       if (err) {

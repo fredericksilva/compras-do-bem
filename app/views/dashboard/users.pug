@@ -18,7 +18,7 @@ block content
       button.modal-action.modal-close.waves-effect.waves-green.btn.blue Cancelar
 
   .row
-    .col.s12.m6.l6
+    .col.s12.m4.l4
       .card
         .card-content.black-text
           p
@@ -28,7 +28,7 @@ block content
           p.card-stats-compare
             i#novos_users_perc
             span.deep-orange-text.text-lighten-2  essa semana
-    .col.s12.m6.l6
+    .col.s12.m4.l4
       .card
         .card-content.black-text
           p
@@ -38,6 +38,16 @@ block content
           p.card-stats-compare
             i#users_total_perc
             span.deep-orange-text.text-lighten-2  mês passado
+    .col.s12.m4.l4
+      .card
+        .card-content.black-text
+          p
+            i.mdi-editor-attach-money
+            | Usuários Inativos
+          h4#users_inact.card-stats-number 
+          p.card-stats-compare
+            i#users_inact_perc
+            span.deep-orange-text.text-lighten-2 
   .row
     .col.s12.m12.l12
       section#usuarios.cadastro
@@ -55,6 +65,8 @@ block content
                 tr
                   th Nome
                   th Email
+                  th Telefone
+                  th Ativo
                   th Admin
                   th Acao
               tbody
@@ -73,7 +85,7 @@ block scripts
           { 
             data: 'profile',
             render: function (data, type, full, meta) {
-              return data.first_name + ' ' + data.second_name
+              return '<a href="/user/' + full._id + '" target="_blank">' + data.first_name + ' ' + data.second_name +'</a>'
             },
             sortable: true
           },
@@ -84,6 +96,28 @@ block scripts
                 return data
               } else {
                 return 'Não informado'
+              }
+            },
+            sortable: true
+          },
+          { 
+            data: 'telefone',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return data
+              } else {
+                return 'Não informado'
+              }
+            },
+            sortable: true
+          },
+          { 
+            data: 'active',
+            render: function (data, type, full, meta) {
+              if (data) {
+                return 'Ativo'
+              } else {
+                return 'Não ativo'
               }
             },
             sortable: true
@@ -132,10 +166,14 @@ block scripts
           var dat = new Date(u.createdAt)
           return dat.getTime() < mes.getTime()
         })
+        var users_inact =  _.filter(user_table.data(), function(u) {
+          return !u.active
+        })
         var dif = novos.length - novos_ant.length;
         var dif_total = user_table.data().length - users_ant.length;
         var perc = (dif * 100) / novos_ant.length;
         var perc_total = (dif_total * 100) / user_table.data().length;
+        var perc_inact = (users_inact.length * 100) / user_table.data().length;
         if (perc > 0) {
           $('#novos_users_perc').addClass('mdi-hardware-keyboard-arrow-up')
         } else {
@@ -148,8 +186,10 @@ block scripts
         }
         $('#novos_users').text(novos.length);
         $('#users_total').text(user_table.data().length);
+        $('#users_inact').text(users_inact.length);
         $('#users_total_perc').text(perc_total+'%');
         $('#novos_users_perc').text(perc+'%');
+        $('#users_inact_perc').text(perc_inact+'%');
       }, 500)
 
       $('.dataTables_length').parent().parent().css('display', 'none');

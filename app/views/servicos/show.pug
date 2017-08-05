@@ -306,11 +306,16 @@ block content
         .col.s12.m3.l3
           .row
             .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
-              a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
-                i.material-icons.white-text star_rate
-                if (aval)
-                  | Editar Avaliação
-                else
+              if (user)
+                a#avaliar.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
+                  i.material-icons.white-text star_rate
+                  if (aval)
+                    | Editar Avaliação
+                  else
+                    | Escrever Avaliação
+              else
+                a#login.pink.lighten-2.btnreinvindicar(style='margin-bottom:10px;')
+                  i.material-icons.white-text star_rate
                   | Escrever Avaliação
               if (avaliacoes.length > 1)
                 strong #{avaliacoes.length} avaliações 
