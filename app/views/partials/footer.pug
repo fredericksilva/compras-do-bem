@@ -12,46 +12,48 @@ footer
             li
               a(href='/') Home
             li
-              a(href='/servico') Serviço
+              form(action='/servicos/busca', method='POST')
+                input(type='hidden', name='_csrf', value=_csrf)
+                button(style='background: none; border: none; padding: 0; text-transform: uppercase;') Negócios do bem
             li
-              a(href='/servico/novo') Criar serviço
+              a(href='/servico/novo') Cadastrar serviço
             li
-              a(href='/servico') Serviços por categoria
+              a(href='/login') Login
             li
-              a(href='#') Avaliações por categoria
+              a(href='/signup') Cadastrar-se
         .s12.m2.l2.col.links.grey-text.text-darken-4
           ul
             li
-              a(href='/') Home
+              a(href='/servico/novo') Quem somos
             li
-              a(href='/servico') Serviço
+              a(href='/') Blog
             li
-              a(href='/servico/novo') Criar serviço
+              a(href='/servico') Compras na mídia
             li
-              a(href='/servico') Serviços por categoria
+              a(href='/servico') Certificações
             li
-              a(href='#') Avaliações por categoria
-        .s12.m2.l2.col.links.grey-text.text-darken-4
-          ul
-            li
-              a(href='/') Home
-            li
-              a(href='/servico') Serviço
-            li
-              a(href='/servico/novo') Criar serviço
-            li
-              a(href='/servico') Serviços por categoria
-            li
-              a(href='#') Avaliações por categoria
-        .s12.m2.l2.col.links.grey-text.text-darken-4
-          ul
-            li
-              a(href='/') Home
-            li
-              a(href='/servico') Serviço
-            li
-              a(href='/servico/novo') Criar serviço
-            li
-              a(href='/servico') Serviços por categoria
-            li
-              a(href='#') Avaliações por categoria
+              a(href='#') Termos de uso
+        //- .s12.m2.l2.col.links.grey-text.text-darken-4
+        //-   ul
+        //-     li
+        //-       a(href='/') Termos de uso
+        //-     li
+        //-       a(href='/servico') Serviço
+        //-     li
+        //-       a(href='/servico/novo') Criar serviço
+        //-     li
+        //-       a(href='/servico') Serviços por categoria
+        //-     li
+        //-       a(href='#') Avaliações por categoria
+        //- .s12.m2.l2.col.links.grey-text.text-darken-4
+        //-   ul
+        //-     li
+        //-       a(href='/') Home
+        //-     li
+        //-       a(href='/servico') Serviço
+        //-     li
+        //-       a(href='/servico/novo') Criar serviço
+        //-     li
+        //-       a(href='/servico') Serviços por categoria
+        //-     li
+        //-       a(href='#') Avaliações por categoria
