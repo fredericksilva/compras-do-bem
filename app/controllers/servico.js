@@ -537,6 +537,7 @@ exports.show = function (req, res) {
       let favorito = null;
       const endereco = JSON.stringify(req.servico.endereco);
       const pontos = JSON.stringify(req.servico.pontos);
+      const url = req.protocol + '://' + req.hostname + req.path;
       for (let i = 0; i < avaliacoes.length; i++) {
         amb += avaliacoes[i].amb;
         soc += avaliacoes[i].soc;
@@ -560,6 +561,7 @@ exports.show = function (req, res) {
         avaliacoes,
         aval,
         favorito,
+        url,
         device: req.device.type === 'phone' || req.device.type === 'tablet'
       });
     }).catch((err) => {
