@@ -179,7 +179,7 @@ block styles
     }
 
     #selos-negocio .col {
-      padding: .5rem 1.2rem !important;
+      padding: .5rem !important;
     }
 
     #modal-selos {
@@ -392,7 +392,7 @@ block content
                 .col.s12.m12.l12
                   input#avaliar-leaf-input(type='hidden', name=amb_string, value=aval_amb)
                   #avaliar-leaf
-              if (aval)
+              if (!aval)
                 .row
                   .col.s12.m12.l12
                     #carroca-avaliar.carroca
@@ -547,22 +547,38 @@ block content
                   button.btn(type='submit') Enviar
     .container#selos-negocio
       .row(style='margin-bottom: 0 !important;')
-        .col.s12.m12.l12
-          h5(style='margin: 0 !important;') Impactos
-            if (user)
-              button#novo-selo.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-left: 5px;height: 20px;line-height: 20px;width: 20px;')
-                i.material-icons.left(style='line-height: 21px; font-size: 15px;') add
-            else
-              button.login.btn-floating.pink.lighten-2.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-left: 5px;height: 20px;line-height: 20px;width: 20px;')
-                i.material-icons.left(style='line-height: 21px; font-size: 15px;') add
-      .row
-        each selo in servico.categorias
-          if (selo.selo)
-            .col.s4.m1.l1
-              a.selo(href='')
-                img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
+        .col.s12.m9.l9
+          .row(style='margin-bottom: 0 !important;')
+            .col.s12.m12.l12
+              h5(style='margin: 0 !important;') Impactos
+          .row(style='margin-bottom: 0 !important;')
+            each selo in servico.categorias
+              if (selo.selo)
+                .col.s4.m1.l1
+                  a.selo(href='')
+                    img.circle.responsive-img.tooltipped(data-position='bottom', data-delay='50', data-tooltip=selo.title, src=selo.img)
+        .col.s12.m3.l3
+          .row(style='margin-bottom: 0 !important;')
+            .col.s12.m12.l12.reivindicacao
+              if (user)
+                a#novo-selo.pink.lighten-2.btnreivindicar.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-bottom:0px; margin-top: 0; text-align: center;')
+                  i.material-icons.white-text star_rate
+                  | Avaliar Impacto
+              else
+                a.login.pink.lighten-2.btnreivindicar(data-position='bottom', data-delay='50', data-tooltip='Conte-nos que impacto esse servico tem.', style='margin-bottom:0px; margin-top: 0; text-align: center;')
+                  i.material-icons.white-text star_rate
+                  | Avaliar Impacto
+            .col.s12.m12.l12.reivindicacao
+              if (user)
+                a#novo-clipping.pink.lighten-2.btnreivindicar.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Compartilhe uma notícia sobre esse serviço.', style='margin-bottom:0px; margin-top: 0; text-align: center;')
+                  i.material-icons.white-text star_rate
+                  | Inserir Notícia
+              else
+                a.login.pink.lighten-2.btnreivindicar(data-position='bottom', data-delay='50', data-tooltip='Compartilhe uma notícia sobre esse negócio.', style='margin-bottom:0px; margin-top: 0; text-align: center;')
+                  i.material-icons.white-text star_rate
+                  | Avaliar Impacto
 
-  .linhapontilhada(style='margin-top: -20px;')
+  .linhapontilhada(style='margin-top: 0px;')
   section.btnDecoracao
     .container
       .row
@@ -1125,6 +1141,11 @@ block scripts
       $('#novo-selo').on('click', function(e) {
         $('#modal-selos').modal('open');
         $('#tabs-selos').tabs('select_tab', 'novo-selo-tab');
+      });
+
+      $('#novo-clipping').on('click', function(e) {
+        $('#modal-selos').modal('open');
+        $('#tabs-selos').tabs('select_tab', 'novo-clipping-tab');
       });
 
       $('.subtipo').on('click', function(e) {

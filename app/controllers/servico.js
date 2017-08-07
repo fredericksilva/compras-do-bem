@@ -12,7 +12,7 @@ const Servico = mongoose.model('Servico');
 const Categoria = mongoose.model('Categoria');
 const Avaliacao = mongoose.model('Avaliacao');
 const Update = mongoose.model('Update');
-const User = mongoose.model('User');
+const Notificacao = mongoose.model('Notificacao');
 const assign = Object.assign;
 const scrape = require('html-metadata');
 
@@ -682,8 +682,20 @@ exports.favoritar = async(function* (req, res) {
   user.favoritos.push(serv._id);
   try {
     yield user.save();
-    req.flash('success', { msg: 'Adicionado aos favoritos.' });
-    res.redirect(`/servico/${serv.urlized}`);
+    const not = new Notificacao();
+    not.de = user._id;
+    if (serv.proAuth) {
+      not.user = serv.proprietario._id;
+    }
+    not.servico = serv._id;
+    not.type = 'favoritado';
+    try {
+      yield not.save();
+      req.flash('success', { msg: 'Adicionado aos favoritos.' });
+      res.redirect(`/servico/${serv.urlized}`);
+    } catch (err) {
+      console.log(err);
+    }
   } catch (err) {
     console.log(err);
   }
@@ -698,8 +710,22 @@ exports.desfavoritar = async(function* (req, res) {
   user.favoritos.pull(serv._id);
   try {
     yield user.save();
-    req.flash('success', { msg: 'Removido dos favoritos.' });
-    res.redirect(`/servico/${serv.urlized}`);
+    if (serv.proAuth) {
+      Notificacao.remove({
+        servico: serv._id,
+        de: user._id,
+        type: 'favoritado'
+      }, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        req.flash('success', { msg: 'Removido dos favoritos.' });
+        res.redirect(`/servico/${serv.urlized}`);
+      });
+    } else {
+      req.flash('success', { msg: 'Removido dos favoritos.' });
+      res.redirect(`/servico/${serv.urlized}`);
+    }
   } catch (err) {
     console.log(err);
   }

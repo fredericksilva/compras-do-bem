@@ -1,0 +1,41 @@
+section.reivindicacao
+  .container
+    .row
+      //- .col.s12.breadcrumb
+      //-   a(href='#!')
+      //-     i.pink-text.material-icons home
+      //-   a(href='#!')=servico.title
+      //-   i.material-icons navigate_next
+      //-   a(href='#!') Fotos e vídeos
+      .col.s12.m9.l9
+        .row(style='position: relative;')
+          .img-edit.z-depth-4
+            h5 Arraste a imagem para melhorar o enquadramento.
+            .row
+              .col.s6.m6.l6
+                button#avatar-enviar.btn.enviar Enviar
+              .col.s6.m6.l6
+                button#avatar-cancel.btn.cancelar Cancelar
+          - var hasAvatar = '';
+          - if (usuario.profile.picture) { hasAvatar = 'has-avatar' }
+          .col.s8.m3.l3.offset-s2.avatar-wrapper(style='position: relative;', class=hasAvatar)
+            #avatar-wrapper.avatar-wrapper(style='margin-top: 0; border: none; height: 160px;')
+              if (usuario.profile.picture)
+                img#avatar.avatar(src=usuario.profile.picture)
+              else
+                img#avatar.avatar(src='/img/avatar-default.png')
+            #avatar-backdrop
+          .col.s9.m9.l9
+            .row
+              .col.s12.m12.l12
+                h1.subtitles(style='margin-bottom: 0;') #{usuario.profile.first_name.charAt(0).toUpperCase()}#{usuario.profile.first_name.slice(1)} #{usuario.profile.second_name.charAt(0).toUpperCase()}.
+              .col.s12.m12.l12
+                if (usuario.profile.estado && usuario.profile.cidade)
+                  h5(style='margin: 0;') #{usuario.profile.cidade} - #{usuario.profile.estado}
+                else
+                  h5(style='margin: 0;') Local desconhecido
+                    a#local-info.tooltipped(data-position='bottom', data-delay='50', data-tooltip='Informe sua cidade editando seu perfil', href='/account', style='') ?
+              .col.s12.m12.l12
+                a(href='/account')
+                  i.material-icons edit
+                  | Editar

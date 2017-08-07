@@ -127,12 +127,20 @@ app.use((req, res, next) => {
       req.path !== '/login' &&
       req.path !== '/signup' &&
       !req.path.match(/^\/auth/) &&
-      !req.path.match(/\./)) {
+      !req.path.match(/\./) &&
+      req.method === 'GET') {
     if (req.path.split('json').length < 2) {
       req.session.returnTo = req.path;
     }
   } else if (req.user &&
-      req.path === '/account') {
+      req.path === '/account' &&
+      req.method === 'GET' &&
+      !req.path.match(/\./)) {
+    req.session.returnTo = req.path;
+  } else if (req.user &&
+      req.path.split('json').length < 2 &&
+      req.method === 'GET' &&
+      !req.path.match(/\./)) {
     req.session.returnTo = req.path;
   }
   next();

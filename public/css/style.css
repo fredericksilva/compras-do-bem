@@ -14,3 +14,7 @@
 .abreprofile {
   background-color: transparent !important;
 }
+
+.logado .dropdown-content {
+  width: 180px !important;
+}

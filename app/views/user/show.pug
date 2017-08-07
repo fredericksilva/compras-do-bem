@@ -297,7 +297,10 @@ block content
                 .col.s12.m12.l12
                   h1.subtitles(style='margin-bottom: 0;') #{usuario.profile.first_name.charAt(0).toUpperCase()}#{usuario.profile.first_name.slice(1)} #{usuario.profile.second_name.charAt(0).toUpperCase()}.
                 .col.s12.m12.l12
-                  h5 Rio de Janeiro - RJ
+                  if (usuario.profile.estado && usuario.profile.cidade)
+                    h5(style='margin: 0;') #{usuario.profile.cidade} - #{usuario.profile.estado}
+                  else
+                    h5(style='margin: 0;') Local desconhecido
             
         .col.s12.m3.l3
           .row
@@ -317,7 +320,7 @@ block content
                   | Seguir
             .col.s12.m12.l12(style='text-align: center; padding-top: 20px;')
               if (user)
-                a#avaliar.pink.lighten-2.btnreivindicar(style='margin-bottom:10px;')
+                a#enviar-msg.pink.lighten-2.btnreivindicar(style='margin-bottom:10px;')
                   i.material-icons.white-text message
                   | Enviar mensagem
               else
@@ -413,6 +416,20 @@ block content
               each up, index in clipping
                 if (index % 2 === 1)
                   include ../partials/update
+  #modal-msg.modal.bottom-sheet(style='max-height: 100%;')
+    form(action='/user/' + usuario._id + '/mensagem', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .modal-content
+        h4 Escreva a menssagem
+        .row
+          .col.s12.m12.l12
+            .file-field.input-field
+              textarea#mensagem.materialize-textarea(placeholder='MENSAGEM', name='msg', required)
+              label(for='mensagem')
+        br
+      .modal-footer
+        button.btn.left Enviar
+        a.btn.right.modal-close Cancelar
   if (!user)
     include ../partials/login-modal
 block scripts
@@ -432,5 +449,10 @@ block scripts
       $('.login').on('click', function(e) {
         e.preventDefault();
         $('#modal-login').modal('open');
+      });
+
+      $('#enviar-msg').on('click', function(e) {
+        e.preventDefault();
+        $('#modal-msg').modal('open');
       });
     })

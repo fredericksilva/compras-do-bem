@@ -20,7 +20,8 @@ const transporter = nodemailer.createTransport({
 const User = mongoose.model('User');
 const Avaliacao = mongoose.model('Avaliacao');
 const Update = mongoose.model('Update');
-const Servico = mongoose.model('Servico');
+const Mensagem = mongoose.model('Mensagem');
+const Notificacao = mongoose.model('Notificacao');
 
 /**
  * Load
@@ -29,6 +30,22 @@ exports.load = async(function* (req, res, next, id) {
   try {
     req.usuario = yield User.load(id);
     if (!req.usuario) return next(new Error('Usuário não encontrado'));
+  } catch (err) {
+    return next(err);
+  }
+  next();
+});
+
+/**
+ * Get Notification
+ */
+exports.getNotify = async(function* (req, res, next) {
+  if (!req.user) return next();
+  try {
+    req.novas_msg = yield Mensagem.list({ para: req.user._id, visto: false });
+    // req.notificacoes = yield Notificacao.list({ user: req.user._id, visto: false });
+    res.locals.novas_msg = req.novas_msg;
+    // res.locals.notificacoes = req.notificacoes;
   } catch (err) {
     return next(err);
   }
@@ -49,8 +66,17 @@ exports.seguir = async(function* (req, res) {
   user.seguindo.push(usuario._id);
   try {
     yield user.save();
-    req.flash('success', { msg: 'Seguindo usuário.' });
-    res.redirect(`/user/${usuario._id}`);
+    const not = new Notificacao();
+    not.de = user._id;
+    not.user = usuario._id;
+    not.type = 'seguir';
+    try {
+      yield not.save();
+      req.flash('success', { msg: 'Seguindo usuário.' });
+      res.redirect(`/user/${usuario._id}`);
+    } catch (err) {
+      console.log(err);
+    }
   } catch (err) {
     console.log(err);
   }
@@ -65,8 +91,36 @@ exports.desseguir = async(function* (req, res) {
   user.seguindo.pull(usuario._id);
   try {
     yield user.save();
-    req.flash('success', { msg: 'Não seguindo mais.' });
-    res.redirect(`/user/${usuario._id}`);
+    Notificacao.remove({
+      user: usuario._id,
+      de: user._id,
+      type: 'serguir'
+    }, (err) => {
+      if (err) {
+        console.log(err);
+      }
+      req.flash('success', { msg: 'Não seguindo mais.' });
+      res.redirect(`/user/${usuario._id}`);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/**
+ * Enviar mensagem
+ */
+exports.enviarMsg = async(function* (req, res) {
+  const user = req.user;
+  const usuario = req.usuario;
+  const msg = new Mensagem();
+  msg.de = user._id;
+  msg.para = usuario._id;
+  msg.msg = req.body.msg;
+  try {
+    yield msg.save();
+    req.flash('success', { msg: 'Mensagem enviada.' });
+    res.redirect(req.session.returnTo);
   } catch (err) {
     console.log(err);
   }
@@ -313,10 +367,8 @@ exports.getAccount = (req, res) => {
  * User page.
  */
 exports.show = (req, res) => {
-  console.log(req.params.user_id);
   Avaliacao.list({ user: req.params.user_id }).then((avaliacoes) => {
     Update.list({ criteria: { user: req.params.user_id } }).then((updates) => {
-      console.log(updates);
       const fotosUp = _.filter(updates, f => f.type === 'fotos');
       const pontos = _.filter(updates, p => p.type === 'ponto');
       const servicos = _.filter(updates, s => s.type === 'servico');
@@ -405,6 +457,30 @@ exports.meuPerfil = (req, res) => {
     });
   }).catch((err) => {
     console.log(err);
+  });
+};
+
+/**
+ * GET /meu-perfil/mensagens
+ * User mensagens.
+ */
+exports.minhasMensagens = (req, res) => {
+  Mensagem.update({ para: req.user._id, visto: false }, { visto: true }, { multi: true }, (err) => {
+    if (err) {
+      console.log(err);
+    }
+    Mensagem.list({ $or: [{ para: req.user._id }, { de: req.user._id }] }).then((mensagens) => {
+      const rem = _.filter(mensagens, m => JSON.stringify(m.de._id) !== JSON.stringify(req.user._id));
+      const remententes = _.uniq(rem, r => r.de._id);
+      res.render('user/minhas-mensagens', {
+        title: 'Mensagens',
+        usuario: req.user,
+        remententes,
+        mensagens
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
   });
 };
 
@@ -655,4 +731,18 @@ exports.postForgot = (req, res, next) => {
     .then(sendForgotPasswordEmail)
     .then(() => res.redirect('/forgot'))
     .catch(next);
+};
+
+/**
+ * isUser.
+ */
+exports.isUser = (req, res, next) => {
+  if (req.user && JSON.stringify(req.params.user_id) === JSON.stringify(req.user._id) && req.path === '/user/' + req.user._id) {
+    res.redirect('/meu-perfil');
+  } else if (req.user && JSON.stringify(req.params.user_id) === JSON.stringify(req.user._id)) {
+    req.flash('errors', { msg: 'Esse usuário é você.' });
+    res.redirect(req.session.returnTo);
+  } else {
+    next();
+  }
 };

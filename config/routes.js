@@ -54,6 +54,7 @@ module.exports = (app, passportConfig, passport) => {
    * locals routes.
    */
   app.use(categoriaController.load);
+  app.use(userController.getNotify);
 
   /**
    * Pages routes.
@@ -138,7 +139,7 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/signup', userController.getSignup);
   app.post('/signup', userController.postSignup);
   app.get('/verificacao/:verifToken', userController.verifyAccount);
-  app.get('/user/:user_id', userController.show);
+  app.get('/user/:user_id', userController.isUser, userController.show);
   app.post('/contact', contactController.postContact);
   app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
   app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
@@ -147,9 +148,11 @@ module.exports = (app, passportConfig, passport) => {
   app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
   app.get('/user/:user_id/makeadmin', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.makeAdmin);
   app.get('/user/:user_id/delete', passportConfig.isAuthenticated, passportConfig.isAdmin, userController.delete);
-  app.get('/user/:user_id/seguir', passportConfig.isAuthenticated, userController.seguir);
-  app.get('/user/:user_id/desseguir', passportConfig.isAuthenticated, userController.desseguir);
+  app.get('/user/:user_id/seguir', passportConfig.isAuthenticated, userController.isUser, userController.seguir);
+  app.get('/user/:user_id/desseguir', passportConfig.isAuthenticated, userController.isUser, userController.desseguir);
+  app.post('/user/:user_id/mensagem', passportConfig.isAuthenticated, userController.isUser, userController.enviarMsg);
   app.get('/meu-perfil', passportConfig.isAuthenticated, userController.meuPerfil);
+  app.get('/meu-perfil/mensagens', passportConfig.isAuthenticated, userController.minhasMensagens);
   app.post('/eu/avatar/upload', passportConfig.isAuthenticated, upload.array('avatar', 1), userController.uploadAvatar);
 
   /**

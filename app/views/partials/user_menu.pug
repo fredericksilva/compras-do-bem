@@ -2,7 +2,7 @@ if !user
   .col.s4.m2.l2.menuLinks
     a.btn.botaoLogar.transparent(href='/login', title='Cadastre-se', style='float: right;') Login
 else
-  .menuLinks.logado.white-text.col.offset-s7.s4.m1.l1
+  .menuLinks.logado.white-text.col.offset-s7.s4.m1.l1(style='position: relative;')
     .icones_profile_foto
       .abreprofile.dropdown-button(data-activates='dropdown1', data-beloworigin='true', style='padding: 0;')
         if user.profile.picture
@@ -12,15 +12,19 @@ else
         i.material-icons keyboard_arrow_down
       ul#dropdown1.dropdown-content
         li(style='margin: 0;')
-          a(href='/meu-perfil') Feed
+          a(href='/meu-perfil') Perfil
         li(style='margin: 0;')
-          a(href='/account') Perfil
+          a(href='/meu-perfil/mensagens') Mensagens
+            if (novas_msg.length > 0)
+              span.badge.new(data-badge-caption='novas')= novas_msg.length
         if user.admin
           li(style='margin: 0;')
             a(href='/dash', target='_blank') Dashboard
         li.divider(style='margin: 0;')
         li(style='margin: 0;')
           a(href='/logout') Logout
+    if (user && novas_msg.length > 0)
+      span.badge.new(data-badge-caption='', style='position: absolute; width: 1.3rem; min-width: 0; right: 44px; height: 18px; line-height: 18px; top: -5px; border-radius: 10px;') #{novas_msg.length}
     //- .icones_profile_aviso
     //-   i.material-icons notifications
     //- .icones_profile_mensagem

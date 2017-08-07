@@ -273,102 +273,58 @@ block content
       .row
         .col.s12.m4.l4
           ul#user_info.collection
-            li.collection-item.active(data-action='#feed')
-              | Feed
-            li.collection-item(data-action='#avaliacoes')
-              i.small.pink-text.lighten-2.left #{avaliacoes.length}
-              | Avaliações
-            li.collection-item(data-action='#fotos')
-              i.small.pink-text.lighten-2.left #{fotos.length}
-              | Fotos
-            li.collection-item(data-action='#servicos')
-              i.small.pink-text.lighten-2.left #{servicos.length}
-              | Serviços cadastrados
-            li.collection-item(data-action='#pontos')
-              i.small.pink-text.lighten-2.left #{pontos.length}
-              | Pontos de venda cadastrados
-            li.collection-item(data-action='#impacto')
-              i.small.pink-text.lighten-2.left #{clipping.length}
-              | Avaliação impacto
-        #feed.page.active.col.s12.m8.l8
-          .row
-            .col.s6.m6.l6
-              each up, index in feed
-                if (index % 2 === 0)
-                  include ../partials/update
-            .col.s6.m6.l6
-              each up, index in feed
-                if (index % 2 === 1)
-                  include ../partials/update
-        #avaliacoes.page.col.s12.m8.l8
-          h5(style='text-align: center;') Avaliações
-          .divider
-          each ava in avaliacoes
-            // loop resultado
-            - var u = ava.servico
-            include ../partials/aval.pug
-
-            // fim loop resultado
-            if (avaliacoes.lenght > 10)
-              section.resultadoBusca
-                .container
-                  .row
-                    .col.s12.m8.l8.ol
-                      .vermais2.vejaMais.pink-text.text-lighten-2(data-destino='nexibir')
-                        span.palavraUsada
-                          i.material-icons keyboard_arrow_down
-                          |   Mostrar
-                        |  atividades: Rio de Janeiro
-                    .col.s12.m4.l4.ol
-        #fotos.page.col.s12.m8.l8
-          .row
-            .col.s6.m4.l4
-              each foto, index in fotos
-                if (index % 3 === 0)
-                  .col.s12.m12.l12(style='margin-top: 20px;')
-                    img.responsive-img.materialboxed.z-depth-1(src=foto)
-            .col.s6.m4.l4
-              each foto, index in fotos
-                if (index % 3 === 1)
-                  .col.s12.m12.l12(style='margin-top: 20px;')
-                    img.responsive-img.materialboxed.z-depth-1(src=foto)
-            .col.s6.m4.l4
-              each foto, index in fotos
-                if (index % 3 === 2)
-                  .col.s12.m12.l12(style='margin-top: 20px;')
-                    img.responsive-img.materialboxed.z-depth-1(src=foto)
-        #servicos.page.col.s12.m8.l8
-          .row
-            .col.s6.m6.l6
-              each up, index in servicos
-                if (index % 2 === 0)
-                  include ../partials/update
-            .col.s6.m6.l6
-              each up, index in servicos
-                if (index % 2 === 1)
-                  include ../partials/update
-        #pontos.page.col.s12.m8.l8
-          .row
-            .col.s6.m6.l6
-              each up, index in pontos
-                if (index % 2 === 0)
-                  include ../partials/update
-            .col.s6.m6.l6
-              each up, index in pontos
-                if (index % 2 === 1)
-                  include ../partials/update
-        #impacto.page.col.s12.m8.l8
-          .row
-            .col.s6.m6.l6
-              each up, index in clipping
-                if (index % 2 === 0)
-                  include ../partials/update
-            .col.s6.m6.l6
-              each up, index in clipping
-                if (index % 2 === 1)
-                  include ../partials/update
-  if (!user)
-    include ../partials/login-modal
+            each remetente, index in remententes
+              - var act = ''
+              if index === 0
+                - act = 'active'
+              li.collection-item(data-action='#'+remetente._id, class=act)
+                i.small.pink-text.lighten-2.left 1
+                | #{remetente.de.profile.first_name.charAt(0).toUpperCase()}#{remetente.de.profile.first_name.slice(1)} #{remetente.de.profile.second_name.charAt(0).toUpperCase()}.
+        each remetente in remententes
+          .page.active.col.s12.m8.l8(id=remetente._id)
+            .row
+              .col.s12.m12.l12
+                each msg, index in mensagens
+                  if (JSON.stringify(remetente.de._id) === JSON.stringify(msg.de._id) || JSON.stringify(remetente.de._id) === JSON.stringify(msg.para._id))
+                    .s12.m12.l12.col.cards
+                      .card.z-depth-5
+                        .card-content(style='padding-top: 10px; padding-bottom: 0px;')
+                          .row(style='margin-bottom: 0px;')
+                            .col.s1.m1.l1
+                              if (msg.de.profile.picture)
+                                img.circle.responsive-img(src=msg.de.profile.picture)
+                              else
+                                img.circle.responsive-img(src='/img/avatar-default.png')
+                            .col.s11.m11.l11(style='line-height: 0rem;')
+                              .row
+                                .col.s12.m12.l12
+                                  a.card-title.cardNome(href='/user/' + msg.de._id)
+                                    | #{msg.de.profile.first_name.charAt(0).toUpperCase()}#{msg.de.profile.first_name.slice(1)} #{msg.de.profile.second_name.charAt(0).toUpperCase()}.
+                        .card-content(style='padding: 0 10px 10px 10px;')
+                          - var bod = msg.msg
+                          - bod = bod.split('\n')
+                          each b in bod
+                            if (b.length > 1)
+                              p= b
+                            else
+                              br
+                        .card-action
+                          .row(style='margin-bottom: 0;')
+                            a.responder(href='', data-index=remetente.de._id) Responder
+          .modal.bottom-sheet(style='max-height: 100%;', id='modal-' + remetente.de._id)
+            form(action='/user/' + remetente.de._id + '/mensagem', method='POST')
+              input(type='hidden', name='_csrf', value=_csrf)
+              .modal-content
+                h4 Escreva a menssagem
+                .row
+                  .col.s12.m12.l12
+                    .file-field.input-field
+                      textarea#mensagem.materialize-textarea(placeholder='MENSAGEM', name='msg', required)
+                      label(for='mensagem')
+                br
+              .modal-footer
+                button.btn.left Enviar
+                a.btn.right.modal-close Cancelar
 block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js')
   script(src='/js/lib/load-image.min.js')
@@ -386,5 +342,10 @@ block scripts
       $('.login').on('click', function(e) {
         e.preventDefault();
         $('#modal-login').modal('open');
+      });
+
+      $('.responder').on('click', function(e) {
+        e.preventDefault();
+        $('#modal-' + e.currentTarget.dataset.index).modal('open');
       });
     })
