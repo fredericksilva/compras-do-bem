@@ -116,8 +116,8 @@ block content
 block scripts
   script(type='text/javascript').
     function uploadIcon (id) {
-      var c = document.getElementsByClassName('form-icone');
-      c[id].submit();
+      var c = document.getElementById(id + '-form');
+      c.submit();
     }
     
     $(document).ready(function() {
@@ -132,9 +132,9 @@ block scripts
             data: 'img',
             render: function (data, type, full, meta) {
               if (data) {
-                return '<img src="' + data + '" class="circle responsive-image" style="width: 30px;"><form id="' + full._id + '-form" action="/categoria/' + full._id + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0;position: absolute;height: 15px;width: 15px;min-width: 0;top: -10px;"><i class="material-icons left white-text" style="margin: 0;line-height: 14px;font-size: 10px;margin-left: 2px;">add_a_photo</i><input id="image-' + full._id + '" type="file" name="photos" onchange="uploadIcon(' + meta.row + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
+                return '<img src="' + data + '" class="circle responsive-image" style="width: 30px;"><form id="' + full._id + '-form" action="/categoria/' + full._id + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0;position: absolute;height: 15px;width: 15px;min-width: 0;top: -10px;"><i class="material-icons left white-text" style="margin: 0;line-height: 14px;font-size: 10px;margin-left: 2px;">add_a_photo</i><input id="image-' + full._id + '" type="file" name="photos" onchange="uploadIcon(' + full._id + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
               } else {
-                return '<form id="' + full._id + '-form" action="/categoria/' + full._id + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0 17px;"><i class="material-icons left white-text" style="margin: 0;">add_a_photo</i><input id="image-' + full._id + '" type="file" name="photos" onchange="uploadIcon(' + meta.row + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
+                return '<form id="' + full._id + '-form" action="/categoria/' + full._id + '/upload" method="POST" enctype="multipart/form-data" class="form-icone"><div class="file-field input-field" style="margin: 0;"><div class="btn pink lighten-2" style="padding: 0 17px;"><i class="material-icons left white-text" style="margin: 0;">add_a_photo</i><input id="image-' + full._id + '" type="file" name="photos" onchange="uploadIcon(' + full._id + ')"></div><div class="file-path-wrapper" style="display: none;"><input class="file-path validate" type="text" placeholder="Upload one or more files"></div></div></form>'
               }
             },
             sortable: false
